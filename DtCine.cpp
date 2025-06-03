@@ -1,23 +1,26 @@
 #include "DtCine.h"
 #include <iostream>
-#include namespace std
+using namespace std;
 
-DtCine::DtCine(){}
-DtCine::DtCine(int id, DtCine Cine){
-	this->id=id;
-	this->Direccion=Direccion;
-}
-string DtCine::getid(){
-	return this->id;
-}
-string DtCine::getDireccion(){
-	return this->Direccion;
+DtCine::DtCine() {}
+
+DtCine::DtCine(int id, DtDireccion dir) {
+    this->id = id;
+    this->direccion = dir;
 }
 
-DtCine::~DtCine(){}
+int DtCine::getid() {
+    return this->id;
+}
 
-ostream& operator <<(ostream& salida, const DtCine& dtc){
-    cout << "Id: " << dtc.id << "\n" ;
-        "Direccion: " << dtc.Direccion << "\n";
+DtDireccion DtCine::getDireccion() {
+    return this->direccion;
+}
+
+DtCine::~DtCine() {}
+
+ostream& operator <<(ostream& salida, const DtCine& dtc) {
+    salida << "Id: " << dtc.id << "\n";
+    salida << "Direccion: " << dtc.direccion << "\n";
     return salida;
 }
