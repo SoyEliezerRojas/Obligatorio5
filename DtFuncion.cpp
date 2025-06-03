@@ -22,5 +22,4 @@ DtHorario DtFuncion::getHoraFun(){
     return this->horario;
 }
 
-
 DtFuncion::~DtFuncion() {}

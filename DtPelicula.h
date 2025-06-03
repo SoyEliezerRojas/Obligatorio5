@@ -1,6 +1,6 @@
 #ifndef DTPELICULA_H
 #define DTPELICULA_H
-
+#include <iostream>
 #include <string>
 using namespace std;
 
@@ -12,7 +12,7 @@ private:
     float PuntajePromedio;
 public:
     DtPelicula();
-    DtPelicula(string, string);
+    DtPelicula(string, string, string, float);
     string gettitulo();
     string getsinopsis();
     string getposter();

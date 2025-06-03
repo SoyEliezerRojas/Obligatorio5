@@ -1,6 +1,5 @@
 #ifndef DTFUNCION_H
 #define DTFUNCION_H
-
 #include <iostream>
 #include "DtHorario.h"
 #include "DtFecha.h"

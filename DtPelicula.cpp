@@ -1,7 +1,6 @@
 #include "DtPelicula.h"
-#include "DtCine.h"
 DtPelicula::DtPelicula(){}
-DtPelicula::DtPelicula(string titulo, string sinopsis,float poster,float PuntajePromedio){
+DtPelicula::DtPelicula(string titulo, string sinopsis,string poster,float PuntajePromedio){
 	this->titulo=titulo;
 	this->sinopsis=sinopsis;
 	this->poster=poster;

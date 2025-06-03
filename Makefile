@@ -1,6 +1,9 @@
-main: DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o  main.o
-	g++ DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o main.o -o mainCine
+main: DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o main.o
+	g++ DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o main.o -o mainCine
 
+DtReserva.o: DtReserva.cpp
+DtPelicula.o: DtPelicula.cpp
+DtFuncion.o: DtFuncion.cpp
 DtCine.o: DtCine.cpp
 DtSala.o: DtSala.cpp
 Credito.o: Credito.cpp
