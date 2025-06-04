@@ -5,15 +5,15 @@
 #include "ICCerrarSesion.h"
 
 class Fabrica {
-private:
-    static Fabrica* instancia;
-    Fabrica();
+    private:
+        static Fabrica* instancia;
+        Fabrica();
 
-public:
-    static Fabrica* getInstancia();
+    public:
+        static Fabrica* getInstancia();
     ICIniciarSesion* getICIniciarSesion();
     ICCerrarSesion* getICCerrarSesion();
-    ~Fabrica();
+        ~Fabrica();
 };
 
 #endif // FABRICA_H
