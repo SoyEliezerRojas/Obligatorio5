@@ -18,6 +18,7 @@ public:
     void setPass(string);
     string getUrlFoto();
     void setUrl(string);
+     bool verificarPass(string& pass);
     ~Usuario();
 };
 

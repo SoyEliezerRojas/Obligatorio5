@@ -1,13 +1,19 @@
-#ifndef FABRICA
-#define FABRICA
-#include "IControlador.h"
-class Fabrica{
-    private:
-        static Fabrica* instancia;
-        Fabrica();
-    public:
-        static Fabrica* getInstancia();
-        IControlador* getIControlador();
-        ~Fabrica();
+#ifndef FABRICA_H
+#define FABRICA_H
+
+#include "ICIniciarSesion.h"
+#include "ICCerrarSesion.h"
+
+class Fabrica {
+private:
+    static Fabrica* instancia;
+    Fabrica();
+
+public:
+    static Fabrica* getInstancia();
+    ICIniciarSesion* getICIniciarSesion();
+    ICCerrarSesion* getICCerrarSesion();
+    ~Fabrica();
 };
-#endif
+
+#endif // FABRICA_H

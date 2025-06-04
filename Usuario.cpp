@@ -10,6 +10,11 @@ Usuario::Usuario(string nickN, string pass, string url) {
     this->urlFoto = url;
 }
 
+bool Usuario::verificarPass(string& pass) {
+    return this->pass == pass;
+}
+
+
 string Usuario::getNickName() {
     return this->nickName;
 }

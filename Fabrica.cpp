@@ -1,18 +1,30 @@
 #include "Fabrica.h"
-#include "Controlador.h"
-Fabrica* Fabrica::instancia = NULL;
+#include "CIniciarSesion.h"
+#include "CCerrarSesion.h"
 
-Fabrica::Fabrica(){}
+Fabrica* Fabrica::instancia = nullptr;
 
-Fabrica* Fabrica::getInstancia(){
-    if (instancia == NULL) 
+Fabrica::Fabrica() {}
+
+Fabrica* Fabrica::getInstancia() {
+    if (instancia == nullptr) {
         instancia = new Fabrica();
+    }
     return instancia;
 }
 
-IControlador* Fabrica::getIControlador(){
-    return new Controlador();    
+ICIniciarSesion* Fabrica::getICIniciarSesion() {
+    return CIniciarSesion::getInstancia();
 }
 
-Fabrica::~Fabrica(){}
+ICCerrarSesion* Fabrica::getICCerrarSesion() {
+    return CCerrarSesion::getInstancia();
+}
+
+Fabrica::~Fabrica() {
+    if (instancia != nullptr) {
+        delete instancia;
+        instancia = nullptr;
+    }
+}
 
