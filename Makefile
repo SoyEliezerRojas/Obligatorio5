@@ -46,7 +46,9 @@ Puntaje.o: Puntaje.cpp
 DtPuntaje.o: DtPuntaje.cpp
 
 Comentario.o: Comentario.cpp
+
 DtComentario.o: DtComentario.cpp
+
 main.o: main.cpp
 
 clean:
