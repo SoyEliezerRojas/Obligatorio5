@@ -1,6 +1,7 @@
 #include "Fabrica.h"
 #include "CIniciarSesion.h"
 #include "CCerrarSesion.h"
+#include "CAltaUsuario.h"
 
 Fabrica* Fabrica::instancia = nullptr;
 
@@ -21,10 +22,13 @@ ICCerrarSesion* Fabrica::getICCerrarSesion() {
     return CCerrarSesion::getInstancia();
 }
 
+ICAltaUsuario* Fabrica::getICAltaUsuario() {
+    return new CAltaUsuario;
+}
+
 Fabrica::~Fabrica() {
     if (instancia != nullptr) {
         delete instancia;
         instancia = nullptr;
     }
 }
-
