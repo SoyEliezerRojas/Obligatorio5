@@ -23,4 +23,18 @@ void Cine::setDirecCine(DtDireccion direc){
     this->direccion = direc;
 }
 
-Cine::~Cine(){}
+void Cine::agregarSala(Sala* sala) {
+    this->salas.push_back(sala);
+}
+
+list<Sala*> Cine::getSalas() {
+    return this->salas;
+}
+
+Cine::~Cine() {
+    // Liberar memoria de las salas
+    for(list<Sala*>::iterator it = salas.begin(); it != salas.end(); ++it) {
+        delete *it;
+    }
+    salas.clear();
+}

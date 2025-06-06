@@ -4,6 +4,9 @@
 #include "ICCerrarSesion.h"
 #include "ICAltaUsuario.h"
 #include "ICAltaPelicula.h"
+#include "ICAltaCine.h"
+#include "DtDireccion.h"
+#include "ManejadorCine.h"
 using namespace std;
 
 Fabrica* fabrica;
@@ -11,6 +14,7 @@ ICAltaUsuario* iAltaUsuario;
 ICIniciarSesion* iIniciarSesion;
 ICCerrarSesion* iCerrarSesion;
 ICAltaPelicula* iAltaPelicula;
+ICAltaCine* iAltaCine;
 
 void altaUsuario(){
     system("clear");
@@ -85,6 +89,50 @@ void altaPelicula() {
     }
 }
 
+void altaCine() {
+    system("clear");
+    cout <<"_" <<endl;
+    cout <<"_A L T A  D E  C I N E_"<< endl;
+    
+    // Obtener el ID que se asignará
+    int nextId = iAltaCine->getNextId();
+    cout << "ID del nuevo cine: " << nextId << endl << endl;
+    
+    // Ingresar dirección
+    string calle;
+    int numero;
+    cout << "DIRECCION DEL CINE" << endl;
+    cout << "Calle: ";
+    cin.ignore();
+    getline(cin, calle);
+    cout << "Numero: ";
+    cin >> numero;
+    
+    DtDireccion direccion(calle, numero);
+    iAltaCine->ingresarDireccion(direccion);
+    
+    // Ingresar capacidades de salas
+    list<int> capacidades;
+    int cantSalas;
+    cout << endl << "Cantidad de salas: ";
+    cin >> cantSalas;
+    
+    for(int i = 1; i <= cantSalas; i++) {
+        int capacidad;
+        cout << "Capacidad de la sala " << i << ": ";
+        cin >> capacidad;
+        capacidades.push_back(capacidad);
+    }
+    
+    iAltaCine->ingresarCapacidades(capacidades);
+    
+    // Dar de alta el cine
+    iAltaCine->altaCine();
+    cout << endl << "CINE " << nextId << " REGISTRADO CORRECTAMENTE" << endl;
+    cout << "Direccion: " << calle << " " << numero << endl;
+    cout << "Cantidad de salas: " << cantSalas << endl;
+}
+
 void menu();
 
 int main() {
@@ -96,6 +144,8 @@ int main() {
     iCerrarSesion = fabrica->getICCerrarSesion();
     iAltaUsuario = fabrica->getICAltaUsuario();
     iAltaPelicula = fabrica->getICAltaPelicula();
+    iAltaCine = fabrica->getICAltaCine();
+    
     int opcion;
     menu();
     cin>> opcion;
@@ -109,7 +159,7 @@ int main() {
 				break;
 			case 4: altaPelicula();
 				break;
-			case 5: //altaCine();
+			case 5: altaCine();
 				break;
 			case 6: //altaFuncion();
 				break;

@@ -5,6 +5,7 @@
 #include "ICCerrarSesion.h"
 #include "ICAltaUsuario.h"
 #include "ICAltaPelicula.h"
+#include "ICAltaCine.h"
 
 class Fabrica {
 private:
@@ -17,6 +18,7 @@ public:
     ICCerrarSesion* getICCerrarSesion();
     ICAltaUsuario* getICAltaUsuario();
     ICAltaPelicula* getICAltaPelicula();
+    ICAltaCine* getICAltaCine();
     ~Fabrica();
 };
 

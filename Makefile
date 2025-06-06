@@ -1,5 +1,5 @@
-main: DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o Sesion.o CIniciarSesion.o CCerrarSesion.o Fabrica.o Puntaje.o DtPuntaje.o Comentario.o DtComentario.o ManejadorUsuario.o CAltaUsuario.o ManejadorPelicula.o CAltaPelicula.o main.o
-	g++ DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o Sesion.o CIniciarSesion.o CCerrarSesion.o Fabrica.o Puntaje.o DtPuntaje.o Comentario.o DtComentario.o ManejadorUsuario.o CAltaUsuario.o ManejadorPelicula.o CAltaPelicula.o main.o -o mainCine
+main: DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o Sesion.o CIniciarSesion.o CCerrarSesion.o Fabrica.o Puntaje.o DtPuntaje.o Comentario.o DtComentario.o ManejadorUsuario.o CAltaUsuario.o ManejadorPelicula.o CAltaPelicula.o ManejadorCine.o CAltaCine.o main.o
+	g++ DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o Sesion.o CIniciarSesion.o CCerrarSesion.o Fabrica.o Puntaje.o DtPuntaje.o Comentario.o DtComentario.o ManejadorUsuario.o CAltaUsuario.o ManejadorPelicula.o CAltaPelicula.o ManejadorCine.o CAltaCine.o main.o -o mainCine
 
 DtReserva.o: DtReserva.cpp
 
@@ -56,6 +56,10 @@ CAltaUsuario.o: CAltaUsuario.cpp
 CAltaPelicula.o: CAltaPelicula.cpp
 
 ManejadorPelicula.o: ManejadorPelicula.cpp
+
+ManejadorCine.o: ManejadorCine.cpp
+
+CAltaCine.o: CAltaCine.cpp
 
 main.o: main.cpp
 
