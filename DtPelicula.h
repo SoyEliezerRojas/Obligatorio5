@@ -9,13 +9,13 @@ private:
     string titulo;
     string sinopsis;
     string poster;
-    float PuntajePromedio;
+    float puntajePromedio;
 public:
     DtPelicula();
     DtPelicula(string, string, string, float);
-    string gettitulo();
-    string getsinopsis();
-    string getposter();
+    string getTitulo();
+    string getSinopsis();
+    string getPoster();
     float getPuntajePromedio();
     ~DtPelicula();
     friend ostream& operator << (ostream&, const DtPelicula&);

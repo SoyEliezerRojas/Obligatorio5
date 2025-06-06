@@ -1,6 +1,5 @@
 @echo off
-call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-cl.exe /EHsc /W4 /std:c++17 /Fe:programa.exe ^
+g++ -o programa.exe ^
     main.cpp ^
     Fabrica.cpp ^
     CIniciarSesion.cpp ^
@@ -12,6 +11,9 @@ cl.exe /EHsc /W4 /std:c++17 /Fe:programa.exe ^
     Puntaje.cpp ^
     Pelicula.cpp ^
     ManejadorUsuario.cpp ^
+    ManejadorFuncion.cpp ^
+    ManejadorCine.cpp ^
+    ManejadorPelicula.cpp ^
     Funcion.cpp ^
     DtSala.cpp ^
     DtReserva.cpp ^
@@ -28,4 +30,5 @@ cl.exe /EHsc /W4 /std:c++17 /Fe:programa.exe ^
     Controlador.cpp ^
     Comentario.cpp ^
     Cine.cpp ^
-    CAltaUsuario.cpp 
+    CAltaUsuario.cpp ^
+    CAltaFuncion.cpp 

@@ -1,16 +1,16 @@
 #include "Sala.h"
 
 Sala::Sala(){}
-Sala::Sala(int sala, int cap){
-    this->sala = sala;
+Sala::Sala(int id, int cap){
+    this->id = id;
     this->capacidad = cap;
 }
 
-int Sala::getSala(){
-    return this->sala;
+int Sala::getId(){
+    return this->id;
 }
-void Sala::setSala(int sala){
-    this->sala = sala;
+void Sala::setId(int id){
+    this->id = id;
 }
 
 int Sala::getCapacidad(){
@@ -20,4 +20,13 @@ int Sala::getCapacidad(){
 void Sala::setCapacidad(int cap){
     this->capacidad = cap;
 }
+
+void Sala::agregarFuncion(Funcion* funcion) {
+    this->funciones.push_back(funcion);
+}
+
+list<Funcion*> Sala::getFunciones() {
+    return this->funciones;
+}
+
 Sala::~Sala(){}

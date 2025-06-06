@@ -2,6 +2,7 @@
 #define PELICULA_H
 #include<iostream>
 #include<string>
+#include "DtPelicula.h"
 
 using namespace std;
 
@@ -25,6 +26,8 @@ public:
 
     string getPoster();
     void setPoster(string);
+    
+    DtPelicula getDtPelicula();
     ~Pelicula();
 };
 

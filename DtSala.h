@@ -2,25 +2,20 @@
 #define DTSALA_H
 
 #include <string>
-#include <map>
-#include <list>
 #include <iostream>
-#include "DtFuncion.h"  // NECESARIO para que DtFuncion sea conocido
 
 using namespace std;
 
 class DtSala {
 private:
-    int sala;
+    int id;
     int capacidad;
-    map<string, DtFuncion*> funciones;
 
 public:
     DtSala();
-    DtSala(int sala, int capacidad);
-    int getSala();
+    DtSala(int id, int capacidad);
+    int getId();
     int getCapacidad();
-    list<DtFuncion*> getDtFuncion();  // Asumido como getter de funciones
     ~DtSala();
 
     friend ostream& operator <<(ostream&, const DtSala&);

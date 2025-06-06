@@ -44,4 +44,8 @@ void Pelicula::setPoster(string poster){
     this->poster = poster;
 }
 
+DtPelicula Pelicula::getDtPelicula() {
+    return DtPelicula(this->titulo, this->sinopsis, this->poster, this->puntajeProm);
+}
+
 Pelicula::~Pelicula() {}

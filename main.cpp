@@ -5,7 +5,14 @@
 #include "ICAltaUsuario.h"
 #include "ICAltaPelicula.h"
 #include "ICAltaCine.h"
+#include "ICAltaFuncion.h"
 #include "DtDireccion.h"
+#include "DtPelicula.h"
+#include "DtCine.h"
+#include "DtSala.h"
+#include "DtFuncion.h"
+#include "DtFecha.h"
+#include "DtHorario.h"
 #include "ManejadorCine.h"
 using namespace std;
 
@@ -15,6 +22,7 @@ ICIniciarSesion* iIniciarSesion;
 ICCerrarSesion* iCerrarSesion;
 ICAltaPelicula* iAltaPelicula;
 ICAltaCine* iAltaCine;
+ICAltaFuncion* iAltaFuncion;
 
 void altaUsuario(){
     system("clear");
@@ -133,6 +141,86 @@ void altaCine() {
     cout << "Cantidad de salas: " << cantSalas << endl;
 }
 
+void altaFuncion() {
+    system("clear");
+    cout << "_" << endl;
+    cout << "_A L T A  D E  F U N C I O N_" << endl;
+
+    // Listar películas disponibles
+    list<DtPelicula> peliculas = iAltaFuncion->listarPeliculas();
+    if (peliculas.empty()) {
+        cout << "No hay películas registradas en el sistema." << endl;
+        return;
+    }
+
+    cout << "PELÍCULAS DISPONIBLES:" << endl;
+    for (list<DtPelicula>::iterator it = peliculas.begin(); it != peliculas.end(); ++it) {
+        cout << "- " << it->getTitulo() << endl;
+    }
+
+    // Seleccionar película
+    string titulo;
+    cout << endl << "Ingrese el título de la película: ";
+    cin.ignore();
+    getline(cin, titulo);
+    iAltaFuncion->selectPeli(titulo);
+
+    // Listar cines disponibles
+    list<DtCine> cines = iAltaFuncion->listarCines();
+    if (cines.empty()) {
+        cout << "No hay cines registrados en el sistema." << endl;
+        return;
+    }
+
+    cout << endl << "CINES DISPONIBLES:" << endl;
+    for (list<DtCine>::iterator it = cines.begin(); it != cines.end(); ++it) {
+        cout << "ID: " << it->getId() << " - Dirección: " << it->getDireccion().getCalle() 
+             << " " << it->getDireccion().getNumero() << endl;
+    }
+
+    // Seleccionar cine
+    string idCine;
+    cout << endl << "Ingrese el ID del cine: ";
+    cin >> idCine;
+    iAltaFuncion->selectCine(idCine);
+
+    // Listar salas del cine
+    list<DtSala> salas = iAltaFuncion->listarSalas();
+    if (salas.empty()) {
+        cout << "No hay salas disponibles en este cine." << endl;
+        return;
+    }
+
+    cout << endl << "SALAS DISPONIBLES:" << endl;
+    for (list<DtSala>::iterator it = salas.begin(); it != salas.end(); ++it) {
+        cout << "ID: " << it->getId() << " - Capacidad: " << it->getCapacidad() << endl;
+    }
+
+    // Seleccionar sala
+    int idSala;
+    cout << endl << "Ingrese el ID de la sala: ";
+    cin >> idSala;
+    iAltaFuncion->selectSala(idSala);
+
+    // Ingresar datos de la función
+    int idFuncion;
+    string horaInicio;
+    int dia, mes, anio;
+    
+    cout << endl << "DATOS DE LA FUNCIÓN" << endl;
+    cout << "ID: ";
+    cin >> idFuncion;
+    cout << "Hora de inicio (HH:MM): ";
+    cin >> horaInicio;
+    cout << "Fecha (DD MM AAAA): ";
+    cin >> dia >> mes >> anio;
+
+    DtFecha fecha(dia, mes, anio);
+    iAltaFuncion->altaFuncion(idFuncion, horaInicio, fecha);
+    
+    cout << endl << "FUNCIÓN CREADA EXITOSAMENTE" << endl;
+}
+
 void menu();
 
 int main() {
@@ -145,6 +233,7 @@ int main() {
     iAltaUsuario = fabrica->getICAltaUsuario();
     iAltaPelicula = fabrica->getICAltaPelicula();
     iAltaCine = fabrica->getICAltaCine();
+    iAltaFuncion = fabrica->getICAltaFuncion();
     
     int opcion;
     menu();
@@ -161,7 +250,7 @@ int main() {
 				break;
 			case 5: altaCine();
 				break;
-			case 6: //altaFuncion();
+			case 6: altaFuncion();
 				break;
             case 7: //crearReserva();
                 break;

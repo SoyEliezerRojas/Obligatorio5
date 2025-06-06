@@ -9,7 +9,7 @@ DtCine::DtCine(int id, DtDireccion dir) {
     this->direccion = dir;
 }
 
-int DtCine::getid() {
+int DtCine::getId() {
     return this->id;
 }
 

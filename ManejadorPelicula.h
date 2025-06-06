@@ -10,13 +10,14 @@ using namespace std;
 class ManejadorPelicula {
 private:
     static ManejadorPelicula* instancia;
-    vector<Pelicula*> peliculas;
     ManejadorPelicula() {}
 
 public:
+    vector<Pelicula*> peliculas;
     static ManejadorPelicula* getInstancia();
     void agregarPelicula(Pelicula* pelicula);
     Pelicula* buscarPelicula(string titulo);
+    vector<Pelicula*>& getPeliculas() { return peliculas; }
     ~ManejadorPelicula();
 };
 

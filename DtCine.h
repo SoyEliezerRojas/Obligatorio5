@@ -16,7 +16,7 @@ private:
 public:
     DtCine();
     DtCine(int, DtDireccion);
-    int getid();
+    int getId();
     DtDireccion getDireccion();
     ~DtCine();
 

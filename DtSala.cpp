@@ -2,31 +2,23 @@
 
 DtSala::DtSala() {}
 
-DtSala::DtSala(int sala, int cap) {
-    this->sala = sala;
+DtSala::DtSala(int id, int cap) {
+    this->id = id;
     this->capacidad = cap;
 }
 
-int DtSala::getSala() {
-    return this->sala;
+int DtSala::getId() {
+    return this->id;
 }
 
 int DtSala::getCapacidad() {
     return this->capacidad;
 }
 
-list<DtFuncion*> DtSala::getDtFuncion() {
-    list<DtFuncion*> lista;
-    for (auto& it : funciones) {
-        lista.push_back(it.second);
-    }
-    return lista;
-}
-
 DtSala::~DtSala() {}
 
 ostream& operator <<(ostream& salida, const DtSala& dts) {
-    salida << "Sala: " << dts.sala << "\n";
+    salida << "Sala: " << dts.id << "\n";
     salida << "Capacidad: " << dts.capacidad << "\n";
     return salida;
 }

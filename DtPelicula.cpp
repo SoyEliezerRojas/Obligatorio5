@@ -1,29 +1,36 @@
 #include "DtPelicula.h"
+
 DtPelicula::DtPelicula(){}
-DtPelicula::DtPelicula(string titulo, string sinopsis,string poster,float PuntajePromedio){
-	this->titulo=titulo;
-	this->sinopsis=sinopsis;
-	this->poster=poster;
-	this->PuntajePromedio=PuntajePromedio;
+
+DtPelicula::DtPelicula(string titulo, string sinopsis, string poster, float puntajePromedio){
+	this->titulo = titulo;
+	this->sinopsis = sinopsis;
+	this->poster = poster;
+	this->puntajePromedio = puntajePromedio;
 }
-string DtPelicula::gettitulo(){
+
+string DtPelicula::getTitulo() {
 	return this->titulo;
 }
-string DtPelicula::getsinopsis(){
+
+string DtPelicula::getSinopsis() {
 	return this->sinopsis;
 }
-string DtPelicula::getposter(){
+
+string DtPelicula::getPoster() {
 	return this->poster;
 }
-float DtPelicula::getPuntajePromedio(){
-	return this->PuntajePromedio;
+
+float DtPelicula::getPuntajePromedio() {
+	return this->puntajePromedio;
 }
+
 DtPelicula::~DtPelicula(){}
 
-ostream& operator <<(ostream& salida, const DtPelicula& dtp){
-	cout << "Titulo: " << dtp.titulo << "\n" 
-		"Sinopsis: " << dtp.sinopsis << "\n"
-		"poster: " << dtp.poster << " \n"
-		"Puntaje Promedio: " << dtp.PuntajePromedio << " puntos\n"<<endl;
+ostream& operator << (ostream& salida, const DtPelicula& dtPelicula){
+	cout << "Título: " << dtPelicula.titulo << endl;
+	cout << "Sinopsis: " << dtPelicula.sinopsis << endl;
+	cout << "Poster: " << dtPelicula.poster << endl;
+	cout << "Puntaje promedio: " << dtPelicula.puntajePromedio << endl;
 	return salida;
 }

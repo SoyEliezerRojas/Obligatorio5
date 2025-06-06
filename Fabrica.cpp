@@ -4,6 +4,7 @@
 #include "CAltaUsuario.h"
 #include "CAltaPelicula.h"
 #include "CAltaCine.h"
+#include "CAltaFuncion.h"
 
 Fabrica* Fabrica::instancia = nullptr;
 
@@ -34,6 +35,10 @@ ICAltaPelicula* Fabrica::getICAltaPelicula() {
 
 ICAltaCine* Fabrica::getICAltaCine() {
     return new CAltaCine();
+}
+
+ICAltaFuncion* Fabrica::getICAltaFuncion() {
+    return new CAltaFuncion();
 }
 
 Fabrica::~Fabrica() {

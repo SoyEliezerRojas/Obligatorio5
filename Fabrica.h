@@ -6,6 +6,7 @@
 #include "ICAltaUsuario.h"
 #include "ICAltaPelicula.h"
 #include "ICAltaCine.h"
+#include "ICAltaFuncion.h"
 
 class Fabrica {
 private:
@@ -19,6 +20,7 @@ public:
     ICAltaUsuario* getICAltaUsuario();
     ICAltaPelicula* getICAltaPelicula();
     ICAltaCine* getICAltaCine();
+    ICAltaFuncion* getICAltaFuncion();
     ~Fabrica();
 };
 
