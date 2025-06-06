@@ -1,23 +1,15 @@
 #include "CCerrarSesion.h"
-
-CCerrarSesion* CCerrarSesion::instancia = nullptr;
+#include "Sesion.h"
 
 CCerrarSesion::CCerrarSesion() {}
 
-CCerrarSesion* CCerrarSesion::getInstancia() {
-    if (instancia == nullptr) {
-        instancia = new CCerrarSesion();
+bool CCerrarSesion::cerrarSesion() {
+    Sesion* sesion = Sesion::getInstancia();
+    if (sesion->getUsuario() != NULL) {
+        sesion->setUsuario(NULL);
+        return true;
     }
-    return instancia;
+    return false;
 }
 
-void CCerrarSesion::cerrarSesion() {
-    Sesion::getInstancia()->cerrarSesion();
-}
-
-CCerrarSesion::~CCerrarSesion() {
-    if (instancia != nullptr) {
-        delete instancia;
-        instancia = nullptr;
-    }
-}
+CCerrarSesion::~CCerrarSesion() {}

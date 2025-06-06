@@ -8,14 +8,15 @@
 using namespace std;
 
 class CIniciarSesion : public ICIniciarSesion {
-private:
-    static CIniciarSesion* instancia;
-    CIniciarSesion();
-
 public:
-    static CIniciarSesion* getInstancia();
+    CIniciarSesion();
+    void ingresarNick(string nick);
+    bool verificarPass(string pass);
+    void iniciarSesion();
     bool iniciarSesion(string& nickname, string& password);
     ~CIniciarSesion();
+private:
+    string nickname;
 };
 
 #endif // CINICIARSESION_H

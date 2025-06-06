@@ -3,17 +3,19 @@
 #include "ICIniciarSesion.h"
 #include "ICCerrarSesion.h"
 #include "ICAltaUsuario.h"
+#include "ICAltaPelicula.h"
 using namespace std;
 
 Fabrica* fabrica;
 ICAltaUsuario* iAltaUsuario;
 ICIniciarSesion* iIniciarSesion;
 ICCerrarSesion* iCerrarSesion;
+ICAltaPelicula* iAltaPelicula;
 
 void altaUsuario(){
     system("clear");
 	cout <<"_" <<endl;
-	cout <<"_A L T AD E_ U S U A R I O_"<< endl;
+	cout <<"_A L T A  D E  U S U A R I O_"<< endl;
     string nickname, contrasenia, url;
     int aux;
     cout << "NICKNAME: ";
@@ -31,6 +33,58 @@ void altaUsuario(){
     iAltaUsuario->altaUsuario(nickname, contrasenia, url);
 }
 
+void iniciarSesion() {
+    system("clear");
+    cout <<"_" <<endl;
+    cout <<"_I N I C I A R  S E S I O N_"<< endl;
+    string nickname, contrasenia;
+    cout << "NICKNAME: ";
+    cin >> nickname;
+    cout << endl << "PASSWORD: ";
+    cin >> contrasenia;
+    
+    if(iIniciarSesion->iniciarSesion(nickname, contrasenia)) {
+        cout << endl << "SESION INICIADA CORRECTAMENTE" << endl;
+    } else {
+        cout << endl << "ERROR AL INICIAR SESION" << endl;
+    }
+}
+
+void cerrarSesion() {
+    system("clear");
+    cout <<"_" <<endl;
+    cout <<"_C E R R A R  S E S I O N_"<< endl;
+    
+    if(iCerrarSesion->cerrarSesion()) {
+        cout << endl << "SESION CERRADA CORRECTAMENTE" << endl;
+    } else {
+        cout << endl << "ERROR: NO HAY SESION INICIADA" << endl;
+    }
+}
+
+void altaPelicula() {
+    system("clear");
+    cout <<"_" <<endl;
+    cout <<"_A L T A  D E  P E L I C U L A_"<< endl;
+    string titulo, sinopsis, url;
+    
+    cout << "TITULO: ";
+    cin.ignore(); // Clear the buffer
+    getline(cin, titulo);
+    
+    cout << endl << "SINOPSIS: ";
+    getline(cin, sinopsis);
+    
+    cout << endl << "URL DEL POSTER: ";
+    getline(cin, url);
+    
+    if(iAltaPelicula->altaPelicula(titulo, sinopsis, url)) {
+        cout << endl << "PELICULA REGISTRADA CORRECTAMENTE" << endl;
+    } else {
+        cout << endl << "ERROR: YA EXISTE UNA PELICULA CON ESE TITULO" << endl;
+    }
+}
+
 void menu();
 
 int main() {
@@ -41,18 +95,19 @@ int main() {
     iIniciarSesion = fabrica->getICIniciarSesion();
     iCerrarSesion = fabrica->getICCerrarSesion();
     iAltaUsuario = fabrica->getICAltaUsuario();
+    iAltaPelicula = fabrica->getICAltaPelicula();
     int opcion;
     menu();
     cin>> opcion;
     while(opcion != 10){
 		switch(opcion){
-			case 1: //iniciarSesion();
+			case 1: iniciarSesion();
 				break;
-			case 2: //cerrarSesion();
+			case 2: cerrarSesion();
 				break;
 			case 3: altaUsuario();
 				break;
-			case 4: //altaPelicula();
+			case 4: altaPelicula();
 				break;
 			case 5: //altaCine();
 				break;
@@ -66,6 +121,7 @@ int main() {
                 break;
             case 10: system("exit");
 				cout << "SALIENDO..." << endl;
+				break;
 			default:
 				cout << "OPCIÓN INCORRECTA" << endl;
 		}
@@ -74,28 +130,7 @@ int main() {
 		menu();
 		cin >> opcion;
     }
-
-    
-    // Obtener las interfaces a través de la Fabrica
-    ICIniciarSesion* iIniciarSesion = fabrica->getICIniciarSesion();
-    ICCerrarSesion* iCerrarSesion = fabrica->getICCerrarSesion();
-    
-    
-
-    // Intentar iniciar sesión
-    string nick = "nick";
-    string pass = "password123";
-    if (iIniciarSesion->iniciarSesion(nick, pass)) {
-        cout << "Sesión iniciada correctamente" << endl;
-        
-        // Cerrar sesión
-        iCerrarSesion->cerrarSesion();
-        cout << "Sesión cerrada" << endl;
-    } else {
-        cout << "Error al iniciar sesión" << endl;
-    }
-
-
+    return 0;
 }
 
 void menu(){

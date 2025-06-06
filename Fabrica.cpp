@@ -2,6 +2,7 @@
 #include "CIniciarSesion.h"
 #include "CCerrarSesion.h"
 #include "CAltaUsuario.h"
+#include "CAltaPelicula.h"
 
 Fabrica* Fabrica::instancia = nullptr;
 
@@ -15,15 +16,19 @@ Fabrica* Fabrica::getInstancia() {
 }
 
 ICIniciarSesion* Fabrica::getICIniciarSesion() {
-    return CIniciarSesion::getInstancia();
+    return new CIniciarSesion();
 }
 
 ICCerrarSesion* Fabrica::getICCerrarSesion() {
-    return CCerrarSesion::getInstancia();
+    return new CCerrarSesion();
 }
 
 ICAltaUsuario* Fabrica::getICAltaUsuario() {
     return new CAltaUsuario;
+}
+
+ICAltaPelicula* Fabrica::getICAltaPelicula() {
+    return new CAltaPelicula();
 }
 
 Fabrica::~Fabrica() {

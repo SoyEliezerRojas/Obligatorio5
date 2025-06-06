@@ -21,8 +21,11 @@ list<Usuario*> ManejadorUsuario::getUsuarios(){
 }
 
 Usuario* ManejadorUsuario::buscarUsuario(string usuario){
-  map<string,Usuario*>::iterator it = this->usuarios.find(usuario);
-  return it->second;
+    map<string,Usuario*>::iterator it = this->usuarios.find(usuario);
+    if (it != this->usuarios.end()) {
+        return it->second;
+    }
+    return NULL;
 }
 
 void ManejadorUsuario::agregarUsuario(Usuario* usuario){

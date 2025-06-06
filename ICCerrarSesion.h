@@ -3,7 +3,7 @@
 
 class ICCerrarSesion {
 public:
-    virtual void cerrarSesion() = 0;
+    virtual bool cerrarSesion() = 0;
     virtual ~ICCerrarSesion() {}
 };
 
