@@ -1,12 +1,13 @@
 #ifndef FABRICA_H
 #define FABRICA_H
 
-#include "ICIniciarSesion.h"
-#include "ICCerrarSesion.h"
-#include "ICAltaUsuario.h"
-#include "ICAltaPelicula.h"
 #include "ICAltaCine.h"
 #include "ICAltaFuncion.h"
+#include "ICAltaPelicula.h"
+#include "ICCerrarSesion.h"
+#include "ICIniciarSesion.h"
+#include "ICPuntuarPelicula.h"
+#include "ICAltaUsuario.h"
 
 class Fabrica {
 private:
@@ -15,12 +16,13 @@ private:
 
 public:
     static Fabrica* getInstancia();
-    ICIniciarSesion* getICIniciarSesion();
-    ICCerrarSesion* getICCerrarSesion();
-    ICAltaUsuario* getICAltaUsuario();
-    ICAltaPelicula* getICAltaPelicula();
     ICAltaCine* getICAltaCine();
     ICAltaFuncion* getICAltaFuncion();
+    ICAltaPelicula* getICAltaPelicula();
+    ICCerrarSesion* getICCerrarSesion();
+    ICIniciarSesion* getICIniciarSesion();
+    ICPuntuarPelicula* getICPuntuarPelicula();
+    ICAltaUsuario* getICAltaUsuario();
     ~Fabrica();
 };
 

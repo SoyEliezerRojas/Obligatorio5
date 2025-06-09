@@ -6,6 +6,7 @@
 #include "ICAltaPelicula.h"
 #include "ICAltaCine.h"
 #include "ICAltaFuncion.h"
+#include "ICPuntuarPelicula.h"
 #include "DtDireccion.h"
 #include "DtPelicula.h"
 #include "DtCine.h"
@@ -23,6 +24,7 @@ ICCerrarSesion* iCerrarSesion;
 ICAltaPelicula* iAltaPelicula;
 ICAltaCine* iAltaCine;
 ICAltaFuncion* iAltaFuncion;
+ICPuntuarPelicula* iPuntuarPelicula;
 
 void altaUsuario(){
     system("clear");
@@ -221,6 +223,47 @@ void altaFuncion() {
     cout << endl << "FUNCIÓN CREADA EXITOSAMENTE" << endl;
 }
 
+void puntuarPelicula() {
+    system("clear");
+    cout << "_" << endl;
+    cout << "_P U N T U A R  P E L I C U L A_" << endl;
+
+    string titulo;
+    int puntaje;
+
+    cout << "TITULO DE LA PELICULA: ";
+    cin.ignore();
+    getline(cin, titulo);
+
+    try {
+        iPuntuarPelicula->ingresarPelicula(titulo);
+
+        cout << "PUNTAJE (1-5): ";
+        cin >> puntaje;
+
+        if (puntaje < 1 || puntaje > 5) {
+            cout << "ERROR: El puntaje debe estar entre 1 y 5" << endl;
+            return;
+        }
+
+        iPuntuarPelicula->ingresarPuntaje(puntaje);
+
+        cout << "¿DESEA CONFIRMAR EL PUNTAJE? (1: SI, 2: NO): ";
+        int confirmar;
+        cin >> confirmar;
+
+        if (confirmar == 1) {
+            iPuntuarPelicula->confirmarPuntaje();
+            cout << "PUNTAJE REGISTRADO CORRECTAMENTE" << endl;
+        } else {
+            iPuntuarPelicula->cancelarPuntaje();
+            cout << "OPERACION CANCELADA" << endl;
+        }
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
+    }
+}
+
 void menu();
 
 int main() {
@@ -234,11 +277,12 @@ int main() {
     iAltaPelicula = fabrica->getICAltaPelicula();
     iAltaCine = fabrica->getICAltaCine();
     iAltaFuncion = fabrica->getICAltaFuncion();
+    iPuntuarPelicula = fabrica->getICPuntuarPelicula();
     
     int opcion;
     menu();
     cin>> opcion;
-    while(opcion != 10){
+    while(opcion != 11){
 		switch(opcion){
 			case 1: iniciarSesion();
 				break;
@@ -258,9 +302,8 @@ int main() {
                 break;
             case 9: //eliminarPelicula();
                 break;
-            case 10: system("exit");
-				cout << "SALIENDO..." << endl;
-				break;
+            case 10: puntuarPelicula();
+                break;
 			default:
 				cout << "OPCIÓN INCORRECTA" << endl;
 		}
@@ -269,6 +312,8 @@ int main() {
 		menu();
 		cin >> opcion;
     }
+    
+    cout << "SALIENDO..." << endl;
     return 0;
 }
 
@@ -285,7 +330,8 @@ void menu(){
 		cout <<"7. Crear Reserva"<<endl;
         cout <<"8. Ver Reservas de Pelicula"<<endl;
         cout <<"9. Eliminar Pelicula"<<endl;
-        cout <<"10. Salir " <<endl;
+        cout <<"10. Puntuar Pelicula"<<endl;
+        cout <<"11. Salir " <<endl;
 		cout <<"_" <<endl;
 		cout << "OPCION: ";
 }

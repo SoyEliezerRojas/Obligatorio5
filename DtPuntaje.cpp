@@ -1,12 +1,21 @@
 #include "DtPuntaje.h"
 
-DtPuntaje::DtPuntaje(){}
-DtPuntaje::DtPuntaje(int pj){
-    this->puntaje = pj;
+DtPuntaje::DtPuntaje(float valor, string nickUsuario, string tituloPelicula) {
+    this->valor = valor;
+    this->nickUsuario = nickUsuario;
+    this->tituloPelicula = tituloPelicula;
 }
 
-int DtPuntaje::getPuntaje(){
-    return this->puntaje;
+float DtPuntaje::getValor() {
+    return this->valor;
 }
 
-DtPuntaje::~DtPuntaje(){}
+string DtPuntaje::getNickUsuario() {
+    return this->nickUsuario;
+}
+
+string DtPuntaje::getTituloPelicula() {
+    return this->tituloPelicula;
+}
+
+DtPuntaje::~DtPuntaje() {}

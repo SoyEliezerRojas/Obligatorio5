@@ -1,47 +1,59 @@
 #include "Pelicula.h"
-#include "Cine.h"
 #include <string>
+#include <stdexcept>
 using namespace std;
 
-Pelicula::Pelicula() {}
+Pelicula::Pelicula() {
+    this->puntajeProm = 0;
+}
 
-Pelicula::Pelicula(string tit, string sinopsis, float puntProm, string poster){
-    this->titulo = tit;
+Pelicula::Pelicula(string titulo, string sinopsis, float puntajeProm, string poster) {
+    this->titulo = titulo;
     this->sinopsis = sinopsis;
-    this->puntajeProm = puntProm;
+    this->puntajeProm = puntajeProm;
     this->poster = poster;
 }
 
-string Pelicula::getTitulo(){
+string Pelicula::getTitulo() {
     return this->titulo;
 }
 
-void Pelicula::setTit(string tit){
-    this->titulo = tit;
+void Pelicula::setTitulo(string titulo) {
+    this->titulo = titulo;
 }
 
-string Pelicula::getSinopsis(){
+string Pelicula::getSinopsis() {
     return this->sinopsis;
 }
 
-void Pelicula::setSinopsis(string sinopsis){
+void Pelicula::setSinopsis(string sinopsis) {
     this->sinopsis = sinopsis;
 }
 
-float Pelicula::getPuntajeProm(){
+float Pelicula::getPuntajeProm() {
     return this->puntajeProm;
 }
 
-void Pelicula::setPuntajeProm(float puntProm){
-    this->puntajeProm = puntProm;
+void Pelicula::setPuntajeProm(float puntajeProm) {
+    this->puntajeProm = puntajeProm;
 }
 
-string Pelicula::getPoster(){
+string Pelicula::getPoster() {
     return this->poster;
 }
 
-void Pelicula::setPoster(string poster){
+void Pelicula::setPoster(string poster) {
     this->poster = poster;
+}
+
+void Pelicula::agregarCine(Cine* cine) {
+    if (cine != NULL) {
+        this->cines.push_back(cine);
+    }
+}
+
+list<Cine*> Pelicula::getCines() {
+    return this->cines;
 }
 
 DtPelicula Pelicula::getDtPelicula() {

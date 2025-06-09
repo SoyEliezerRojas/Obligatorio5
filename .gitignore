@@ -1,0 +1,12 @@
+# Archivos compilados
+*.o
+*.obj
+mainCine
+
+# Archivos temporales
+*~
+.DS_Store
+
+# Archivos de IDE
+.vscode/
+.idea/ 

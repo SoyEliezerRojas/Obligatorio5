@@ -5,6 +5,7 @@
 #include "CAltaPelicula.h"
 #include "CAltaCine.h"
 #include "CAltaFuncion.h"
+#include "CPuntuarPelicula.h"
 
 Fabrica* Fabrica::instancia = nullptr;
 
@@ -41,9 +42,11 @@ ICAltaFuncion* Fabrica::getICAltaFuncion() {
     return new CAltaFuncion();
 }
 
+ICPuntuarPelicula* Fabrica::getICPuntuarPelicula() {
+    return new CPuntuarPelicula();
+}
+
 Fabrica::~Fabrica() {
-    if (instancia != nullptr) {
-        delete instancia;
-        instancia = nullptr;
-    }
+    // No hacemos nada aquí ya que la instancia se limpiará automáticamente
+    // cuando el programa termine
 }
