@@ -18,7 +18,7 @@ public:
     virtual void selectCine(string id) = 0;
     virtual list<DtSala> listarSalas() = 0;
     virtual void selectSala(int id) = 0;
-    virtual void altaFuncion(int id, string horaInicio, DtFecha fecha) = 0;
+    virtual void altaFuncion(string horaInicio, DtFecha fecha) = 0;
     virtual ~ICAltaFuncion() {}
 };
 

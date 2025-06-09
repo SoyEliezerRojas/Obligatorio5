@@ -78,14 +78,20 @@ void CAltaFuncion::selectSala(int id) {
     }
 }
 
-void CAltaFuncion::altaFuncion(int id, string horaInicio, DtFecha fecha) {
+void CAltaFuncion::altaFuncion(string horaInicio, DtFecha fecha) {
     if (this->peliculaSeleccionada != NULL && this->cineSeleccionado != NULL && this->salaSeleccionada != NULL) {
+        // Obtener el siguiente ID disponible
+        int id = ManejadorFuncion::getInstancia()->getNextId();
+        
         // Crear el DtHorario con hora inicio y fin (asumimos que cada función dura 2 horas)
         string horaFin = horaInicio; // TODO: calcular hora fin basado en hora inicio
         DtHorario horario(horaInicio, horaFin);
         
         // Crear nueva función con los datos proporcionados
         Funcion* f = new Funcion(id, fecha, horario);
+        
+        // Establecer la película en la función
+        f->setPelicula(this->peliculaSeleccionada);
         
         // Agregar la función a la sala
         this->salaSeleccionada->agregarFuncion(f);

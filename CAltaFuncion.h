@@ -29,7 +29,7 @@ public:
     void selectCine(string id);
     list<DtSala> listarSalas();
     void selectSala(int id);
-    void altaFuncion(int id, string horaInicio, DtFecha fecha);
+    void altaFuncion(string horaInicio, DtFecha fecha);
     ~CAltaFuncion();
 };
 

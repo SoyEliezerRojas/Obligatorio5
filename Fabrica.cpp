@@ -6,6 +6,7 @@
 #include "CAltaCine.h"
 #include "CAltaFuncion.h"
 #include "CPuntuarPelicula.h"
+#include "CCrearReserva.h"
 
 Fabrica* Fabrica::instancia = nullptr;
 
@@ -44,6 +45,10 @@ ICAltaFuncion* Fabrica::getICAltaFuncion() {
 
 ICPuntuarPelicula* Fabrica::getICPuntuarPelicula() {
     return new CPuntuarPelicula();
+}
+
+ICCrearReserva* Fabrica::getICCrearReserva() {
+    return new CCrearReserva();
 }
 
 Fabrica::~Fabrica() {

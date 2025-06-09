@@ -1,6 +1,8 @@
 #ifndef USUARIO_H
 #define USUARIO_H
 #include <string>
+#include <list>
+#include "Reserva.h"
 
 using namespace std;
 
@@ -9,6 +11,7 @@ private:
     string nickName;
     string pass;
     string urlFoto;
+    list<Reserva*> reservas;
 public:
     Usuario();
     Usuario(string,string,string);
@@ -18,7 +21,9 @@ public:
     void setPass(string);
     string getUrlFoto();
     void setUrl(string);
-     bool verificarPass(string& pass);
+    bool verificarPass(string& pass);
+    void agregarReserva(Reserva*);
+    list<Reserva*> getReservas();
     ~Usuario();
 };
 

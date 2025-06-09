@@ -8,6 +8,7 @@
 #include "ICIniciarSesion.h"
 #include "ICPuntuarPelicula.h"
 #include "ICAltaUsuario.h"
+#include "ICCrearReserva.h"
 
 class Fabrica {
 private:
@@ -23,6 +24,7 @@ public:
     ICIniciarSesion* getICIniciarSesion();
     ICPuntuarPelicula* getICPuntuarPelicula();
     ICAltaUsuario* getICAltaUsuario();
+    ICCrearReserva* getICCrearReserva();
     ~Fabrica();
 };
 

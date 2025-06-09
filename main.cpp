@@ -7,6 +7,7 @@
 #include "ICAltaCine.h"
 #include "ICAltaFuncion.h"
 #include "ICPuntuarPelicula.h"
+#include "ICCrearReserva.h"
 #include "DtDireccion.h"
 #include "DtPelicula.h"
 #include "DtCine.h"
@@ -25,6 +26,7 @@ ICAltaPelicula* iAltaPelicula;
 ICAltaCine* iAltaCine;
 ICAltaFuncion* iAltaFuncion;
 ICPuntuarPelicula* iPuntuarPelicula;
+ICCrearReserva* iCrearReserva;
 
 void altaUsuario(){
     system("clear");
@@ -205,20 +207,17 @@ void altaFuncion() {
     iAltaFuncion->selectSala(idSala);
 
     // Ingresar datos de la función
-    int idFuncion;
     string horaInicio;
     int dia, mes, anio;
     
     cout << endl << "DATOS DE LA FUNCIÓN" << endl;
-    cout << "ID: ";
-    cin >> idFuncion;
     cout << "Hora de inicio (HH:MM): ";
     cin >> horaInicio;
     cout << "Fecha (DD MM AAAA): ";
     cin >> dia >> mes >> anio;
 
     DtFecha fecha(dia, mes, anio);
-    iAltaFuncion->altaFuncion(idFuncion, horaInicio, fecha);
+    iAltaFuncion->altaFuncion(horaInicio, fecha);
     
     cout << endl << "FUNCIÓN CREADA EXITOSAMENTE" << endl;
 }
@@ -264,6 +263,95 @@ void puntuarPelicula() {
     }
 }
 
+void crearReserva() {
+    system("clear");
+    cout << "_" << endl;
+    cout << "_C R E A R  R E S E R V A_" << endl;
+
+    // Listar películas disponibles
+    list<DtPelicula> peliculas = iCrearReserva->listarPeliculas();
+    if (peliculas.empty()) {
+        cout << "No hay películas disponibles para reservar." << endl;
+        return;
+    }
+
+    cout << "PELÍCULAS DISPONIBLES:" << endl;
+    for (list<DtPelicula>::iterator it = peliculas.begin(); it != peliculas.end(); ++it) {
+        cout << "- " << it->getTitulo() << endl;
+    }
+
+    // Seleccionar película
+    string titulo;
+    cout << endl << "Ingrese el título de la película: ";
+    cin.ignore();
+    getline(cin, titulo);
+    iCrearReserva->selectPelicula(titulo);
+
+    // Listar funciones disponibles
+    list<DtFuncion> funciones = iCrearReserva->listarFunciones();
+    if (funciones.empty()) {
+        cout << "No hay funciones disponibles para esta película." << endl;
+        return;
+    }
+
+    cout << endl << "FUNCIONES DISPONIBLES:" << endl;
+    for (list<DtFuncion>::iterator it = funciones.begin(); it != funciones.end(); ++it) {
+        cout << "ID: " << it->getIdFun() << " - Fecha: " << it->getDiaFun().getDia() << "/" 
+             << it->getDiaFun().getMes() << "/" << it->getDiaFun().getAnio() 
+             << " - Hora: " << it->getHoraFun().getHoraIni() << endl;
+    }
+
+    // Seleccionar función
+    int idFuncion;
+    cout << endl << "Ingrese el ID de la función: ";
+    cin >> idFuncion;
+    iCrearReserva->selectFuncion(idFuncion);
+
+    // Ingresar cantidad de entradas
+    int cantEntradas;
+    cout << endl << "Cantidad de entradas: ";
+    cin >> cantEntradas;
+    iCrearReserva->ingresarCantidadEntradas(cantEntradas);
+
+    // Seleccionar forma de pago
+    cout << endl << "FORMA DE PAGO:" << endl;
+    cout << "1. Débito" << endl;
+    cout << "2. Crédito" << endl;
+    int opcionPago;
+    cout << "Seleccione una opción (1-2): ";
+    cin >> opcionPago;
+
+    if (opcionPago == 1) {
+        string banco;
+        cout << "Ingrese el banco: ";
+        cin.ignore();
+        getline(cin, banco);
+        iCrearReserva->seleccionarDebito(banco);
+    } else if (opcionPago == 2) {
+        string financiera;
+        float descuento;
+        cout << "Ingrese la financiera: ";
+        cin.ignore();
+        getline(cin, financiera);
+        cout << "Ingrese el porcentaje de descuento: ";
+        cin >> descuento;
+        iCrearReserva->seleccionarCredito(financiera, descuento);
+    }
+
+    // Confirmar reserva
+    cout << endl << "¿Desea confirmar la reserva? (1: SI, 2: NO): ";
+    int confirmar;
+    cin >> confirmar;
+
+    if (confirmar == 1) {
+        iCrearReserva->confirmarReserva();
+        cout << "RESERVA CREADA EXITOSAMENTE" << endl;
+    } else {
+        iCrearReserva->cancelarReserva();
+        cout << "OPERACIÓN CANCELADA" << endl;
+    }
+}
+
 void menu();
 
 int main() {
@@ -278,6 +366,7 @@ int main() {
     iAltaCine = fabrica->getICAltaCine();
     iAltaFuncion = fabrica->getICAltaFuncion();
     iPuntuarPelicula = fabrica->getICPuntuarPelicula();
+    iCrearReserva = fabrica->getICCrearReserva();
     
     int opcion;
     menu();
@@ -296,7 +385,7 @@ int main() {
 				break;
 			case 6: altaFuncion();
 				break;
-            case 7: //crearReserva();
+            case 7: crearReserva();
                 break;
             case 8: //verReservasPelicula();
                 break;

@@ -1,14 +1,20 @@
 #ifndef SALA_H
 #define SALA_H
+
 #include <iostream>
 #include <list>
-#include "Funcion.h"
+#include <string>
+
+using namespace std;
+
+// Forward declaration
+class Funcion;
 
 class Sala {
 private:
     int id;
     int capacidad;
-    list<Funcion*> funciones;
+    std::list<Funcion*> funciones;
 
 public:
     Sala();
@@ -17,10 +23,10 @@ public:
     void setId(int id);
 
     int getCapacidad();
-    void setCapacidad(int cap);
+    void setCapacidad(int capacidad);
 
     void agregarFuncion(Funcion* funcion);
-    list<Funcion*> getFunciones();
+    std::list<Funcion*> getFunciones();
 
     ~Sala();
 };

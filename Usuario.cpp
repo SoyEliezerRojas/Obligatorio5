@@ -14,7 +14,6 @@ bool Usuario::verificarPass(string& pass) {
     return this->pass == pass;
 }
 
-
 string Usuario::getNickName() {
     return this->nickName;
 }
@@ -39,4 +38,15 @@ void Usuario::setUrl(string url) {
     this->urlFoto = url;
 }
 
-Usuario::~Usuario() {}
+void Usuario::agregarReserva(Reserva* r) {
+    this->reservas.push_back(r);
+}
+
+list<Reserva*> Usuario::getReservas() {
+    return this->reservas;
+}
+
+Usuario::~Usuario() {
+    // No eliminamos las reservas ya que son manejadas por el manejador de reservas
+    this->reservas.clear();
+}

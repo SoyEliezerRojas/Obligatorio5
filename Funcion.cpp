@@ -3,12 +3,17 @@
 #include "DtHorario.h"
 #include "Pelicula.h"
 
-Funcion::Funcion() {}
+Funcion::Funcion() {
+    this->pelicula = NULL;
+    this->precio = 0;
+}
 
 Funcion::Funcion(int id, DtFecha fecha, DtHorario hora){
     this->idFun     = id;
     this->dia       = fecha;
     this->horario   = hora;
+    this->pelicula  = NULL;
+    this->precio    = 0;
 }
 
 int Funcion::getIdFun(){
@@ -34,4 +39,31 @@ void Funcion::setHorario(DtHorario hora){
     this->horario = hora;
 }
 
-Funcion::~Funcion() {}
+Pelicula* Funcion::getPelicula() {
+    return this->pelicula;
+}
+
+void Funcion::setPelicula(Pelicula* p) {
+    this->pelicula = p;
+}
+
+float Funcion::getPrecio() {
+    return this->precio;
+}
+
+void Funcion::setPrecio(float p) {
+    this->precio = p;
+}
+
+void Funcion::agregarReserva(Reserva* r) {
+    this->reservas.push_back(r);
+}
+
+list<Reserva*> Funcion::getReservas() {
+    return this->reservas;
+}
+
+Funcion::~Funcion() {
+    // No eliminamos las reservas ya que son manejadas por el usuario
+    this->reservas.clear();
+}

@@ -1,24 +1,30 @@
 #include "Sala.h"
+#include "Funcion.h"
 
-Sala::Sala(){}
-Sala::Sala(int id, int cap){
-    this->id = id;
-    this->capacidad = cap;
+Sala::Sala() {
+    this->id = 0;
+    this->capacidad = 0;
 }
 
-int Sala::getId(){
+Sala::Sala(int id, int capacidad) {
+    this->id = id;
+    this->capacidad = capacidad;
+}
+
+int Sala::getId() {
     return this->id;
 }
-void Sala::setId(int id){
+
+void Sala::setId(int id) {
     this->id = id;
 }
 
-int Sala::getCapacidad(){
+int Sala::getCapacidad() {
     return this->capacidad;
 }
 
-void Sala::setCapacidad(int cap){
-    this->capacidad = cap;
+void Sala::setCapacidad(int capacidad) {
+    this->capacidad = capacidad;
 }
 
 void Sala::agregarFuncion(Funcion* funcion) {
@@ -29,4 +35,7 @@ list<Funcion*> Sala::getFunciones() {
     return this->funciones;
 }
 
-Sala::~Sala(){}
+Sala::~Sala() {
+    // No eliminamos las funciones ya que son manejadas por el manejador de funciones
+    this->funciones.clear();
+}
