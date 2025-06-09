@@ -1,9 +1,11 @@
 #ifndef PUNTAJE_H
 #define PUNTAJE_H
 
-#include "Pelicula.h"
 #include "Usuario.h"
 #include "DtPuntaje.h"
+#include "Pelicula.h"
+
+using namespace std;
 
 class Puntaje {
     private:
@@ -12,6 +14,7 @@ class Puntaje {
         Usuario* usuario;
         
     public:
+        Puntaje();
         Puntaje(float puntaje, Pelicula* pelicula, Usuario* usuario);
         float getPuntaje();
         Pelicula* getPelicula();

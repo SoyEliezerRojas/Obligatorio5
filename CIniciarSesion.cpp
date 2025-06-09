@@ -1,6 +1,5 @@
 #include "CIniciarSesion.h"
 #include "ManejadorUsuario.h"
-#include "Sesion.h"
 
 CIniciarSesion::CIniciarSesion() {}
 
@@ -18,6 +17,7 @@ void CIniciarSesion::iniciarSesion() {
     Usuario* u = ManejadorUsuario::getInstancia()->buscarUsuario(nickname);
     if (u) {
         Sesion::getInstancia()->setUsuario(u);
+        ManejadorUsuario::getInstancia()->setUsuarioActual(u);
     }
 }
 

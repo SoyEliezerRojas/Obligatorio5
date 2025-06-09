@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include "Fabrica.h"
 #include "ICIniciarSesion.h"
 #include "ICCerrarSesion.h"
@@ -7,6 +8,7 @@
 #include "ICAltaCine.h"
 #include "ICAltaFuncion.h"
 #include "ICPuntuarPelicula.h"
+#include "ICComentarPelicula.h"
 #include "DtDireccion.h"
 #include "DtPelicula.h"
 #include "DtCine.h"
@@ -14,7 +16,9 @@
 #include "DtFuncion.h"
 #include "DtFecha.h"
 #include "DtHorario.h"
+#include "DtComentario.h"
 #include "ManejadorCine.h"
+#include "ManejadorUsuario.h"
 using namespace std;
 
 Fabrica* fabrica;
@@ -25,6 +29,7 @@ ICAltaPelicula* iAltaPelicula;
 ICAltaCine* iAltaCine;
 ICAltaFuncion* iAltaFuncion;
 ICPuntuarPelicula* iPuntuarPelicula;
+ICComentarPelicula* iComentarPelicula;
 
 void altaUsuario(){
     system("clear");
@@ -163,14 +168,24 @@ void altaFuncion() {
     // Seleccionar película
     string titulo;
     cout << endl << "Ingrese el título de la película: ";
-    cin.ignore();
+    cin.ignore(10000, '\n');
     getline(cin, titulo);
-    iAltaFuncion->selectPeli(titulo);
+    if(titulo.empty()) {
+        cout << "ERROR: El título no puede estar vacío" << endl;
+        return;
+    }
+    
+    try {
+        iAltaFuncion->selectPeli(titulo);
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
+        return;
+    }
 
     // Listar cines disponibles
     list<DtCine> cines = iAltaFuncion->listarCines();
     if (cines.empty()) {
-        cout << "No hay cines registrados en el sistema." << endl;
+        cout << "ERROR: No hay cines registrados en el sistema." << endl;
         return;
     }
 
@@ -184,12 +199,24 @@ void altaFuncion() {
     string idCine;
     cout << endl << "Ingrese el ID del cine: ";
     cin >> idCine;
-    iAltaFuncion->selectCine(idCine);
+    if(cin.fail()) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "ERROR: ID de cine inválido" << endl;
+        return;
+    }
+
+    try {
+        iAltaFuncion->selectCine(idCine);
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
+        return;
+    }
 
     // Listar salas del cine
     list<DtSala> salas = iAltaFuncion->listarSalas();
     if (salas.empty()) {
-        cout << "No hay salas disponibles en este cine." << endl;
+        cout << "ERROR: No hay salas disponibles en este cine." << endl;
         return;
     }
 
@@ -202,25 +229,61 @@ void altaFuncion() {
     int idSala;
     cout << endl << "Ingrese el ID de la sala: ";
     cin >> idSala;
-    iAltaFuncion->selectSala(idSala);
+    if(cin.fail()) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "ERROR: ID de sala inválido" << endl;
+        return;
+    }
+
+    try {
+        iAltaFuncion->selectSala(idSala);
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
+        return;
+    }
 
     // Ingresar datos de la función
-    int idFuncion;
-    string horaInicio;
-    int dia, mes, anio;
+    int idFuncion, hora, minutos, dia, mes, anio;
     
     cout << endl << "DATOS DE LA FUNCIÓN" << endl;
     cout << "ID: ";
     cin >> idFuncion;
-    cout << "Hora de inicio (HH:MM): ";
-    cin >> horaInicio;
+    if(cin.fail()) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "ERROR: ID de función inválido" << endl;
+        return;
+    }
+
+    cout << "Hora (HH MM): ";
+    cin >> hora >> minutos;
+    if(cin.fail() || hora < 0 || hora > 23 || minutos < 0 || minutos > 59) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "ERROR: Hora inválida" << endl;
+        return;
+    }
+
+    string horaInicio = (hora < 10 ? "0" : "") + to_string(hora) + ":" + 
+                       (minutos < 10 ? "0" : "") + to_string(minutos);
+
     cout << "Fecha (DD MM AAAA): ";
     cin >> dia >> mes >> anio;
+    if(cin.fail() || dia < 1 || dia > 31 || mes < 1 || mes > 12) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "ERROR: Fecha inválida" << endl;
+        return;
+    }
 
-    DtFecha fecha(dia, mes, anio);
-    iAltaFuncion->altaFuncion(idFuncion, horaInicio, fecha);
-    
-    cout << endl << "FUNCIÓN CREADA EXITOSAMENTE" << endl;
+    try {
+        DtFecha fecha(dia, mes, anio);
+        iAltaFuncion->altaFuncion(idFuncion, horaInicio, fecha);
+        cout << endl << "FUNCIÓN CREADA EXITOSAMENTE" << endl;
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
+    }
 }
 
 void puntuarPelicula() {
@@ -264,6 +327,81 @@ void puntuarPelicula() {
     }
 }
 
+void comentarPelicula() {
+    system("clear");
+    cout << "_" << endl;
+    cout << "_C O M E N T A R  P E L I C U L A_" << endl;
+
+    // Verificar si hay usuario logueado
+    if (!iComentarPelicula->hayUsuarioLogueado()) {
+        cout << "ERROR: Debe iniciar sesión para comentar películas" << endl;
+        return;
+    }
+
+    try {
+        // Listar películas
+        cout << "PELÍCULAS DISPONIBLES:" << endl;
+        iComentarPelicula->listarPeliculas();
+
+        // Seleccionar película
+        string titulo;
+        cout << endl << "Ingrese el título de la película: ";
+        cin.ignore(10000, '\n');
+        getline(cin, titulo);
+        iComentarPelicula->selectPeli(titulo);
+
+        char continuar;
+        do {
+            cout << endl << "¿Qué desea hacer?" << endl;
+            cout << "1. Agregar nuevo comentario" << endl;
+            cout << "2. Responder a un comentario" << endl;
+            cout << "3. Volver al menú principal" << endl;
+            cout << "Opción: ";
+
+            int opcion;
+            cin >> opcion;
+            cin.ignore(10000, '\n');
+
+            string texto;
+            switch(opcion) {
+                case 1:
+                    cout << "Ingrese su comentario: ";
+                    getline(cin, texto);
+                    iComentarPelicula->comentar(texto);
+                    cout << "Comentario agregado exitosamente" << endl;
+                    break;
+
+                case 2:
+                    int idComentario;
+                    cout << "Ingrese el ID del comentario a responder: ";
+                    cin >> idComentario;
+                    cin.ignore(10000, '\n');
+                    cout << "Ingrese su respuesta: ";
+                    getline(cin, texto);
+                    iComentarPelicula->responder(idComentario, texto);
+                    cout << "Respuesta agregada exitosamente" << endl;
+                    break;
+
+                case 3:
+                    return;
+
+                default:
+                    cout << "Opción inválida" << endl;
+                    continue;
+            }
+
+            cout << endl << "¿Desea agregar otro comentario? (s/n): ";
+            cin >> continuar;
+            cin.ignore(10000, '\n');
+            system("clear");
+
+        } while (tolower(continuar) == 's');
+
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
+    }
+}
+
 void menu();
 
 int main() {
@@ -278,24 +416,26 @@ int main() {
     iAltaCine = fabrica->getICAltaCine();
     iAltaFuncion = fabrica->getICAltaFuncion();
     iPuntuarPelicula = fabrica->getICPuntuarPelicula();
+    iComentarPelicula = fabrica->getICComentarPelicula();
     
     int opcion;
     menu();
-    cin>> opcion;
-    while(opcion != 11){
-		switch(opcion){
-			case 1: iniciarSesion();
-				break;
-			case 2: cerrarSesion();
-				break;
-			case 3: altaUsuario();
-				break;
-			case 4: altaPelicula();
-				break;
-			case 5: altaCine();
-				break;
-			case 6: altaFuncion();
-				break;
+    cin >> opcion;
+    while(opcion != 12){
+        system("clear");
+        switch(opcion){
+            case 1: iniciarSesion();
+                break;
+            case 2: cerrarSesion();
+                break;
+            case 3: altaUsuario();
+                break;
+            case 4: altaPelicula();
+                break;
+            case 5: altaCine();
+                break;
+            case 6: altaFuncion();
+                break;
             case 7: //crearReserva();
                 break;
             case 8: //verReservasPelicula();
@@ -304,13 +444,22 @@ int main() {
                 break;
             case 10: puntuarPelicula();
                 break;
-			default:
-				cout << "OPCIÓN INCORRECTA" << endl;
-		}
-		system("sleep 5");
+            case 11: comentarPelicula();
+                break;
+            case 12: cout << "SALIENDO..." << endl;
+                break;
+            default:
+                cout << "OPCIÓN INCORRECTA" << endl;
+        }
+        
         system("clear");
-		menu();
-		cin >> opcion;
+        menu();
+        cin >> opcion;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            opcion = -1;
+        }
     }
     
     cout << "SALIENDO..." << endl;
@@ -318,20 +467,21 @@ int main() {
 }
 
 void menu(){
-		//system("clear");
-		cout <<"_" <<endl;
-		cout <<"M E N U  C I N E MA"<< endl;
-		cout <<"1. Iniciar Sesion"<<endl;
-		cout <<"2. Cerrar Sesion"<<endl;
-		cout <<"3. Alta Usuario"<<endl;
-		cout <<"4. Alta Pelicula"<<endl;
-		cout <<"5. Alta Cine"<<endl;
-		cout <<"6. Alta Funcion"<<endl;
-		cout <<"7. Crear Reserva"<<endl;
-        cout <<"8. Ver Reservas de Pelicula"<<endl;
-        cout <<"9. Eliminar Pelicula"<<endl;
-        cout <<"10. Puntuar Pelicula"<<endl;
-        cout <<"11. Salir " <<endl;
-		cout <<"_" <<endl;
-		cout << "OPCION: ";
+    //system("clear");
+    cout <<"_" <<endl;
+    cout <<"M E N U  C I N E MA"<< endl;
+    cout <<"1. Iniciar Sesion"<<endl;
+    cout <<"2. Cerrar Sesion"<<endl;
+    cout <<"3. Alta Usuario"<<endl;
+    cout <<"4. Alta Pelicula"<<endl;
+    cout <<"5. Alta Cine"<<endl;
+    cout <<"6. Alta Funcion"<<endl;
+    cout <<"7. Crear Reserva"<<endl;
+    cout <<"8. Ver Reservas de Pelicula"<<endl;
+    cout <<"9. Eliminar Pelicula"<<endl;
+    cout <<"10. Puntuar Pelicula"<<endl;
+    cout <<"11. Comentar Pelicula"<<endl;
+    cout <<"12. Salir " <<endl;
+    cout <<"_" <<endl;
+    cout << "OPCION: ";
 }

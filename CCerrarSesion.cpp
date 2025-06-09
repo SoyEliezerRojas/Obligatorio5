@@ -1,12 +1,13 @@
 #include "CCerrarSesion.h"
-#include "Sesion.h"
+#include "ManejadorUsuario.h"
 
 CCerrarSesion::CCerrarSesion() {}
 
 bool CCerrarSesion::cerrarSesion() {
-    Sesion* sesion = Sesion::getInstancia();
-    if (sesion->getUsuario() != NULL) {
-        sesion->setUsuario(NULL);
+    ManejadorUsuario* mu = ManejadorUsuario::getInstancia();
+    if (mu->getUsuarioActual() != nullptr) {
+        mu->setUsuarioActual(nullptr);
+        Sesion::getInstancia()->cerrarSesion();
         return true;
     }
     return false;

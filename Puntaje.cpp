@@ -1,4 +1,11 @@
 #include "Puntaje.h"
+#include "Pelicula.h"
+
+Puntaje::Puntaje() {
+    this->puntaje = 0;
+    this->pelicula = nullptr;
+    this->usuario = nullptr;
+}
 
 Puntaje::Puntaje(float puntaje, Pelicula* pelicula, Usuario* usuario) {
     this->puntaje = puntaje;

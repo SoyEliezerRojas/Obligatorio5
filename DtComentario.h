@@ -1,16 +1,28 @@
 #ifndef DTCOMENTARIO_H
 #define DTCOMENTARIO_H
 #include <string>
+#include <list>
 
 using namespace std;
 
-class DtComentario{
+class DtComentario {
 private:
-    string comentario;
+    int id;
+    string texto;
+    string nombreUsuario;
+    list<DtComentario> respuestas;
+
 public:
     DtComentario();
-    DtComentario(string);
-    string getComentario();
+    DtComentario(int id, string texto, string nombreUsuario);
+    
+    int getId();
+    string getTexto();
+    string getNombreUsuario();
+    list<DtComentario> getRespuestas();
+    
+    void agregarRespuesta(DtComentario respuesta);
+    
     ~DtComentario();
 };
 

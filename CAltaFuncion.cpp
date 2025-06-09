@@ -9,14 +9,7 @@ CAltaFuncion::CAltaFuncion() {
 
 list<DtPelicula> CAltaFuncion::listarPeliculas() {
     ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
-    list<DtPelicula> infoPeliculas;
-    
-    vector<Pelicula*> peliculas = mP->peliculas;
-    for(vector<Pelicula*>::iterator p = peliculas.begin(); p != peliculas.end(); ++p) {
-        DtPelicula dtP = (*p)->getDtPelicula();
-        infoPeliculas.push_back(dtP);
-    }
-    return infoPeliculas;
+    return mP->listarPeliculas();
 }
 
 void CAltaFuncion::selectPeli(string titulo) {
