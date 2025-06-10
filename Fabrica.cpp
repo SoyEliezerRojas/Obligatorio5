@@ -8,6 +8,7 @@
 #include "CPuntuarPelicula.h"
 #include "CCrearReserva.h"
 #include "CComentarPelicula.h"
+#include "CEliminarPelicula.h"
 
 Fabrica* Fabrica::instancia = nullptr;
 
@@ -54,6 +55,10 @@ ICCrearReserva* Fabrica::getICCrearReserva() {
 
 ICComentarPelicula* Fabrica::getICComentarPelicula() {
     return new CComentarPelicula();
+}
+
+ICEliminarPelicula* Fabrica::getICEliminarPelicula() {
+    return new CEliminarPelicula();
 }
 
 Fabrica::~Fabrica() {

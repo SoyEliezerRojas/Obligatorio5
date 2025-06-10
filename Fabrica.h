@@ -10,6 +10,7 @@
 #include "ICAltaUsuario.h"
 #include "ICCrearReserva.h"
 #include "ICComentarPelicula.h"
+#include "ICEliminarPelicula.h"
 
 class Fabrica {
 private:
@@ -27,6 +28,7 @@ public:
     ICAltaUsuario* getICAltaUsuario();
     ICCrearReserva* getICCrearReserva();
     ICComentarPelicula* getICComentarPelicula();
+    ICEliminarPelicula* getICEliminarPelicula();
     ~Fabrica();
 };
 
