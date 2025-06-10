@@ -33,6 +33,17 @@ Pelicula* ManejadorPelicula::obtenerPelicula(string titulo) {
     return buscarPelicula(titulo);
 }
 
+bool ManejadorPelicula::eliminarPelicula(string titulo) {
+    for (auto it = peliculas.begin(); it != peliculas.end(); ++it) {
+        if ((*it)->getTitulo() == titulo) {
+            delete *it;
+            peliculas.erase(it);
+            return true;
+        }
+    }
+    return false;
+}
+
 ManejadorPelicula::~ManejadorPelicula() {
     for (Pelicula* pelicula : peliculas) {
         delete pelicula;

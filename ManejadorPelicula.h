@@ -22,6 +22,7 @@ public:
     vector<Pelicula*>& getPeliculas() { return peliculas; }
     list<DtPelicula> listarPeliculas();
     Pelicula* obtenerPelicula(string titulo);
+    bool eliminarPelicula(string titulo);
     ~ManejadorPelicula();
 };
 

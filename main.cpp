@@ -8,6 +8,8 @@
 #include "ICAltaFuncion.h"
 #include "ICPuntuarPelicula.h"
 #include "ICCrearReserva.h"
+#include "ICComentarPelicula.h"
+#include "ICEliminarPelicula.h"
 #include "DtDireccion.h"
 #include "DtPelicula.h"
 #include "DtCine.h"
@@ -28,6 +30,7 @@ ICAltaFuncion* iAltaFuncion;
 ICPuntuarPelicula* iPuntuarPelicula;
 ICCrearReserva* iCrearReserva;
 ICComentarPelicula* iComentarPelicula;
+ICEliminarPelicula* iEliminarPelicula;
 
 void altaUsuario(){
     system("clear");
@@ -434,6 +437,34 @@ void crearReserva() {
     }
 }
 
+void eliminarPelicula() {
+    system("clear");
+    cout << "_" << endl;
+    cout << "_E L I M I N A R  P E L I C U L A_" << endl;
+
+    // Listar películas disponibles
+    list<DtPelicula> peliculas = iEliminarPelicula->listarPeliculas();
+    if (peliculas.empty()) {
+        cout << "No hay películas registradas en el sistema." << endl;
+        return;
+    }
+
+    cout << "PELÍCULAS DISPONIBLES:" << endl;
+    for (list<DtPelicula>::iterator it = peliculas.begin(); it != peliculas.end(); ++it) {
+        cout << "- " << it->getTitulo() << endl;
+    }
+    // Seleccionar película a eliminar
+    string titulo;
+    cout << endl << "Ingrese el título de la película a eliminar: ";
+    cin.ignore();
+    getline(cin, titulo);
+
+    // Intentar eliminar la película
+    if (iEliminarPelicula->eliminarPelicula(titulo)) {
+        cout << endl << "La película fue eliminada exitosamente." << endl;
+    }
+}
+
 void menu();
 
 int main() {
@@ -450,6 +481,7 @@ int main() {
     iPuntuarPelicula = fabrica->getICPuntuarPelicula();
     iComentarPelicula = fabrica->getICComentarPelicula();
     iCrearReserva = fabrica->getICCrearReserva();
+    iEliminarPelicula = fabrica->getICEliminarPelicula();
     
     int opcion;
     menu();
@@ -473,7 +505,7 @@ int main() {
                 break;
             case 8: //verReservasPelicula();
                 break;
-            case 9: //eliminarPelicula();
+            case 9: eliminarPelicula();
                 break;
             case 10: puntuarPelicula();
                 break;
