@@ -17,8 +17,6 @@
 #include "DtFecha.h"
 #include "DtHorario.h"
 #include "DtComentario.h"
-#include "ManejadorCine.h"
-#include "ManejadorUsuario.h"
 using namespace std;
 
 Fabrica* fabrica;
@@ -451,7 +449,7 @@ int main() {
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;
         }
-        
+        system("sleep 5");
         system("clear");
         menu();
         cin >> opcion;
