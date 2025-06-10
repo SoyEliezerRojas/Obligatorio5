@@ -11,7 +11,7 @@ list<DtPelicula> CAltaFuncion::listarPeliculas() {
     ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
     list<DtPelicula> infoPeliculas;
     
-    vector<Pelicula*> peliculas = mP->peliculas;
+    vector<Pelicula*>& peliculas = mP->getPeliculas();
     for(vector<Pelicula*>::iterator p = peliculas.begin(); p != peliculas.end(); ++p) {
         DtPelicula dtP = (*p)->getDtPelicula();
         infoPeliculas.push_back(dtP);

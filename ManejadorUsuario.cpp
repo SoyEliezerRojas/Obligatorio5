@@ -5,41 +5,58 @@ using namespace std;
 
 ManejadorUsuario* ManejadorUsuario::instancia = NULL;
 
-ManejadorUsuario::ManejadorUsuario(){}
+ManejadorUsuario::ManejadorUsuario() {
+    this->usuarioActual = nullptr;
+}
 
-ManejadorUsuario* ManejadorUsuario::getInstancia(){
-    if (instancia == NULL)
+ManejadorUsuario* ManejadorUsuario::getInstancia() {
+    if (instancia == NULL) {
         instancia = new ManejadorUsuario();
+    }
     return instancia;
 }
 
-list<Usuario*> ManejadorUsuario::getUsuarios(){
-    list<Usuario*> lstUsuarios;
-    for (map<string,Usuario*>::iterator it=this->usuarios.begin(); it!=usuarios.end(); ++it)
-        lstUsuarios.push_back(it->second);
-    return lstUsuarios;
-}
-
-Usuario* ManejadorUsuario::buscarUsuario(string usuario){
-    map<string,Usuario*>::iterator it = this->usuarios.find(usuario);
-    if (it != this->usuarios.end()) {
-        return it->second;
+list<Usuario*> ManejadorUsuario::getUsuarios() {
+    list<Usuario*> lista;
+    for (map<string,Usuario*>::iterator it = usuarios.begin(); it != usuarios.end(); ++it) {
+        lista.push_back(it->second);
     }
-    return NULL;
+    return lista;
 }
 
-void ManejadorUsuario::agregarUsuario(Usuario* usuario){
-    usuarios.insert(std::pair<string,Usuario*>(usuario->getNickName(),usuario));
+Usuario* ManejadorUsuario::buscarUsuario(string nickname) {
+    if (usuarios.find(nickname) != usuarios.end()) {
+        return usuarios[nickname];
+    }
+    return nullptr;
 }
 
-bool ManejadorUsuario::existeUsuario(string usuario){ 
-  map<string,Usuario*>::iterator it = this->usuarios.find(usuario);
-  return (it != this->usuarios.end());
+void ManejadorUsuario::agregarUsuario(Usuario* usuario) {
+    usuarios[usuario->getNickName()] = usuario;
 }
 
-void ManejadorUsuario::eliminarUsuario(string usuario){
-  map<string,Usuario*>::iterator it = this->usuarios.find(usuario);
-  this->usuarios.erase(it);
+bool ManejadorUsuario::existeUsuario(string nickname) {
+    return usuarios.find(nickname) != usuarios.end();
 }
 
-ManejadorUsuario::~ManejadorUsuario(){}
+void ManejadorUsuario::eliminarUsuario(string nickname) {
+    if (usuarios.find(nickname) != usuarios.end()) {
+        delete usuarios[nickname];
+        usuarios.erase(nickname);
+    }
+}
+
+Usuario* ManejadorUsuario::getUsuarioActual() {
+    return this->usuarioActual;
+}
+
+void ManejadorUsuario::setUsuarioActual(Usuario* usuario) {
+    this->usuarioActual = usuario;
+}
+
+ManejadorUsuario::~ManejadorUsuario() {
+    for (map<string,Usuario*>::iterator it = usuarios.begin(); it != usuarios.end(); ++it) {
+        delete it->second;
+    }
+    usuarios.clear();
+}

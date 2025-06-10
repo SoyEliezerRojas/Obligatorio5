@@ -13,16 +13,29 @@ void ManejadorPelicula::agregarPelicula(Pelicula* pelicula) {
 }
 
 Pelicula* ManejadorPelicula::buscarPelicula(string titulo) {
-    for (Pelicula* p : peliculas) {
-        if (p->getTitulo() == titulo)
-            return p;
+    for (Pelicula* pelicula : peliculas) {
+        if (pelicula->getTitulo() == titulo) {
+            return pelicula;
+        }
     }
-    return NULL;
+    return nullptr;
+}
+
+list<DtPelicula> ManejadorPelicula::listarPeliculas() {
+    list<DtPelicula> dtPeliculas;
+    for (Pelicula* pelicula : peliculas) {
+        dtPeliculas.push_back(DtPelicula(pelicula->getTitulo(), pelicula->getSinopsis(), pelicula->getPoster(), pelicula->getPuntajeProm()));
+    }
+    return dtPeliculas;
+}
+
+Pelicula* ManejadorPelicula::obtenerPelicula(string titulo) {
+    return buscarPelicula(titulo);
 }
 
 ManejadorPelicula::~ManejadorPelicula() {
-    for (Pelicula* p : peliculas) {
-        delete p;
+    for (Pelicula* pelicula : peliculas) {
+        delete pelicula;
     }
     peliculas.clear();
 }

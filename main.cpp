@@ -27,6 +27,7 @@ ICAltaCine* iAltaCine;
 ICAltaFuncion* iAltaFuncion;
 ICPuntuarPelicula* iPuntuarPelicula;
 ICCrearReserva* iCrearReserva;
+ICComentarPelicula* iComentarPelicula;
 
 void altaUsuario(){
     system("clear");
@@ -222,6 +223,81 @@ void altaFuncion() {
     cout << endl << "FUNCIÓN CREADA EXITOSAMENTE" << endl;
 }
 
+void comentarPelicula() {
+    system("clear");
+    cout << "_" << endl;
+    cout << "_C O M E N T A R  P E L I C U L A_" << endl;
+
+    // Verificar si hay usuario logueado
+    if (!iComentarPelicula->hayUsuarioLogueado()) {
+        cout << "ERROR: Debe iniciar sesión para comentar películas" << endl;
+        return;
+    }
+
+    try {
+        // Listar películas
+        cout << "PELÍCULAS DISPONIBLES:" << endl;
+        iComentarPelicula->listarPeliculas();
+
+        // Seleccionar película
+        string titulo;
+        cout << endl << "Ingrese el título de la película: ";
+        cin.ignore(10000, '\n');
+        getline(cin, titulo);
+        iComentarPelicula->selectPeli(titulo);
+
+        char continuar;
+        do {
+            cout << endl << "¿Qué desea hacer?" << endl;
+            cout << "1. Agregar nuevo comentario" << endl;
+            cout << "2. Responder a un comentario" << endl;
+            cout << "3. Volver al menú principal" << endl;
+            cout << "Opción: ";
+
+            int opcion;
+            cin >> opcion;
+            cin.ignore(10000, '\n');
+
+            string texto;
+            switch(opcion) {
+                case 1:
+                    cout << "Ingrese su comentario: ";
+                    getline(cin, texto);
+                    iComentarPelicula->comentar(texto);
+                    cout << "Comentario agregado exitosamente" << endl;
+                    break;
+
+                case 2:
+                    int idComentario;
+                    cout << "Ingrese el ID del comentario a responder: ";
+                    cin >> idComentario;
+                    cin.ignore(10000, '\n');
+                    cout << "Ingrese su respuesta: ";
+                    getline(cin, texto);
+                    iComentarPelicula->responder(idComentario, texto);
+                    cout << "Respuesta agregada exitosamente" << endl;
+                    break;
+
+                case 3:
+                    return;
+
+                default:
+                    cout << "Opción inválida" << endl;
+                    continue;
+            }
+
+            cout << endl << "¿Desea agregar otro comentario? (s/n): ";
+            cin >> continuar;
+            cin.ignore(10000, '\n');
+            system("clear");
+
+        } while (tolower(continuar) == 's');
+
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
+    }
+}
+
 void puntuarPelicula() {
     system("clear");
     cout << "_" << endl;
@@ -366,25 +442,27 @@ int main() {
     iAltaCine = fabrica->getICAltaCine();
     iAltaFuncion = fabrica->getICAltaFuncion();
     iPuntuarPelicula = fabrica->getICPuntuarPelicula();
+    iComentarPelicula = fabrica->getICComentarPelicula();
     iCrearReserva = fabrica->getICCrearReserva();
     
     int opcion;
     menu();
-    cin>> opcion;
-    while(opcion != 11){
-		switch(opcion){
-			case 1: iniciarSesion();
-				break;
-			case 2: cerrarSesion();
-				break;
-			case 3: altaUsuario();
-				break;
-			case 4: altaPelicula();
-				break;
-			case 5: altaCine();
-				break;
-			case 6: altaFuncion();
-				break;
+    cin >> opcion;
+    while(opcion != 12){
+        system("clear");
+        switch(opcion){
+            case 1: iniciarSesion();
+                break;
+            case 2: cerrarSesion();
+                break;
+            case 3: altaUsuario();
+                break;
+            case 4: altaPelicula();
+                break;
+            case 5: altaCine();
+                break;
+            case 6: altaFuncion();
+                break;
             case 7: crearReserva();
                 break;
             case 8: //verReservasPelicula();
@@ -393,13 +471,22 @@ int main() {
                 break;
             case 10: puntuarPelicula();
                 break;
-			default:
-				cout << "OPCIÓN INCORRECTA" << endl;
-		}
-		system("sleep 5");
+            case 11: comentarPelicula();
+                break;
+            case 12: cout << "SALIENDO..." << endl;
+                break;
+            default:
+                cout << "OPCIÓN INCORRECTA" << endl;
+        }
+        system("sleep 5");
         system("clear");
-		menu();
-		cin >> opcion;
+        menu();
+        cin >> opcion;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            opcion = -1;
+        }
     }
     
     cout << "SALIENDO..." << endl;
@@ -407,20 +494,21 @@ int main() {
 }
 
 void menu(){
-		//system("clear");
-		cout <<"_" <<endl;
-		cout <<"M E N U  C I N E MA"<< endl;
-		cout <<"1. Iniciar Sesion"<<endl;
-		cout <<"2. Cerrar Sesion"<<endl;
-		cout <<"3. Alta Usuario"<<endl;
-		cout <<"4. Alta Pelicula"<<endl;
-		cout <<"5. Alta Cine"<<endl;
-		cout <<"6. Alta Funcion"<<endl;
-		cout <<"7. Crear Reserva"<<endl;
-        cout <<"8. Ver Reservas de Pelicula"<<endl;
-        cout <<"9. Eliminar Pelicula"<<endl;
-        cout <<"10. Puntuar Pelicula"<<endl;
-        cout <<"11. Salir " <<endl;
-		cout <<"_" <<endl;
-		cout << "OPCION: ";
+    system("clear");
+    cout <<"_" <<endl;
+    cout <<"M E N U  C I N E MA"<< endl;
+    cout <<"1. Iniciar Sesion"<<endl;
+    cout <<"2. Cerrar Sesion"<<endl;
+    cout <<"3. Alta Usuario"<<endl;
+    cout <<"4. Alta Pelicula"<<endl;
+    cout <<"5. Alta Cine"<<endl;
+    cout <<"6. Alta Funcion"<<endl;
+    cout <<"7. Crear Reserva"<<endl;
+    cout <<"8. Ver Reservas de Pelicula"<<endl;
+    cout <<"9. Eliminar Pelicula"<<endl;
+    cout <<"10. Puntuar Pelicula"<<endl;
+    cout <<"11. Comentar Pelicula"<<endl;
+    cout <<"12. Salir " <<endl;
+    cout <<"_" <<endl;
+    cout << "OPCION: ";
 }

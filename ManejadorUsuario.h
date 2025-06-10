@@ -11,6 +11,7 @@ class ManejadorUsuario{
     private:
         static ManejadorUsuario* instancia;
         map<string,Usuario*> usuarios;
+        Usuario* usuarioActual;
         ManejadorUsuario();
     public:
         static ManejadorUsuario* getInstancia();
@@ -20,5 +21,7 @@ class ManejadorUsuario{
         Usuario* buscarUsuario(string);
         void eliminarUsuario(string);
         bool existeUsuario(string);
+        Usuario* getUsuarioActual();
+        void setUsuarioActual(Usuario* usuario);
 };
 #endif
