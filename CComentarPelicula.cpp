@@ -1,6 +1,9 @@
 #include "CComentarPelicula.h"
+#include "Sesion.h"
 #include <stdexcept>
 #include <iostream>
+
+using namespace std;
 
 CComentarPelicula::CComentarPelicula() {
     this->manejadorPelicula = ManejadorPelicula::getInstancia();
@@ -10,7 +13,7 @@ CComentarPelicula::CComentarPelicula() {
 }
 
 bool CComentarPelicula::hayUsuarioLogueado() {
-    return this->manejadorUsuario->getUsuarioActual() != nullptr;
+    return Sesion::getInstancia()->getUsuario() != nullptr;
 }
 
 void CComentarPelicula::listarPeliculas() {
@@ -36,7 +39,7 @@ void CComentarPelicula::comentar(string texto) {
         throw invalid_argument("No hay película seleccionada");
     }
 
-    Usuario* usuarioActual = this->manejadorUsuario->getUsuarioActual();
+    Usuario* usuarioActual = Sesion::getInstancia()->getUsuario();
     Comentario* nuevoComentario = new Comentario(texto, usuarioActual, this->peliculaSeleccionada);
     nuevoComentario->setId(this->nextCommentId);
     this->comentarios[this->nextCommentId] = nuevoComentario;
@@ -59,7 +62,7 @@ void CComentarPelicula::responder(int id, string texto) {
         throw invalid_argument("No hay película seleccionada");
     }
 
-    Usuario* usuarioActual = this->manejadorUsuario->getUsuarioActual();
+    Usuario* usuarioActual = Sesion::getInstancia()->getUsuario();
     Comentario* comentarioOriginal = this->obtenerComentario(id);
     if (comentarioOriginal == nullptr) {
         throw invalid_argument("No existe un comentario con ese ID");

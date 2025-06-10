@@ -14,7 +14,7 @@ class Sala {
 private:
     int id;
     int capacidad;
-    std::list<Funcion*> funciones;
+    list<Funcion*> funciones;
 
 public:
     Sala();
@@ -26,7 +26,7 @@ public:
     void setCapacidad(int capacidad);
 
     void agregarFuncion(Funcion* funcion);
-    std::list<Funcion*> getFunciones();
+    list<Funcion*> getFunciones();
 
     ~Sala();
 };
