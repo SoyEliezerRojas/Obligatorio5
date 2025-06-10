@@ -344,6 +344,12 @@ void crearReserva() {
     cout << "_" << endl;
     cout << "_C R E A R  R E S E R V A_" << endl;
 
+    // Verificar si hay usuario logueado
+    if (!iCrearReserva->hayUsuarioLogueado()) {
+        cout << "ERROR: Debe iniciar sesión para crear una reserva" << endl;
+        return;
+    }
+
     // Listar películas disponibles
     list<DtPelicula> peliculas = iCrearReserva->listarPeliculas();
     if (peliculas.empty()) {

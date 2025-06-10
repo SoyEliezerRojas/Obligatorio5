@@ -19,13 +19,14 @@ private:
     Pelicula* peliculaSeleccionada;
     Funcion* funcionSeleccionada;
     int cantidadEntradas;
+    bool esDebito;
     string banco;
     string financiera;
     float descuento;
-    bool esDebito;
 
 public:
     CCrearReserva();
+    bool hayUsuarioLogueado();
     list<DtPelicula> listarPeliculas();
     void selectPelicula(string titulo);
     list<DtFuncion> listarFunciones();

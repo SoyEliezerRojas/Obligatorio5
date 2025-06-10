@@ -8,6 +8,10 @@ CCrearReserva::CCrearReserva() {
     this->esDebito = false;
 }
 
+bool CCrearReserva::hayUsuarioLogueado() {
+    return Sesion::getInstancia()->getUsuario() != NULL;
+}
+
 list<DtPelicula> CCrearReserva::listarPeliculas() {
     ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
     list<DtPelicula> infoPeliculas;

@@ -10,6 +10,7 @@ using namespace std;
 
 class ICCrearReserva {
 public:
+    virtual bool hayUsuarioLogueado() = 0;
     virtual list<DtPelicula> listarPeliculas() = 0;
     virtual void selectPelicula(string titulo) = 0;
     virtual list<DtFuncion> listarFunciones() = 0;
