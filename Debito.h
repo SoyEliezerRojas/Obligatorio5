@@ -11,7 +11,7 @@ private:
     string banco;
 public:
     Debito();
-    Debito(float,int,string);
+    Debito(int id, float costo, int cantEntradas, string banco);
     string getBanco();
     void setBanco(string);
     ~Debito();

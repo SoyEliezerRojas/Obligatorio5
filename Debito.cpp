@@ -2,7 +2,7 @@
 
 Debito::Debito(){}
 
-Debito::Debito(float costo,int cantEnt, string banco):Reserva(costo,cantEnt){
+Debito::Debito(int id, float costo, int cantEntradas, string banco):Reserva(id, costo, cantEntradas, "Debito"){
     this->banco = banco;
 }
 
@@ -13,4 +13,5 @@ string Debito::getBanco(){
 void Debito::setBanco(string banco){
     this->banco = banco;
 }
+
 Debito::~Debito() {}

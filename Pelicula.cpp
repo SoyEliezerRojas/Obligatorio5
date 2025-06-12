@@ -60,4 +60,13 @@ DtPelicula Pelicula::getDtPelicula() {
     return DtPelicula(this->titulo, this->sinopsis, this->poster, this->puntajeProm);
 }
 
+list<DtReserva> Pelicula::listarReservas() {
+    list<DtReserva> reservas;
+    for (list<Cine*>::iterator it = cines.begin(); it != cines.end(); ++it) {
+        list<DtReserva> reservasCine = (*it)->listarReservasDePelicula(this->titulo);
+        reservas.insert(reservas.end(), reservasCine.begin(), reservasCine.end());
+    }
+    return reservas;
+}
+
 Pelicula::~Pelicula() {}

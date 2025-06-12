@@ -98,6 +98,19 @@ void CAltaFuncion::altaFuncion(string horaInicio, DtFecha fecha) {
         
         // Guardar la función en el manejador
         ManejadorFuncion::getInstancia()->agregarFuncion(f);
+        
+        // Asociar el cine a la película si no está ya asociado
+        list<Cine*> cines = this->peliculaSeleccionada->getCines();
+        bool cineYaAsociado = false;
+        for (Cine* c : cines) {
+            if (c == this->cineSeleccionado) {
+                cineYaAsociado = true;
+                break;
+            }
+        }
+        if (!cineYaAsociado) {
+            this->peliculaSeleccionada->agregarCine(this->cineSeleccionado);
+        }
     }
 }
 

@@ -3,9 +3,15 @@
 
 DtReserva::DtReserva() {}
 
-DtReserva::DtReserva(float costo, int cantEnt) {
+DtReserva::DtReserva(int id, float costo, int cantEnt, string formaPago) {
+    this->id = id;
     this->costo = costo;
     this->cantEntradas = cantEnt;
+    this->formaPago = formaPago;
+}
+
+int DtReserva::getId() {
+    return this->id;
 }
 
 float DtReserva::getCosto() {
@@ -14,6 +20,10 @@ float DtReserva::getCosto() {
 
 int DtReserva::getCantEntradas() {
     return this->cantEntradas;
+}
+
+string DtReserva::getFormaPago() {
+    return this->formaPago;
 }
 
 DtReserva::~DtReserva() {}

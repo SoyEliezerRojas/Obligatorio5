@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include "DtPelicula.h"
+#include "DtReserva.h"
 #include "Cine.h"
 
 using namespace std;
@@ -41,6 +42,7 @@ public:
     
     // Otros métodos
     DtPelicula getDtPelicula();
+    list<DtReserva> listarReservas();
     
     // Destructor
     ~Pelicula();

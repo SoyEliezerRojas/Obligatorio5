@@ -63,6 +63,21 @@ list<Reserva*> Funcion::getReservas() {
     return this->reservas;
 }
 
+list<DtReserva> Funcion::listarReservas() {
+    list<DtReserva> dtReservas;
+    for (list<Reserva*>::iterator it = reservas.begin(); it != reservas.end(); ++it) {
+        dtReservas.push_back(DtReserva((*it)->getId(), (*it)->getCosto(), (*it)->getCantEntradas(), (*it)->getFormaPago()));
+    }
+    return dtReservas;
+}
+
+string Funcion::getTituloPelicula() {
+    if (pelicula != NULL) {
+        return pelicula->getTitulo();
+    }
+    return "";
+}
+
 Funcion::~Funcion() {
     // No eliminamos las reservas ya que son manejadas por el usuario
     this->reservas.clear();

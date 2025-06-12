@@ -31,6 +31,15 @@ list<Sala*> Cine::getSalas() {
     return this->salas;
 }
 
+list<DtReserva> Cine::listarReservasDePelicula(string titulo) {
+    list<DtReserva> reservas;
+    for (list<Sala*>::iterator it = salas.begin(); it != salas.end(); ++it) {
+        list<DtReserva> reservasSala = (*it)->listarReservasDePelicula(titulo);
+        reservas.insert(reservas.end(), reservasSala.begin(), reservasSala.end());
+    }
+    return reservas;
+}
+
 Cine::~Cine() {
     // Liberar memoria de las salas
     for(list<Sala*>::iterator it = salas.begin(); it != salas.end(); ++it) {

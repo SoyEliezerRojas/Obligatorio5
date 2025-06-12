@@ -74,10 +74,14 @@ void CCrearReserva::confirmarReserva() {
             float costo = this->funcionSeleccionada->getPrecio() * this->cantidadEntradas;
             Reserva* reserva;
             
+            // Generar un ID único para la reserva
+            static int nextId = 1;
+            int id = nextId++;
+            
             if (this->esDebito) {
-                reserva = new Debito(costo, this->cantidadEntradas, this->banco);
+                reserva = new Debito(id, costo, this->cantidadEntradas, this->banco);
             } else {
-                reserva = new Credito(costo, this->cantidadEntradas, this->descuento, this->financiera);
+                reserva = new Credito(id, costo, this->cantidadEntradas, this->descuento, this->financiera);
             }
             
             usuarioActual->agregarReserva(reserva);

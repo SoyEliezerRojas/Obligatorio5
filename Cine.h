@@ -1,6 +1,7 @@
 #ifndef CINE_H
 #define CINE_H
 #include "DtDireccion.h"
+#include "DtReserva.h"
 #include "Sala.h"
 #include <iostream>
 #include <string>
@@ -24,6 +25,7 @@ public:
     
     void agregarSala(Sala* sala);
     list<Sala*> getSalas();
+    list<DtReserva> listarReservasDePelicula(string titulo);
     
     ~Cine();
 };

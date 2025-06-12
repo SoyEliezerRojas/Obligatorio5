@@ -4,6 +4,7 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include "DtReserva.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ public:
 
     void agregarFuncion(Funcion* funcion);
     list<Funcion*> getFunciones();
+    list<DtReserva> listarReservasDePelicula(string titulo);
 
     ~Sala();
 };

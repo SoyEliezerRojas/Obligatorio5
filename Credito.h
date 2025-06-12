@@ -11,7 +11,7 @@ private:
     string financiera;
 public:
     Credito();
-    Credito(float,int,float,string);
+    Credito(int id, float costo, int cantEntradas, float porcDescuento, string financiera);
     float getPorcentaje();
     void setPorcentaje(float);
     string getFinanciera();

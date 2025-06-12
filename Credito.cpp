@@ -6,7 +6,7 @@ using namespace std;
 
 Credito::Credito(){}
 
-Credito::Credito(float costo,int cantEnt, float porcentaje,string financiera):Reserva(costo,cantEnt){
+Credito::Credito(int id, float costo, int cantEntradas, float porcentaje, string financiera):Reserva(id, costo, cantEntradas, "Credito"){
     this->porcDescuento = porcentaje;
     this->financiera = financiera;
 }

@@ -35,6 +35,17 @@ list<Funcion*> Sala::getFunciones() {
     return this->funciones;
 }
 
+list<DtReserva> Sala::listarReservasDePelicula(string titulo) {
+    list<DtReserva> reservas;
+    for (list<Funcion*>::iterator it = funciones.begin(); it != funciones.end(); ++it) {
+        if ((*it)->getTituloPelicula() == titulo) {
+            list<DtReserva> reservasFuncion = (*it)->listarReservas();
+            reservas.insert(reservas.end(), reservasFuncion.begin(), reservasFuncion.end());
+        }
+    }
+    return reservas;
+}
+
 Sala::~Sala() {
     // No eliminamos las funciones ya que son manejadas por el manejador de funciones
     this->funciones.clear();

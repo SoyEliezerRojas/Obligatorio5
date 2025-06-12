@@ -3,6 +3,7 @@
 #include <iostream>
 #include "DtHorario.h"
 #include "DtFecha.h"
+#include "DtReserva.h"
 #include "Pelicula.h"
 #include "Reserva.h"
 #include <list>
@@ -35,6 +36,8 @@ public:
 
     void agregarReserva(Reserva*);
     list<Reserva*> getReservas();
+    list<DtReserva> listarReservas();
+    string getTituloPelicula();
 
     ~Funcion();
 };

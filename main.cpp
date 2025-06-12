@@ -18,6 +18,7 @@
 #include "DtFecha.h"
 #include "DtHorario.h"
 #include "ManejadorCine.h"
+#include "ICVerReservasDePelicula.h"
 using namespace std;
 
 Fabrica* fabrica;
@@ -31,6 +32,7 @@ ICPuntuarPelicula* iPuntuarPelicula;
 ICCrearReserva* iCrearReserva;
 ICComentarPelicula* iComentarPelicula;
 ICEliminarPelicula* iEliminarPelicula;
+ICVerReservasDePelicula* iVerReservasDePelicula;
 
 void altaUsuario(){
     system("clear");
@@ -465,6 +467,46 @@ void eliminarPelicula() {
     }
 }
 
+void verReservasDePelicula() {
+    system("clear");
+    cout << "_" << endl;
+    cout << "_V E R  R E S E R V A S  D E  P E L I C U L A_" << endl;
+
+    // Listar películas disponibles
+    list<DtPelicula> peliculas = iVerReservasDePelicula->listarPeliculas();
+    if (peliculas.empty()) {
+        cout << "No hay películas registradas en el sistema." << endl;
+        return;
+    }
+
+    cout << "PELÍCULAS DISPONIBLES:" << endl;
+    for (list<DtPelicula>::iterator it = peliculas.begin(); it != peliculas.end(); ++it) {
+        cout << "- " << it->getTitulo() << endl;
+    }
+
+    // Seleccionar película
+    string titulo;
+    cout << endl << "Ingrese el título de la película: ";
+    cin.ignore();
+    getline(cin, titulo);
+
+    // Listar reservas de la película
+    list<DtReserva> reservas = iVerReservasDePelicula->listarReservasDePelicula(titulo);
+    if (reservas.empty()) {
+        cout << "No hay reservas para esta película." << endl;
+        return;
+    }
+
+    cout << endl << "RESERVAS DE LA PELÍCULA " << titulo << ":" << endl;
+    for (list<DtReserva>::iterator it = reservas.begin(); it != reservas.end(); ++it) {
+        cout << "ID Reserva: " << it->getId() << endl;
+        cout << "Cantidad de entradas: " << it->getCantEntradas() << endl;
+        cout << "Costo total: $" << it->getCosto() << endl;
+        cout << "Forma de pago: " << it->getFormaPago() << endl;
+        cout << "------------------------" << endl;
+    }
+}
+
 void menu();
 
 int main() {
@@ -482,6 +524,7 @@ int main() {
     iComentarPelicula = fabrica->getICComentarPelicula();
     iCrearReserva = fabrica->getICCrearReserva();
     iEliminarPelicula = fabrica->getICEliminarPelicula();
+    iVerReservasDePelicula = fabrica->getICVerReservasDePelicula();
     
     int opcion;
     menu();
@@ -503,7 +546,7 @@ int main() {
                 break;
             case 7: crearReserva();
                 break;
-            case 8: //verReservasPelicula();
+            case 8: verReservasDePelicula();
                 break;
             case 9: eliminarPelicula();
                 break;

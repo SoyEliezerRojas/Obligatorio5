@@ -3,25 +3,39 @@
 
 Reserva::Reserva() {}
 
-Reserva::Reserva(float costo,int cantEnt){
-    this->costo =  costo;
+Reserva::Reserva(int id, float costo, int cantEnt, string formaPago) {
+    this->id = id;
+    this->costo = costo;
     this->cantEntradas = cantEnt;
+    this->formaPago = formaPago;
 }
 
-float Reserva::getCosto(){
+int Reserva::getId() {
+    return this->id;
+}
+
+float Reserva::getCosto() {
     return this->costo;
 }
 
-void Reserva::setCosto(float costo){
+void Reserva::setCosto(float costo) {
     this->costo = costo;
 }
 
-int Reserva::getCantEntradas(){
+int Reserva::getCantEntradas() {
     return this->cantEntradas;
 }
 
-void Reserva::setCantEntradas(int cantE){
+void Reserva::setCantEntradas(int cantE) {
     this->cantEntradas = cantE;
+}
+
+string Reserva::getFormaPago() {
+    return this->formaPago;
+}
+
+void Reserva::setFormaPago(string formaPago) {
+    this->formaPago = formaPago;
 }
 
 Reserva::~Reserva() {}
