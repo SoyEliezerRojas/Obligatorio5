@@ -59,17 +59,31 @@ void iniciarSesion() {
     system("clear");
     cout <<"_" <<endl;
     cout <<"_I N I C I A R  S E S I O N_"<< endl;
-    string nickname, contrasenia;
+    
+    string nickname, password;
+    bool passwordValida = false;
+    
+    // 1. Pedir nickname (según diagrama)
     cout << "NICKNAME: ";
     cin >> nickname;
-    cout << endl << "PASSWORD: ";
-    cin >> contrasenia;
+    iIniciarSesion->ingresarNick(nickname);  // El sistema recuerda el nick
     
-    if(iIniciarSesion->iniciarSesion(nickname, contrasenia)) {
-        cout << endl << "SESION INICIADA CORRECTAMENTE" << endl;
-    } else {
-        cout << endl << "ERROR AL INICIAR SESION" << endl;
-    }
+    // 2. Loop de validación de contraseña (según diagrama)
+    do {
+        cout << "PASSWORD: ";
+        cin >> password;
+        
+        passwordValida = iIniciarSesion->verificarPas(password);
+        
+        if (!passwordValida) {
+            cout << "Contraseña incorrecta. Intente nuevamente." << endl;
+        }
+        
+    } while (!passwordValida);
+    
+    // 3. Si llegamos aquí, iniciar sesión
+    iIniciarSesion->iniciarSesion();  // Conecta usuario a la sesión
+    cout << endl << "SESION INICIADA CORRECTAMENTE" << endl;
 }
 
 void cerrarSesion() {

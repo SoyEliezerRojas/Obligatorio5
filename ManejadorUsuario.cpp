@@ -39,6 +39,14 @@ bool ManejadorUsuario::existeUsuario(string nickname) {
     return usuarios.find(nickname) != usuarios.end();
 }
 
+bool ManejadorUsuario::verificarCredenciales(string nickname, string password) {
+    Usuario* usuario = buscarUsuario(nickname);
+    if (usuario == nullptr) {
+        return false;
+    }
+    return usuario->verificarPass(password);
+}
+
 void ManejadorUsuario::eliminarUsuario(string nickname) {
     if (usuarios.find(nickname) != usuarios.end()) {
         delete usuarios[nickname];

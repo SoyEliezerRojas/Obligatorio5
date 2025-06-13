@@ -1,6 +1,7 @@
 #include "CIniciarSesion.h"
 #include "ManejadorUsuario.h"
 #include "Sesion.h"
+#include <iostream>
 
 CIniciarSesion::CIniciarSesion() {}
 
@@ -8,10 +9,8 @@ void CIniciarSesion::ingresarNick(string nick) {
     this->nickname = nick;
 }
 
-bool CIniciarSesion::verificarPass(string pass) {
-    Usuario* u = ManejadorUsuario::getInstancia()->buscarUsuario(nickname);
-    if (!u) return false;
-    return u->verificarPass(pass);
+bool CIniciarSesion::verificarPas(string pass) {
+    return ManejadorUsuario::getInstancia()->verificarCredenciales(nickname, pass);
 }
 
 void CIniciarSesion::iniciarSesion() {
@@ -21,13 +20,6 @@ void CIniciarSesion::iniciarSesion() {
     }
 }
 
-bool CIniciarSesion::iniciarSesion(string& nickname, string& password) {
-    this->ingresarNick(nickname);
-    if (this->verificarPass(password)) {
-        this->iniciarSesion();
-        return true;
-    }
-    return false;
-}
+
 
 CIniciarSesion::~CIniciarSesion() {}

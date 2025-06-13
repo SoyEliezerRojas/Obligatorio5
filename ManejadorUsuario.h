@@ -21,6 +21,7 @@ class ManejadorUsuario{
         Usuario* buscarUsuario(string);
         void eliminarUsuario(string);
         bool existeUsuario(string);
+        bool verificarCredenciales(string nickname, string password);
         Usuario* getUsuarioActual();
         void setUsuarioActual(Usuario* usuario);
 };

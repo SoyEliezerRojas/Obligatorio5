@@ -6,7 +6,9 @@ using namespace std;
 
 class ICIniciarSesion {
 public:
-    virtual bool iniciarSesion(string& nickname, string& password) = 0;
+    virtual void ingresarNick(string nick) = 0;
+    virtual bool verificarPas(string pass) = 0;
+    virtual void iniciarSesion() = 0;  // Conecta usuario a sesión
     virtual ~ICIniciarSesion() {}
 };
 
