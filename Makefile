@@ -78,4 +78,4 @@ CVerReservasDePelicula.o: CVerReservasDePelicula.cpp
 main.o: main.cpp
 
 clean:
-	rm -rf *.o mainCine
+	rm -f *.o mainCine

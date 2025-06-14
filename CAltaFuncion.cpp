@@ -1,5 +1,13 @@
 #include "CAltaFuncion.h"
 #include "DtHorario.h"
+#include "Sesion.h"
+#include "ManejadorPelicula.h"
+#include "ManejadorCine.h"
+#include "ManejadorFuncion.h"
+#include "Pelicula.h"
+#include "Cine.h"
+#include "Sala.h"
+#include "Funcion.h"
 
 CAltaFuncion::CAltaFuncion() {
     this->peliculaSeleccionada = NULL;
@@ -8,110 +16,99 @@ CAltaFuncion::CAltaFuncion() {
 }
 
 list<DtPelicula> CAltaFuncion::listarPeliculas() {
-    ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
-    list<DtPelicula> infoPeliculas;
-    
-    vector<Pelicula*>& peliculas = mP->getPeliculas();
-    for(vector<Pelicula*>::iterator p = peliculas.begin(); p != peliculas.end(); ++p) {
-        DtPelicula dtP = (*p)->getDtPelicula();
-        infoPeliculas.push_back(dtP);
+    list<DtPelicula> dtPeliculas;
+    vector<Pelicula*> peliculas = ManejadorPelicula::getInstancia()->getPeliculas();
+    for (vector<Pelicula*>::iterator it = peliculas.begin(); it != peliculas.end(); ++it) {
+        DtPelicula dtPeli((*it)->getTitulo(), (*it)->getSinopsis(), (*it)->getPoster(), (*it)->getPuntajeProm());
+        dtPeliculas.push_back(dtPeli);
     }
-    return infoPeliculas;
+    return dtPeliculas;
 }
 
 void CAltaFuncion::selectPeli(string titulo) {
-    ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
-    this->peliculaSeleccionada = mP->buscarPelicula(titulo);
+    this->tituloPelicula = titulo;
 }
 
 list<DtCine> CAltaFuncion::listarCines() {
-    ManejadorCine* mC = ManejadorCine::getInstancia();
-    list<DtCine> infoCines;
-    
-    list<Cine*> cines = mC->getCines();
-    for(list<Cine*>::iterator c = cines.begin(); c != cines.end(); ++c) {
-        DtCine dtC((*c)->getIdCine(), (*c)->getDirecCine());
-        infoCines.push_back(dtC);
+    list<DtCine> dtCines;
+    list<Cine*> cines = ManejadorCine::getInstancia()->getCines();
+    for (list<Cine*>::iterator it = cines.begin(); it != cines.end(); ++it) {
+        DtCine dtCine((*it)->getIdCine(), (*it)->getDirecCine());
+        dtCines.push_back(dtCine);
     }
-    return infoCines;
+    return dtCines;
 }
 
-void CAltaFuncion::selectCine(string id) {
-    ManejadorCine* mC = ManejadorCine::getInstancia();
-    this->cineSeleccionado = mC->buscarCine(stoi(id));
+void CAltaFuncion::selectCine(string idCine) {
+    this->idCine = idCine;
 }
 
 list<DtSala> CAltaFuncion::listarSalas() {
-    list<DtSala> infoSalas;
-    if (this->cineSeleccionado != NULL) {
-        list<Sala*> salas = this->cineSeleccionado->getSalas();
-        for (list<Sala*>::iterator s = salas.begin(); s != salas.end(); ++s) {
-            DtSala dtSala((*s)->getId(), (*s)->getCapacidad());
-            infoSalas.push_back(dtSala);
-            
-            cout << "Funciones de la sala " << (*s)->getId() << ":" << endl;
-            list<Funcion*> funciones = (*s)->getFunciones();
-            if (funciones.empty()) {
-                cout << "  No hay funciones programadas" << endl;
-            } else {
-                for (list<Funcion*>::iterator f = funciones.begin(); f != funciones.end(); ++f) {
-                    cout << "  Hora: " << (*f)->getHoraFun().getHoraIni() << " - Fecha: " 
-                         << (*f)->getDiaFun().getDia() << "/" 
-                         << (*f)->getDiaFun().getMes() << "/" 
-                         << (*f)->getDiaFun().getAnio() << endl;
-                }
-            }
+    list<DtSala> dtSalas;
+    Cine* cine = ManejadorCine::getInstancia()->buscarCine(stoi(this->idCine));
+    if (cine != NULL) {
+        list<Sala*> salas = cine->getSalas();
+        for (list<Sala*>::iterator it = salas.begin(); it != salas.end(); ++it) {
+            DtSala dtSala((*it)->getId(), (*it)->getCapacidad());
+            dtSalas.push_back(dtSala);
         }
     }
-    return infoSalas;
+    return dtSalas;
 }
 
-void CAltaFuncion::selectSala(int id) {
-    if (this->cineSeleccionado != NULL) {
-        list<Sala*> salas = this->cineSeleccionado->getSalas();
-        for(list<Sala*>::iterator s = salas.begin(); s != salas.end(); ++s) {
-            if ((*s)->getId() == id) {
-                this->salaSeleccionada = *s;
-                break;
-            }
-        }
-    }
+void CAltaFuncion::selectSala(int idSala) {
+    this->idSala = idSala;
 }
 
 void CAltaFuncion::altaFuncion(string horaInicio, DtFecha fecha) {
-    if (this->peliculaSeleccionada != NULL && this->cineSeleccionado != NULL && this->salaSeleccionada != NULL) {
-        // Obtener el siguiente ID disponible
-        int id = ManejadorFuncion::getInstancia()->getNextId();
-        
-        // Crear el DtHorario con hora inicio y fin (asumimos que cada función dura 2 horas)
-        string horaFin = horaInicio; // TODO: calcular hora fin basado en hora inicio
-        DtHorario horario(horaInicio, horaFin);
-        
-        // Crear nueva función con los datos proporcionados
-        Funcion* f = new Funcion(id, fecha, horario);
-        
-        // Establecer la película en la función
-        f->setPelicula(this->peliculaSeleccionada);
-        
+    ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
+    ManejadorCine* mC = ManejadorCine::getInstancia();
+    ManejadorFuncion* mF = ManejadorFuncion::getInstancia();
+
+    Pelicula* pelicula = mP->buscarPelicula(tituloPelicula);
+    Cine* cine = mC->buscarCine(stoi(idCine));
+    Sala* sala = NULL;
+
+    // Buscar la sala en el cine
+    list<Sala*> salas = cine->getSalas();
+    for (list<Sala*>::iterator it = salas.begin(); it != salas.end(); ++it) {
+        if ((*it)->getId() == idSala) {
+            sala = *it;
+            break;
+        }
+    }
+
+    if (pelicula != NULL && cine != NULL && sala != NULL) {
+        // Crear la función
+        int idFuncion = mF->getNextId();
+        DtHorario horario(horaInicio, ""); // La hora de fin se calcula en la función
+        Funcion* funcion = new Funcion(idFuncion, fecha, horario);
+        funcion->setPelicula(pelicula);
+        funcion->setPrecio(200); // Precio por defecto
+
         // Agregar la función a la sala
-        this->salaSeleccionada->agregarFuncion(f);
+        sala->agregarFuncion(funcion);
         
-        // Guardar la función en el manejador
-        ManejadorFuncion::getInstancia()->agregarFuncion(f);
-        
-        // Asociar el cine a la película si no está ya asociado
-        list<Cine*> cines = this->peliculaSeleccionada->getCines();
-        bool cineYaAsociado = false;
-        for (Cine* c : cines) {
-            if (c == this->cineSeleccionado) {
-                cineYaAsociado = true;
+        // Agregar la función al manejador de funciones
+        mF->agregarFuncion(funcion);
+
+        // Agregar el cine a la lista de cines de la película si no está ya
+        bool cineExiste = false;
+        list<Cine*> cinesPelicula = pelicula->getCines();
+        for (list<Cine*>::iterator it = cinesPelicula.begin(); it != cinesPelicula.end(); ++it) {
+            if ((*it)->getIdCine() == cine->getIdCine()) {
+                cineExiste = true;
                 break;
             }
         }
-        if (!cineYaAsociado) {
-            this->peliculaSeleccionada->agregarCine(this->cineSeleccionado);
+        if (!cineExiste) {
+            pelicula->agregarCine(cine);
         }
     }
+}
+
+bool CAltaFuncion::hayUsuarioLogueado() {
+    return Sesion::getInstancia()->getUsuario() != NULL;
 }
 
 CAltaFuncion::~CAltaFuncion() {

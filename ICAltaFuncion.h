@@ -15,10 +15,11 @@ public:
     virtual list<DtPelicula> listarPeliculas() = 0;
     virtual void selectPeli(string titulo) = 0;
     virtual list<DtCine> listarCines() = 0;
-    virtual void selectCine(string id) = 0;
+    virtual void selectCine(string idCine) = 0;
     virtual list<DtSala> listarSalas() = 0;
-    virtual void selectSala(int id) = 0;
+    virtual void selectSala(int idSala) = 0;
     virtual void altaFuncion(string horaInicio, DtFecha fecha) = 0;
+    virtual bool hayUsuarioLogueado() = 0;
     virtual ~ICAltaFuncion() {}
 };
 

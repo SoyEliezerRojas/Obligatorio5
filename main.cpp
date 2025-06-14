@@ -36,14 +36,36 @@ ICVerReservasDePelicula* iVerReservasDePelicula;
 
 void altaUsuario(){
     system("clear");
-	cout <<"_" <<endl;
-	cout <<"_A L T A  D E  U S U A R I O_"<< endl;
+    cout <<"_" <<endl;
+    cout <<"_A L T A  D E  U S U A R I O_"<< endl;
+    
     string nickname, contrasenia, url;
     int aux;
-    cout << "NICKNAME: ";
-	cin >> nickname;
-	cout << endl << "PASSWORD: ";
-	cin >> contrasenia;
+    bool nicknameDisponible = false;
+    
+    do {
+        cout << "NICKNAME: ";
+        cin >> nickname;
+        
+        nicknameDisponible = iAltaUsuario->verificarNickname(nickname);
+        
+        if (!nicknameDisponible) {
+            cout << "ERROR: El nickname ya está en uso." << endl;
+            cout << "1. Reintentar" << endl;
+            cout << "2. Cancelar" << endl;
+            cout << "Opción: ";
+            cin >> aux;
+            
+            if (aux == 2) {
+                cout << "Operación cancelada." << endl;
+                return;
+            }
+        }
+    } while (!nicknameDisponible);
+    
+    cout << endl << "PASSWORD: ";
+    cin >> contrasenia;
+    
     cout << "¿DESEA INGRESAR FOTO DEL PERFIL? 1: SI 2:NO"<<endl;
     cin >> aux;
     if(aux == 1){
@@ -52,7 +74,9 @@ void altaUsuario(){
     }else{
         url = "";
     }
+    
     iAltaUsuario->altaUsuario(nickname, contrasenia, url);
+    cout << endl << "USUARIO REGISTRADO CORRECTAMENTE" << endl;
 }
 
 void iniciarSesion() {
@@ -62,6 +86,7 @@ void iniciarSesion() {
     
     string nickname, password;
     bool passwordValida = false;
+    int opcion;
     
     // 1. Pedir nickname (según diagrama)
     cout << "NICKNAME: ";
@@ -76,7 +101,16 @@ void iniciarSesion() {
         passwordValida = iIniciarSesion->verificarPas(password);
         
         if (!passwordValida) {
-            cout << "Contraseña incorrecta. Intente nuevamente." << endl;
+            cout << "Contraseña incorrecta." << endl;
+            cout << "1. Reintentar" << endl;
+            cout << "2. Cancelar" << endl;
+            cout << "Opción: ";
+            cin >> opcion;
+            
+            if (opcion == 2) {
+                cout << "Operación cancelada." << endl;
+                return;
+            }
         }
         
     } while (!passwordValida);
@@ -102,11 +136,37 @@ void altaPelicula() {
     system("clear");
     cout <<"_" <<endl;
     cout <<"_A L T A  D E  P E L I C U L A_"<< endl;
-    string titulo, sinopsis, url;
     
-    cout << "TITULO: ";
-    cin.ignore(); // Clear the buffer
-    getline(cin, titulo);
+    // Verificar si hay usuario logueado
+    if (!iAltaPelicula->hayUsuarioLogueado()) {
+        cout << "ERROR: Debe iniciar sesión para dar de alta una película." << endl;
+        return;
+    }
+    
+    string titulo, sinopsis, url;
+    bool tituloUnico = false;
+    int opcion;
+    
+    do {
+        cout << "TITULO: ";
+        cin.ignore(); // Clear the buffer
+        getline(cin, titulo);
+        
+        tituloUnico = iAltaPelicula->altaPelicula(titulo, "", "");
+        
+        if (!tituloUnico) {
+            cout << "ERROR: Ya existe una película con ese título." << endl;
+            cout << "1. Reintentar" << endl;
+            cout << "2. Cancelar" << endl;
+            cout << "Opción: ";
+            cin >> opcion;
+            
+            if (opcion == 2) {
+                cout << "Operación cancelada." << endl;
+                return;
+            }
+        }
+    } while (!tituloUnico);
     
     cout << endl << "SINOPSIS: ";
     getline(cin, sinopsis);
@@ -114,17 +174,20 @@ void altaPelicula() {
     cout << endl << "URL DEL POSTER: ";
     getline(cin, url);
     
-    if(iAltaPelicula->altaPelicula(titulo, sinopsis, url)) {
-        cout << endl << "PELICULA REGISTRADA CORRECTAMENTE" << endl;
-    } else {
-        cout << endl << "ERROR: YA EXISTE UNA PELICULA CON ESE TITULO" << endl;
-    }
+    iAltaPelicula->altaPelicula(titulo, sinopsis, url);
+    cout << endl << "PELICULA REGISTRADA CORRECTAMENTE" << endl;
 }
 
 void altaCine() {
     system("clear");
     cout <<"_" <<endl;
     cout <<"_A L T A  D E  C I N E_"<< endl;
+    
+    // Verificar si hay usuario logueado
+    if (!iAltaCine->hayUsuarioLogueado()) {
+        cout << "ERROR: Debe iniciar sesión para dar de alta un cine." << endl;
+        return;
+    }
     
     // Obtener el ID que se asignará
     int nextId = iAltaCine->getNextId();
@@ -158,17 +221,32 @@ void altaCine() {
     
     iAltaCine->ingresarCapacidades(capacidades);
     
-    // Dar de alta el cine
-    iAltaCine->altaCine();
-    cout << endl << "CINE " << nextId << " REGISTRADO CORRECTAMENTE" << endl;
-    cout << "Direccion: " << calle << " " << numero << endl;
-    cout << "Cantidad de salas: " << cantSalas << endl;
+    // Solicitar confirmación
+    cout << endl << "¿Desea confirmar el alta del cine? (1: SI, 2: NO): ";
+    int confirmar;
+    cin >> confirmar;
+    
+    if (confirmar == 1) {
+        // Dar de alta el cine
+        iAltaCine->altaCine();
+        cout << endl << "CINE " << nextId << " REGISTRADO CORRECTAMENTE" << endl;
+        cout << "Direccion: " << calle << " " << numero << endl;
+        cout << "Cantidad de salas: " << cantSalas << endl;
+    } else {
+        cout << endl << "OPERACION CANCELADA" << endl;
+    }
 }
 
 void altaFuncion() {
     system("clear");
     cout << "_" << endl;
     cout << "_A L T A  D E  F U N C I O N_" << endl;
+
+    // Verificar si hay usuario logueado
+    if (!iAltaFuncion->hayUsuarioLogueado()) {
+        cout << "ERROR: Debe iniciar sesión para dar de alta una función." << endl;
+        return;
+    }
 
     // Listar películas disponibles
     list<DtPelicula> peliculas = iAltaFuncion->listarPeliculas();
@@ -208,38 +286,47 @@ void altaFuncion() {
     cin >> idCine;
     iAltaFuncion->selectCine(idCine);
 
-    // Listar salas del cine
-    list<DtSala> salas = iAltaFuncion->listarSalas();
-    if (salas.empty()) {
-        cout << "No hay salas disponibles en este cine." << endl;
-        return;
-    }
+    char continuar;
+    do {
+        // Listar salas del cine
+        list<DtSala> salas = iAltaFuncion->listarSalas();
+        if (salas.empty()) {
+            cout << "No hay salas disponibles en este cine." << endl;
+            return;
+        }
 
-    cout << endl << "SALAS DISPONIBLES:" << endl;
-    for (list<DtSala>::iterator it = salas.begin(); it != salas.end(); ++it) {
-        cout << "ID: " << it->getId() << " - Capacidad: " << it->getCapacidad() << endl;
-    }
+        cout << endl << "SALAS DISPONIBLES:" << endl;
+        for (list<DtSala>::iterator it = salas.begin(); it != salas.end(); ++it) {
+            cout << "ID: " << it->getId() << " - Capacidad: " << it->getCapacidad() << endl;
+        }
 
-    // Seleccionar sala
-    int idSala;
-    cout << endl << "Ingrese el ID de la sala: ";
-    cin >> idSala;
-    iAltaFuncion->selectSala(idSala);
+        // Seleccionar sala
+        int idSala;
+        cout << endl << "Ingrese el ID de la sala: ";
+        cin >> idSala;
+        iAltaFuncion->selectSala(idSala);
 
-    // Ingresar datos de la función
-    string horaInicio;
-    int dia, mes, anio;
-    
-    cout << endl << "DATOS DE LA FUNCIÓN" << endl;
-    cout << "Hora de inicio (HH:MM): ";
-    cin >> horaInicio;
-    cout << "Fecha (DD MM AAAA): ";
-    cin >> dia >> mes >> anio;
+        // Ingresar datos de la función
+        string horaInicio;
+        int dia, mes, anio;
+        
+        cout << endl << "DATOS DE LA FUNCIÓN" << endl;
+        cout << "Hora de inicio (HH:MM): ";
+        cin >> horaInicio;
+        cout << "Fecha (DD MM AAAA): ";
+        cin >> dia >> mes >> anio;
 
-    DtFecha fecha(dia, mes, anio);
-    iAltaFuncion->altaFuncion(horaInicio, fecha);
-    
-    cout << endl << "FUNCIÓN CREADA EXITOSAMENTE" << endl;
+        DtFecha fecha(dia, mes, anio);
+        iAltaFuncion->altaFuncion(horaInicio, fecha);
+        
+        cout << endl << "FUNCIÓN CREADA EXITOSAMENTE" << endl;
+        
+        cout << endl << "¿Desea agregar otra función para esta película? (s/n): ";
+        cin >> continuar;
+        cin.ignore(10000, '\n');
+        system("clear");
+        
+    } while (tolower(continuar) == 's');
 }
 
 void comentarPelicula() {

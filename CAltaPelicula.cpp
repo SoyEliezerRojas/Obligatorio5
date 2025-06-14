@@ -1,4 +1,5 @@
 #include "CAltaPelicula.h"
+#include "Sesion.h"
 #include "ManejadorPelicula.h"
 #include "Pelicula.h"
 
@@ -15,6 +16,10 @@ bool CAltaPelicula::altaPelicula(string titulo, string sinopsis, string url) {
     Pelicula* p = new Pelicula(titulo, sinopsis, 0.0, url);
     mp->agregarPelicula(p);
     return true;
+}
+
+bool CAltaPelicula::hayUsuarioLogueado() {
+    return Sesion::getInstancia()->getUsuario() != NULL;
 }
 
 CAltaPelicula::~CAltaPelicula() {}

@@ -1,4 +1,5 @@
 #include "CAltaCine.h"
+#include "Sesion.h"
 #include "ManejadorCine.h"
 #include "Cine.h"
 #include "Sala.h"
@@ -18,22 +19,22 @@ void CAltaCine::ingresarCapacidades(list<int> capacidades) {
 }
 
 void CAltaCine::altaCine() {
-    // 1. Crear el cine con la dirección
-    // Obtener el siguiente ID del ManejadorCine
+    // 1. Crear el cine con su dirección
     int nextId = ManejadorCine::getInstancia()->getNextId();
     Cine* c = new Cine(nextId, this->direccion);
     
     // 2. Agregar salas con sus capacidades
-    list<int>::iterator it;
-    int i = 1; // Contador para el número de sala
-    for(it = this->capacidades.begin(); it != this->capacidades.end(); ++it) {
-        Sala* s = new Sala(i, *it); // Crear sala con número y capacidad
-        c->agregarSala(s); // Agregar sala al cine
-        i++;
+    int idSala = 1;
+    for (list<int>::iterator it = capacidades.begin(); it != capacidades.end(); ++it) {
+        Sala* s = new Sala(idSala, *it);
+        c->agregarSala(s);
+        idSala++;
     }
     
     // 3. Agregar el cine al manejador
     ManejadorCine::getInstancia()->agregarCine(c);
 }
 
-CAltaCine::~CAltaCine() {}
+bool CAltaCine::hayUsuarioLogueado() {
+    return Sesion::getInstancia()->getUsuario() != NULL;
+}

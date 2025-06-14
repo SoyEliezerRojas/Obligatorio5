@@ -16,7 +16,7 @@ public:
     void ingresarDireccion(DtDireccion direccion);
     void ingresarCapacidades(list<int> capacidades);
     void altaCine();
-    ~CAltaCine();
+    bool hayUsuarioLogueado();
 };
 
 #endif

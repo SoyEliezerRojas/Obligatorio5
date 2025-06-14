@@ -10,6 +10,7 @@ class CAltaPelicula : public ICAltaPelicula {
 public:
     CAltaPelicula();
     bool altaPelicula(string titulo, string sinopsis, string url);
+    bool hayUsuarioLogueado();
     ~CAltaPelicula();
 };
 
