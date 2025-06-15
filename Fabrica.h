@@ -12,6 +12,7 @@
 #include "ICComentarPelicula.h"
 #include "ICEliminarPelicula.h"
 #include "ICVerReservasDePelicula.h"
+#include "ICVerInformacionPelicula.h"
 
 class Fabrica {
 private:
@@ -31,6 +32,7 @@ public:
     ICComentarPelicula* getICComentarPelicula();
     ICEliminarPelicula* getICEliminarPelicula();
     ICVerReservasDePelicula* getICVerReservasDePelicula();
+    ICVerInformacionPelicula* getICVerInformacionPelicula();
     ~Fabrica();
 };
 

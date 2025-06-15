@@ -19,6 +19,8 @@
 #include "DtHorario.h"
 #include "ManejadorCine.h"
 #include "ICVerReservasDePelicula.h"
+#include "ICVerInformacionPelicula.h"
+#include "ManejadorPelicula.h"
 using namespace std;
 
 Fabrica* fabrica;
@@ -33,6 +35,7 @@ ICCrearReserva* iCrearReserva;
 ICComentarPelicula* iComentarPelicula;
 ICEliminarPelicula* iEliminarPelicula;
 ICVerReservasDePelicula* iVerReservasDePelicula;
+ICVerInformacionPelicula* iVerInformacionPelicula;
 
 void altaUsuario(){
     system("clear");
@@ -137,43 +140,37 @@ void altaPelicula() {
     cout <<"_" <<endl;
     cout <<"_A L T A  D E  P E L I C U L A_"<< endl;
     
-    // Verificar si hay usuario logueado
     if (!iAltaPelicula->hayUsuarioLogueado()) {
         cout << "ERROR: Debe iniciar sesión para dar de alta una película." << endl;
         return;
     }
     
     string titulo, sinopsis, url;
-    bool tituloUnico = false;
     int opcion;
-    
-    do {
+    ManejadorPelicula* mp = ManejadorPelicula::getInstancia();
+    while (true) {
         cout << "TITULO: ";
-        cin.ignore(); // Clear the buffer
+        cin.ignore();
         getline(cin, titulo);
-        
-        tituloUnico = iAltaPelicula->altaPelicula(titulo, "", "");
-        
-        if (!tituloUnico) {
+        if (mp->buscarPelicula(titulo) != nullptr) {
             cout << "ERROR: Ya existe una película con ese título." << endl;
             cout << "1. Reintentar" << endl;
             cout << "2. Cancelar" << endl;
             cout << "Opción: ";
             cin >> opcion;
-            
             if (opcion == 2) {
                 cout << "Operación cancelada." << endl;
                 return;
             }
+            cin.ignore(); // Limpiar buffer antes de volver a pedir título
+        } else {
+            break;
         }
-    } while (!tituloUnico);
-    
+    }
     cout << endl << "SINOPSIS: ";
     getline(cin, sinopsis);
-    
     cout << endl << "URL DEL POSTER: ";
     getline(cin, url);
-    
     iAltaPelicula->altaPelicula(titulo, sinopsis, url);
     cout << endl << "PELICULA REGISTRADA CORRECTAMENTE" << endl;
 }
@@ -608,6 +605,11 @@ void verReservasDePelicula() {
     }
 }
 
+void verInformacionPelicula() {
+    system("clear");
+    iVerInformacionPelicula->ejecutar();
+}
+
 void menu();
 
 int main() {
@@ -626,11 +628,12 @@ int main() {
     iCrearReserva = fabrica->getICCrearReserva();
     iEliminarPelicula = fabrica->getICEliminarPelicula();
     iVerReservasDePelicula = fabrica->getICVerReservasDePelicula();
+    iVerInformacionPelicula = fabrica->getICVerInformacionPelicula();
     
     int opcion;
     menu();
     cin >> opcion;
-    while(opcion != 12){
+    while(opcion != 13){
         system("clear");
         switch(opcion){
             case 1: iniciarSesion();
@@ -655,7 +658,9 @@ int main() {
                 break;
             case 11: comentarPelicula();
                 break;
-            case 12: cout << "SALIENDO..." << endl;
+            case 12: verInformacionPelicula();
+                break;
+            case 13: cout << "SALIENDO..." << endl;
                 break;
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;
@@ -690,7 +695,8 @@ void menu(){
     cout <<"9. Eliminar Pelicula"<<endl;
     cout <<"10. Puntuar Pelicula"<<endl;
     cout <<"11. Comentar Pelicula"<<endl;
-    cout <<"12. Salir " <<endl;
+    cout <<"12. Ver Información de Película"<<endl;
+    cout <<"13. Salir " <<endl;
     cout <<"_" <<endl;
     cout << "OPCION: ";
 }
