@@ -30,6 +30,9 @@ public:
     // Método agregado para CAltaFuncion (respetando reglas UML)
     list<DtSala> getDtSalas();
     
+    // Método para CAltaCine - crear salas con capacidades (respetando UML)
+    void crearSalasConCapacidades(list<int> capacidades);
+    
     list<DtReserva> listarReservasDePelicula(string titulo);
     
     ~Cine();

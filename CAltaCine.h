@@ -5,6 +5,8 @@
 #include "DtDireccion.h"
 #include <list>
 
+using namespace std;
+
 class CAltaCine : public ICAltaCine {
 private:
     DtDireccion direccion;
@@ -16,6 +18,7 @@ public:
     void ingresarDireccion(DtDireccion direccion);
     void ingresarCapacidades(list<int> capacidades);
     void altaCine();
+    void finalizar();
     bool hayUsuarioLogueado();
 };
 

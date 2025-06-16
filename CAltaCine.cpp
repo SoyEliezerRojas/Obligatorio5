@@ -2,7 +2,11 @@
 #include "Sesion.h"
 #include "ManejadorCine.h"
 #include "Cine.h"
-#include "Sala.h"
+#include <iostream>
+#include <list>
+#include <string>
+
+using namespace std;
 
 CAltaCine::CAltaCine() {}
 
@@ -19,22 +23,28 @@ void CAltaCine::ingresarCapacidades(list<int> capacidades) {
 }
 
 void CAltaCine::altaCine() {
-    // 1. Crear el cine con su dirección
-    int nextId = ManejadorCine::getInstancia()->getNextId();
-    Cine* c = new Cine(nextId, this->direccion);
+    // Siguiendo el diagrama de comunicación respetando UML:
     
-    // 2. Agregar salas con sus capacidades
-    int idSala = 1;
-    for (list<int>::iterator it = capacidades.begin(); it != capacidades.end(); ++it) {
-        Sala* s = new Sala(idSala, *it);
-        c->agregarSala(s);
-        idSala++;
-    }
+    // 1. c:=crear(dir) - Crear el cine con ID autogenerado y dirección
+    int idAutogenerado = ManejadorCine::getInstancia()->getNextId();
+    Cine* c = new Cine(idAutogenerado, this->direccion);
     
-    // 3. Agregar el cine al manejador
+    // 2. agregarSalas(capacidades:Set(int)) - Delegar creación de salas a Cine
+    // CAltaCine NO puede ver Sala, pero Cine SÍ puede según UML
+    c->crearSalasConCapacidades(this->capacidades);
+    
+    // 3. add() - Agregar el cine al manejador
     ManejadorCine::getInstancia()->agregarCine(c);
 }
 
+void CAltaCine::finalizar() {
+    // Según diagrama de secuencia: Se libera la memoria asociada a capacidades y dirección
+    // En C++, para tipos básicos como DtDireccion y list<int>, 
+    // la limpieza se hace automáticamente al salir del scope
+    this->capacidades.clear();
+    // this->direccion se limpia automáticamente (es un objeto por valor)
+}
+
 bool CAltaCine::hayUsuarioLogueado() {
-    return Sesion::getInstancia()->getUsuario() != NULL;
+    return Sesion::getInstancia()->getUsuario() != nullptr;
 }

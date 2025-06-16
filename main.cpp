@@ -110,7 +110,7 @@ void iniciarSesion() {
             cout << "Opción: ";
             cin >> opcion;
             
-            if (opcion == 2) {
+            if (opcion != 1) {  // Si no es 1 (reintentar), cancelar
                 cout << "Operación cancelada." << endl;
                 return;
             }

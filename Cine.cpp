@@ -45,6 +45,16 @@ list<DtSala> Cine::getDtSalas() {
     return dtSalas;
 }
 
+void Cine::crearSalasConCapacidades(list<int> capacidades) {
+    // Cine puede ver Sala según UML, por lo que puede crear salas directamente
+    int idSala = 1; // ID autogenerado para salas
+    for (list<int>::iterator it = capacidades.begin(); it != capacidades.end(); ++it) {
+        Sala* s = new Sala(idSala, *it);
+        this->agregarSala(s);
+        idSala++;
+    }
+}
+
 list<DtReserva> Cine::listarReservasDePelicula(string titulo) {
     list<DtReserva> reservas;
     for (list<Sala*>::iterator it = salas.begin(); it != salas.end(); ++it) {

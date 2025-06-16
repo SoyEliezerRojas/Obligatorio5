@@ -13,6 +13,7 @@ public:
     virtual void ingresarDireccion(DtDireccion direccion) = 0;
     virtual void ingresarCapacidades(list<int> capacidades) = 0;
     virtual void altaCine() = 0;
+    virtual void finalizar() = 0;
     virtual bool hayUsuarioLogueado() = 0;
     virtual ~ICAltaCine() {}
 };
