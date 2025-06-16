@@ -20,6 +20,7 @@ public:
     virtual void selectSala(int idSala) = 0;
     virtual void altaFuncion(string horaInicio, DtFecha fecha) = 0;
     virtual bool hayUsuarioLogueado() = 0;
+    virtual void mostrarSalasConOcupacion() = 0;
     virtual ~ICAltaFuncion() {}
 };
 

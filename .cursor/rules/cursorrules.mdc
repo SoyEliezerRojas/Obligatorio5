@@ -1,0 +1,131 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# REGLAS DEL PROYECTO - CAltaFuncion y en general
+# ====================================
+
+## 🎯 DEPENDENCIAS UML - CUMPLIMIENTO ESTRICTO
+
+### Reglas de Visibilidad por Clase:
+- **CAltaFuncion** puede SOLAMENTE ver a: ManejadorFuncion, Funcion, Pelicula, Cine, ManejadorPelicula, ManejadorCine
+- **Pelicula** puede SOLAMENTE ver a: Cine
+- **Cine** puede SOLAMENTE ver a: Sala  
+- **Sala** puede SOLAMENTE ver a: Funcion
+- **Funcion** puede SOLAMENTE ver a: Pelicula
+- **ManejadorPelicula** puede SOLAMENTE ver a: Pelicula
+- **ManejadorCine** puede SOLAMENTE ver a: Cine
+- **ManejadorFuncion** puede SOLAMENTE ver a: Funcion
+
+### ❌ VIOLACIONES PROHIBIDAS:
+- CAltaFuncion NO puede ver: Sesion, Usuario, ManejadorUsuario, Reserva
+- Cine NO puede ver: Funcion, ManejadorFuncion, Pelicula
+- ManejadorFuncion NO puede ver: Cine, Sala, ManejadorCine
+- ManejadorCine NO puede ver: Funcion, Sala, ManejadorFuncion
+- Cualquier Manejador NO puede ver a otros Manejadores
+
+## 📁 REGLAS DE INCLUDES
+
+### OBLIGATORIO:
+- NUNCA usar forward declarations (`class ClassName;`)
+- SIEMPRE usar includes directos (`#include "ClassName.h"`)
+- Incluir TODAS las dependencias explícitamente en archivos header
+- Verificar que todos los tipos utilizados estén incluidos
+
+### EJEMPLO CORRECTO:
+```cpp
+// ✅ CORRECTO
+#include "Pelicula.h"
+#include "DtSala.h"
+#include "Funcion.h"
+
+// ❌ INCORRECTO  
+class Pelicula;  // NUNCA HACER ESTO
+```
+
+## 🏗️ ARQUITECTURA Y FLUJO DE DATOS
+
+### Flujo Correcto del Caso de Uso AltaFuncion:
+1. CAltaFuncion → ManejadorPelicula → getPeliculas()
+2. CAltaFuncion → ManejadorCine → getCines()  
+3. CAltaFuncion → Cine → getSalas()
+4. CAltaFuncion → Sala → getDtSalaCompleta() (Sala puede ver Funcion)
+5. CAltaFuncion → ManejadorFuncion → agregarFuncion()
+
+### Principios:
+- Los Dt* (Data Transfer) son creados por quien puede ver las dependencias
+- Sala crea DtSala completo porque puede ver Funcion
+- Cine NO puede crear DtSala con funciones porque no ve Funcion
+- Usar la jerarquía: CAltaFuncion → Manejador → Entidad → Dependencias
+
+## 🔧 REGLAS DE COMPILACIÓN
+
+### OBLIGATORIO:
+- Verificar compilación después de CADA cambio
+- Resolver errores de includes inmediatamente
+- NO adivinar soluciones, verificar dependencias UML primero
+- Si hay error de compilación, revisar primero las dependencias UML
+
+### ERRORES COMUNES A EVITAR:
+- Incluir clases que no deberían ser visibles según UML
+- Asumir que las dependencias transitivas funcionarán
+- Crear métodos que violen las dependencias UML
+
+## 📝 ESTILO DE CÓDIGO
+
+### Naming Conventions:
+- Clases: PascalCase (ej: `CAltaFuncion`, `ManejadorCine`)
+- Métodos: camelCase (ej: `listarPeliculas`, `getDtSalaCompleta`)
+- Atributos privados: camelCase con this-> (ej: `this->peliculaSeleccionada`)
+- Constantes: UPPER_CASE
+
+### Comentarios:
+- Explicar WHY se hace algo, no WHAT se hace
+- Comentar cuando se respetan dependencias UML específicas
+- Documentar flujos de caso de uso complejos
+
+## ⚠️ CASOS ESPECIALES DEL PROYECTO
+
+### Manejo de Sesión:
+- CAltaFuncion NO puede acceder directamente a Sesion
+- El caso de uso asume usuario ya logueado: `return true;`
+- NUNCA incluir ManejadorUsuario en CAltaFuncion
+
+### Información de Ocupación de Salas:
+- Sala puede ver Funcion → Sala crea DtSala completo con funciones
+- Cine NO puede ver Funcion → Cine solo proporciona info básica de salas
+- CAltaFuncion usa Sala.getDtSalaCompleta() para mostrar ocupación
+
+### Asignación de Funciones:
+- CAltaFuncion puede acceder directamente a Sala a través de Cine
+- CAltaFuncion hace: Cine → getSalas() → Sala → agregarFuncion()
+- NO usar métodos intermedios que violen dependencias UML
+
+## 🚫 ANTI-PATRONES PROHIBIDOS
+
+### NUNCA hacer:
+- Forward declarations
+- Dependencias circulares
+- Acceso directo violando UML (ej: ManejadorFuncion → Cine)
+- Asumir que "debería funcionar" sin verificar UML
+- Crear métodos helper que violen dependencias
+
+### Si hay duda:
+1. Consultar el diagrama UML primero
+2. Verificar qué clases puede ver cada clase
+3. Buscar ruta válida respetando dependencias
+4. Preguntar si no está claro
+
+## ✅ VERIFICACIÓN FINAL
+
+Antes de completar cualquier tarea:
+1. ✅ ¿Se respetan TODAS las dependencias UML?
+2. ✅ ¿No hay forward declarations?
+3. ✅ ¿Compila sin errores?
+4. ✅ ¿El flujo sigue la arquitectura correcta?
+5. ✅ ¿Los comentarios explican las decisiones de arquitectura?
+
+---
+
+**REGLA DE ORO: Cuando hay duda sobre dependencias, PREGUNTAR. Es mejor preguntar que violar el UML.** 

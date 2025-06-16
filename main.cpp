@@ -264,38 +264,36 @@ void altaFuncion() {
     getline(cin, titulo);
     iAltaFuncion->selectPeli(titulo);
 
-    // Listar cines disponibles
-    list<DtCine> cines = iAltaFuncion->listarCines();
-    if (cines.empty()) {
-        cout << "No hay cines registrados en el sistema." << endl;
-        return;
-    }
-
-    cout << endl << "CINES DISPONIBLES:" << endl;
-    for (list<DtCine>::iterator it = cines.begin(); it != cines.end(); ++it) {
-        cout << "ID: " << it->getId() << " - Dirección: " << it->getDireccion().getCalle() 
-             << " " << it->getDireccion().getNumero() << endl;
-    }
-
-    // Seleccionar cine
-    string idCine;
-    cout << endl << "Ingrese el ID del cine: ";
-    cin >> idCine;
-    iAltaFuncion->selectCine(idCine);
-
     char continuar;
     do {
-        // Listar salas del cine
-        list<DtSala> salas = iAltaFuncion->listarSalas();
-        if (salas.empty()) {
-            cout << "No hay salas disponibles en este cine." << endl;
+        // Listar cines disponibles (MOVIDO DENTRO DEL LOOP)
+        list<DtCine> cines = iAltaFuncion->listarCines();
+        if (cines.empty()) {
+            cout << "No hay cines registrados en el sistema." << endl;
             return;
         }
 
-        cout << endl << "SALAS DISPONIBLES:" << endl;
-        for (list<DtSala>::iterator it = salas.begin(); it != salas.end(); ++it) {
-            cout << "ID: " << it->getId() << " - Capacidad: " << it->getCapacidad() << endl;
+        cout << endl << "CINES DISPONIBLES:" << endl;
+        for (list<DtCine>::iterator it = cines.begin(); it != cines.end(); ++it) {
+            cout << "ID: " << it->getId() << " - Dirección: " << it->getDireccion().getCalle() 
+                 << " " << it->getDireccion().getNumero() << endl;
         }
+
+        // Seleccionar cine (MOVIDO DENTRO DEL LOOP)
+        string idCine;
+        cout << endl << "Ingrese el ID del cine: ";
+        cin >> idCine;
+        iAltaFuncion->selectCine(idCine);
+
+        // Listar salas del cine con información detallada
+        list<DtSala> salas = iAltaFuncion->listarSalas();
+        if (salas.empty()) {
+            cout << "No hay salas disponibles en este cine." << endl;
+            continue; // Cambiar return por continue para permitir elegir otro cine
+        }
+
+        // Mostrar información detallada de salas con ocupación
+        iAltaFuncion->mostrarSalasConOcupacion();
 
         // Seleccionar sala
         int idSala;

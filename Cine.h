@@ -2,6 +2,7 @@
 #define CINE_H
 #include "DtDireccion.h"
 #include "DtReserva.h"
+#include "DtSala.h"
 #include "Sala.h"
 #include <iostream>
 #include <string>
@@ -25,6 +26,10 @@ public:
     
     void agregarSala(Sala* sala);
     list<Sala*> getSalas();
+    
+    // Método agregado para CAltaFuncion (respetando reglas UML)
+    list<DtSala> getDtSalas();
+    
     list<DtReserva> listarReservasDePelicula(string titulo);
     
     ~Cine();

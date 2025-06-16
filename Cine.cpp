@@ -31,6 +31,20 @@ list<Sala*> Cine::getSalas() {
     return this->salas;
 }
 
+list<DtSala> Cine::getDtSalas() {
+    // Método agregado para CAltaFuncion - respeta reglas UML
+    // Cine puede ver Sala, por lo que puede crear DtSala
+    list<DtSala> dtSalas;
+    
+    for (list<Sala*>::iterator it = salas.begin(); it != salas.end(); ++it) {
+        Sala* sala = *it;
+        DtSala dtSala(sala->getId(), sala->getCapacidad());
+        dtSalas.push_back(dtSala);
+    }
+    
+    return dtSalas;
+}
+
 list<DtReserva> Cine::listarReservasDePelicula(string titulo) {
     list<DtReserva> reservas;
     for (list<Sala*>::iterator it = salas.begin(); it != salas.end(); ++it) {
