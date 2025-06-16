@@ -4,9 +4,16 @@
 #include "Puntaje.h"
 #include <stdexcept>
 
+using namespace std;
+
+list<DtPelicula> CPuntuarPelicula::listarPeliculas() {
+    ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
+    return mP->listarPeliculas();
+}
+
 CPuntuarPelicula::CPuntuarPelicula() {
-    this->pelicula = NULL;
-    this->usuario = NULL;
+    this->pelicula = nullptr;
+    this->usuario = nullptr;
     this->puntajeTemp = 0;
     this->puntajeConfirmado = false;
 }
@@ -14,11 +21,11 @@ CPuntuarPelicula::CPuntuarPelicula() {
 void CPuntuarPelicula::ingresarPelicula(string titulo) {
     ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
     this->pelicula = mP->buscarPelicula(titulo);
-    if (this->pelicula == NULL) {
+    if (this->pelicula == nullptr) {
         throw invalid_argument("No existe una película con ese título");
     }
     this->usuario = Sesion::getInstancia()->getUsuario();
-    if (this->usuario == NULL) {
+    if (this->usuario == nullptr) {
         throw invalid_argument("Debe iniciar sesión para puntuar una película");
     }
 }
@@ -28,7 +35,7 @@ bool CPuntuarPelicula::getPuntajeAnterior(float& puntaje) {
 }
 
 void CPuntuarPelicula::ingresarPuntaje(float puntaje) {
-    if (this->pelicula == NULL) {
+    if (this->pelicula == nullptr) {
         throw invalid_argument("Debe seleccionar una película primero");
     }
     
@@ -40,7 +47,7 @@ void CPuntuarPelicula::ingresarPuntaje(float puntaje) {
 }
 
 void CPuntuarPelicula::confirmarPuntaje() {
-    if (this->pelicula == NULL || this->usuario == NULL) {
+    if (this->pelicula == nullptr || this->usuario == nullptr) {
         throw invalid_argument("No se ha seleccionado película o no hay sesión iniciada");
     }
     

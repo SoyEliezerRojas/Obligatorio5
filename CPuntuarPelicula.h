@@ -4,6 +4,7 @@
 #include "ICPuntuarPelicula.h"
 #include "Pelicula.h"
 #include "Usuario.h"
+#include "DtPelicula.h"
 
 class CPuntuarPelicula : public ICPuntuarPelicula {
 private:
@@ -14,6 +15,7 @@ private:
 
 public:
     CPuntuarPelicula();
+    list<DtPelicula> listarPeliculas();
     void ingresarPelicula(string titulo);
     void ingresarPuntaje(float puntaje);
     void confirmarPuntaje();

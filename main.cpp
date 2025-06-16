@@ -404,10 +404,22 @@ void puntuarPelicula() {
     cout << "_" << endl;
     cout << "_P U N T U A R  P E L I C U L A_" << endl;
 
+    // Listar películas disponibles
+    list<DtPelicula> peliculas = iPuntuarPelicula->listarPeliculas();
+    if (peliculas.empty()) {
+        cout << "No hay películas registradas en el sistema." << endl;
+        return;
+    }
+
+    cout << "PELÍCULAS DISPONIBLES:" << endl;
+    for (list<DtPelicula>::iterator it = peliculas.begin(); it != peliculas.end(); ++it) {
+        cout << "- " << it->getTitulo() << endl;
+    }
+
     string titulo;
     int puntaje;
 
-    cout << "TITULO DE LA PELICULA: ";
+    cout << endl << "TITULO DE LA PELICULA: ";
     cin.ignore();
     getline(cin, titulo);
 
