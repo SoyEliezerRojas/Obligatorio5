@@ -29,6 +29,7 @@ public:
     void agregarFuncion(Funcion* funcion);
     list<Funcion*> getFunciones();
     list<DtReserva> listarReservasDePelicula(string titulo);
+    void eliminarFuncion(Funcion* funcion);
 
     ~Sala();
 };

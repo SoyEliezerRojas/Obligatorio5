@@ -46,6 +46,16 @@ list<DtReserva> Sala::listarReservasDePelicula(string titulo) {
     return reservas;
 }
 
+void Sala::eliminarFuncion(Funcion* funcion) {
+    for (auto it = funciones.begin(); it != funciones.end(); ) {
+        if (*it == funcion) {
+            it = funciones.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
 Sala::~Sala() {
     // No eliminamos las funciones ya que son manejadas por el manejador de funciones
     this->funciones.clear();

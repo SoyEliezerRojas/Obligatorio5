@@ -24,6 +24,7 @@ public:
     bool verificarPass(string& pass);
     void agregarReserva(Reserva*);
     list<Reserva*> getReservas();
+    void eliminarReserva(Reserva* reserva);
     ~Usuario();
 };
 

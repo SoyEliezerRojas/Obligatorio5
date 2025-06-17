@@ -4,6 +4,8 @@
 #include "Funcion.h"
 #include "Pelicula.h"
 #include "Reserva.h"
+#include "ManejadorCine.h"
+#include "ManejadorUsuario.h"
 #include <iostream>
 #include <algorithm>
 
@@ -93,24 +95,52 @@ bool CEliminarPelicula::hayUsuarioLogueado() {
 void CEliminarPelicula::eliminarFuncionesAsociadas(string tituloPelicula) {
     Pelicula* pelicula = manejadorPelicula->buscarPelicula(tituloPelicula);
     if (!pelicula) return;
-    // Obtener todas las funciones
+    ManejadorCine* manejadorCine = ManejadorCine::getInstancia();
+    ManejadorUsuario* manejadorUsuario = ManejadorUsuario::getInstancia();
+    ManejadorFuncion* manejadorFuncion = ManejadorFuncion::getInstancia();
+
+    // 1. Recopilar punteros a funciones a eliminar
+    list<Funcion*> funcionesAEliminar;
     list<Funcion*> funciones = manejadorFuncion->getFunciones();
-    
     for (Funcion* funcion : funciones) {
         if (funcion->getPelicula() == pelicula) {
-            // Eliminar las reservas asociadas a la función
-            list<Reserva*> reservas = funcion->getReservas();
-            for (Reserva* reserva : reservas) {
-                delete reserva;
-            }
-            // Obtener el ID de la función antes de eliminarla
-            int idFuncion = funcion->getIdFun();
-            // Eliminar la función
-            delete funcion;
+            funcionesAEliminar.push_back(funcion);
         }
     }
 
-    cout << "Se han eliminado todas las funciones y sus reservas para la película '" 
+    // 2. Eliminar funciones de las salas
+    list<Cine*> cines = manejadorCine->getCines();
+    for (Cine* cine : cines) {
+        list<Sala*> salas = cine->getSalas();
+        for (Sala* sala : salas) {
+            for (Funcion* funcion : funcionesAEliminar) {
+                sala->eliminarFuncion(funcion);
+            }
+        }
+    }
+
+    // 3. Eliminar reservas de usuarios asociadas a esas funciones
+    list<Usuario*> usuarios = manejadorUsuario->getUsuarios();
+    for (Usuario* usuario : usuarios) {
+        for (Funcion* funcion : funcionesAEliminar) {
+            list<Reserva*> reservasFuncion = funcion->getReservas();
+            for (Reserva* reserva : reservasFuncion) {
+                usuario->eliminarReserva(reserva);
+            }
+        }
+    }
+
+    // 4. Eliminar funciones del manejador y sus reservas
+    for (Funcion* funcion : funcionesAEliminar) {
+        list<Reserva*> reservas = funcion->getReservas();
+        for (Reserva* reserva : reservas) {
+            delete reserva;
+        }
+        delete funcion;
+        // Si tienes un método para quitar del manejador, agrégalo aquí
+    }
+
+    cout << "Se han eliminado todas las funciones y sus reservas para la película '"
          << tituloPelicula << "'." << endl;
 }
 

@@ -10,6 +10,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <ctime>
 
 using namespace std;
 
@@ -120,12 +121,14 @@ void CAltaFuncion::altaFuncion(string horaInicio, DtFecha fecha) {
         // ColGlobalFuncion->add(f)
         manejadorFunc->agregarFuncion(funcion);
         
-        // NOTA: La asignación función->sala no se puede hacer desde CAltaFuncion
-        // debido a las reglas UML estrictas:
-        // - CAltaFuncion no puede ver Sala
-        // - Cine no puede ver Funcion  
-        // - ManejadorFuncion no puede ver ManejadorCine
-        // La asignación debe hacerse externamente por quien use esta interfaz
+        // Asociar la función a la sala seleccionada
+        list<Sala*> salas = cine->getSalas();
+        for (Sala* sala : salas) {
+            if (sala->getId() == this->idSalaSeleccionada) {
+                sala->agregarFuncion(funcion);
+                break;
+            }
+        }
         
         // Asegurar que el cine esté en la lista de cines de la película
         bool cineExiste = false;
@@ -149,66 +152,52 @@ bool CAltaFuncion::hayUsuarioLogueado() {
 }
 
 void CAltaFuncion::mostrarSalasConOcupacion() {
-    // Mostrar salas verificando ocupación basada en reservas vs capacidad
     cout << endl << "SALAS DISPONIBLES:" << endl;
     
     ManejadorCine* manejadorCine = ManejadorCine::getInstancia();
-    ManejadorFuncion* manejadorFunc = ManejadorFuncion::getInstancia();
-    
     int idCine = stoi(this->idCineSeleccionado);
     Cine* cine = manejadorCine->buscarCine(idCine);
     
+    // Obtener fecha y hora actual
+    time_t t = time(nullptr);
+    tm* now = localtime(&t);
+    int diaActual = now->tm_mday;
+    int mesActual = now->tm_mon + 1;
+    int anioActual = now->tm_year + 1900;
+    int horaActual = now->tm_hour;
+    int minActual = now->tm_min;
+
     if (cine != nullptr) {
-        list<DtSala> salas = cine->getDtSalas();
-        
-        // Obtener funciones del cine y contar entradas reservadas
-        list<Funcion*> todasFunciones = manejadorFunc->getFunciones();
-        vector<int> entradasPorFuncion;
-        
-        for (list<Funcion*>::iterator funcIt = todasFunciones.begin(); funcIt != todasFunciones.end(); ++funcIt) {
-            Funcion* funcion = *funcIt;
-            if (funcion->getPelicula() != nullptr) {
-                list<Cine*> cinesPelicula = funcion->getPelicula()->getCines();
-                bool funcionEnCine = false;
-                
-                for (list<Cine*>::iterator cineIt = cinesPelicula.begin(); cineIt != cinesPelicula.end(); ++cineIt) {
-                    if ((*cineIt)->getIdCine() == idCine) {
-                        funcionEnCine = true;
-                        break;
-                    }
+        list<Sala*> salas = cine->getSalas();
+        for (Sala* sala : salas) {
+            string funcionesFuturas = "";
+            list<Funcion*> funciones = sala->getFunciones();
+            for (Funcion* funcion : funciones) {
+                DtFecha fecha = funcion->getDiaFun();
+                DtHorario horario = funcion->getHoraFun();
+                int dia = fecha.getDia();
+                int mes = fecha.getMes();
+                int anio = fecha.getAnio();
+                string horaStr = horario.getHoraIni();
+                int hora, minuto;
+                sscanf(horaStr.c_str(), "%d:%d", &hora, &minuto);
+                // Comparar fecha y hora actual con la de la función
+                bool esFutura = false;
+                if (anio > anioActual ||
+                    (anio == anioActual && mes > mesActual) ||
+                    (anio == anioActual && mes == mesActual && dia > diaActual) ||
+                    (anio == anioActual && mes == mesActual && dia == diaActual && (hora > horaActual || (hora == horaActual && minuto >= minActual)))) {
+                    esFutura = true;
                 }
-                
-                if (funcionEnCine) {
-                    // Contar entradas reservadas para esta función
-                    list<Reserva*> reservas = funcion->getReservas();
-                    int totalEntradas = 0;
-                    for (list<Reserva*>::iterator resIt = reservas.begin(); resIt != reservas.end(); ++resIt) {
-                        totalEntradas += (*resIt)->getCantEntradas();
-                    }
-                    entradasPorFuncion.push_back(totalEntradas);
+                if (esFutura) {
+                    if (!funcionesFuturas.empty()) funcionesFuturas += ", ";
+                    funcionesFuturas += to_string(dia) + "/" + to_string(mes) + "/" + to_string(anio) + " " + horaStr + " (" + funcion->getPelicula()->getTitulo() + ")";
                 }
             }
-        }
-        
-        // Mostrar cada sala verificando si podría estar ocupada
-        for (list<DtSala>::iterator it = salas.begin(); it != salas.end(); ++it) {
-            cout << "ID: " << it->getId() << " - Capacidad: " << it->getCapacidad() << " asientos - ";
-            
-            // Verificar si alguna función tiene reservas que llenan esta capacidad
-            bool salaOcupada = false;
-            for (vector<int>::iterator entIt = entradasPorFuncion.begin(); entIt != entradasPorFuncion.end(); ++entIt) {
-                if (*entIt >= it->getCapacidad()) {
-                    salaOcupada = true;
-                    break;
-                }
+            cout << "ID: " << sala->getId() << " - Capacidad: " << sala->getCapacidad() << " asientos";
+            if (!funcionesFuturas.empty()) {
+                cout << " - Ocupado para: " << funcionesFuturas;
             }
-            
-            if (salaOcupada) {
-                cout << "Ocupada";
-            } else {
-                cout << "Disponible";
-            }
-            
             cout << endl;
         }
     }

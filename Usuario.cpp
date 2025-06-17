@@ -46,6 +46,16 @@ list<Reserva*> Usuario::getReservas() {
     return this->reservas;
 }
 
+void Usuario::eliminarReserva(Reserva* reserva) {
+    for (auto it = reservas.begin(); it != reservas.end(); ) {
+        if (*it == reserva) {
+            it = reservas.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
 Usuario::~Usuario() {
     // No eliminamos las reservas ya que son manejadas por el manejador de reservas
     this->reservas.clear();
