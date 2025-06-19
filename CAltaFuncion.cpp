@@ -6,11 +6,15 @@
 #include "Pelicula.h"
 #include "Cine.h"
 #include "Funcion.h"
-#include <iostream>
+#include "DtFecha.h"
+#include "DtPelicula.h"
+#include "DtCine.h"
+#include "DtSala.h"
 #include <string>
 #include <list>
 #include <vector>
 #include <ctime>
+#include <map>
 
 using namespace std;
 
@@ -151,8 +155,26 @@ bool CAltaFuncion::hayUsuarioLogueado() {
     return true;
 }
 
-void CAltaFuncion::mostrarSalasConOcupacion() {
-    cout << endl << "SALAS DISPONIBLES:" << endl;
+list<DtSala> CAltaFuncion::obtenerSalasConOcupacion() {
+    list<DtSala> salasConInfo;
+    
+    ManejadorCine* manejadorCine = ManejadorCine::getInstancia();
+    int idCine = stoi(this->idCineSeleccionado);
+    Cine* cine = manejadorCine->buscarCine(idCine);
+
+    if (cine != nullptr) {
+        list<Sala*> salas = cine->getSalas();
+        for (Sala* sala : salas) {
+            DtSala dtSala(sala->getId(), sala->getCapacidad());
+            salasConInfo.push_back(dtSala);
+        }
+    }
+    
+    return salasConInfo;
+}
+
+map<int, string> CAltaFuncion::obtenerInformacionOcupacionSalas() {
+    map<int, string> ocupacionSalas;
     
     ManejadorCine* manejadorCine = ManejadorCine::getInstancia();
     int idCine = stoi(this->idCineSeleccionado);
@@ -194,13 +216,11 @@ void CAltaFuncion::mostrarSalasConOcupacion() {
                     funcionesFuturas += to_string(dia) + "/" + to_string(mes) + "/" + to_string(anio) + " " + horaStr + " (" + funcion->getPelicula()->getTitulo() + ")";
                 }
             }
-            cout << "ID: " << sala->getId() << " - Capacidad: " << sala->getCapacidad() << " asientos";
-            if (!funcionesFuturas.empty()) {
-                cout << " - Ocupado para: " << funcionesFuturas;
-            }
-            cout << endl;
+            ocupacionSalas[sala->getId()] = funcionesFuturas;
         }
     }
+    
+    return ocupacionSalas;
 }
 
 CAltaFuncion::~CAltaFuncion() {

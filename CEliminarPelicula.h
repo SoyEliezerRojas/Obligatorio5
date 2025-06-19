@@ -28,6 +28,8 @@ public:
     
     // Métodos auxiliares
     bool hayUsuarioLogueado();
+    DtPelicula obtenerInformacionPelicula(string titulo);
+    bool confirmarEliminacion(string titulo);
     void eliminarFuncionesAsociadas(string tituloPelicula);
     
     ~CEliminarPelicula();

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <list>
+#include <map>
 #include "DtPelicula.h"
 #include "DtCine.h"
 #include "DtSala.h"
@@ -20,7 +21,8 @@ public:
     virtual void selectSala(int idSala) = 0;
     virtual void altaFuncion(string horaInicio, DtFecha fecha) = 0;
     virtual bool hayUsuarioLogueado() = 0;
-    virtual void mostrarSalasConOcupacion() = 0;
+    virtual list<DtSala> obtenerSalasConOcupacion() = 0;
+    virtual map<int, string> obtenerInformacionOcupacionSalas() = 0;
     virtual ~ICAltaFuncion() {}
 };
 

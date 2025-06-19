@@ -13,6 +13,7 @@
 #include "ICEliminarPelicula.h"
 #include "ICVerReservasDePelicula.h"
 #include "ICVerInformacionPelicula.h"
+#include "ICReloj.h"
 
 class Fabrica {
 private:
@@ -33,6 +34,7 @@ public:
     ICEliminarPelicula* getICEliminarPelicula();
     ICVerReservasDePelicula* getICVerReservasDePelicula();
     ICVerInformacionPelicula* getICVerInformacionPelicula();
+    ICReloj* getICReloj();
     ~Fabrica();
 };
 

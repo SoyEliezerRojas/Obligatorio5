@@ -1,9 +1,9 @@
 #ifndef CALTAFUNCION_H
 #define CALTAFUNCION_H
 
-#include <iostream>
 #include <string>
 #include <list>
+#include <map>
 #include "ICAltaFuncion.h"
 #include "ManejadorPelicula.h"
 #include "ManejadorCine.h"
@@ -39,8 +39,9 @@ public:
     void altaFuncion(string horaInicio, DtFecha fecha);
     bool hayUsuarioLogueado();
     
-    // Nuevo método para mostrar información detallada de salas
-    void mostrarSalasConOcupacion();
+    // Nuevo método para obtener información detallada de salas
+    list<DtSala> obtenerSalasConOcupacion();
+    map<int, string> obtenerInformacionOcupacionSalas();
     
     ~CAltaFuncion();
 };

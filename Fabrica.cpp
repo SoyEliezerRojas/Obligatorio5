@@ -11,6 +11,7 @@
 #include "CEliminarPelicula.h"
 #include "CVerReservasDePelicula.h"
 #include "CVerInformacionPelicula.h"
+#include "CReloj.h"
 
 Fabrica* Fabrica::instancia = nullptr;
 
@@ -69,6 +70,10 @@ ICVerReservasDePelicula* Fabrica::getICVerReservasDePelicula() {
 
 ICVerInformacionPelicula* Fabrica::getICVerInformacionPelicula() {
     return new CVerInformacionPelicula();
+}
+
+ICReloj* Fabrica::getICReloj() {
+    return new CReloj();
 }
 
 Fabrica::~Fabrica() {

@@ -1,7 +1,6 @@
 #include "CComentarPelicula.h"
 #include "Sesion.h"
 #include <stdexcept>
-#include <iostream>
 
 using namespace std;
 
@@ -16,11 +15,8 @@ bool CComentarPelicula::hayUsuarioLogueado() {
     return Sesion::getInstancia()->getUsuario() != nullptr;
 }
 
-void CComentarPelicula::listarPeliculas() {
-    list<DtPelicula> peliculas = this->manejadorPelicula->listarPeliculas();
-    for (list<DtPelicula>::iterator it = peliculas.begin(); it != peliculas.end(); ++it) {
-        cout << "- " << it->getTitulo() << endl;
-    }
+list<DtPelicula> CComentarPelicula::listarPeliculas() {
+    return this->manejadorPelicula->listarPeliculas();
 }
 
 void CComentarPelicula::selectPeli(string titulo) {

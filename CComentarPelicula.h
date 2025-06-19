@@ -21,7 +21,7 @@ private:
 public:
     CComentarPelicula();
     bool hayUsuarioLogueado();
-    void listarPeliculas();
+    list<DtPelicula> listarPeliculas();
     void selectPeli(string titulo);
     void comentar(string texto);
     void responder(int id, string texto);

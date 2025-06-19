@@ -1,7 +1,6 @@
 #ifndef CVERINFORMACIONPELICULA_H
 #define CVERINFORMACIONPELICULA_H
 
-#include <iostream>
 #include <string>
 #include <list>
 #include <vector>
@@ -10,6 +9,8 @@
 #include "Pelicula.h"
 #include "Cine.h"
 #include "DtPelicula.h"
+#include "DtCine.h"
+#include "DtFuncion.h"
 #include "DtDireccion.h"
 #include "ICVerInformacionPelicula.h"
 
@@ -20,18 +21,15 @@ private:
     ManejadorPelicula* manejadorPelicula;
     ManejadorCine* manejadorCine;
     
-    // Métodos auxiliares privados
-    void mostrarListaPeliculas();
-    void mostrarInformacionPelicula(const string& titulo);
-    void mostrarInformacionCines(const string& titulo);
-    bool validarOpcionMenu(int opcion, int maxOpciones);
-    string obtenerTituloPorIndice(int indice);
-    
 public:
     CVerInformacionPelicula();
-    void ejecutar();
+    list<DtPelicula> listarPeliculas();
+    DtPelicula obtenerInformacionPelicula(string titulo);
+    list<DtCine> obtenerCinesPelicula(string titulo);
+    list<DtFuncion> obtenerFuncionesPeliculaEnCine(string titulo, int idCine);
+    bool validarOpcionMenu(int opcion, int maxOpciones);
+    string obtenerTituloPorIndice(int indice);
     ~CVerInformacionPelicula();
-    void mostrarFuncionesEnCine(const string& titulo, int idCine);
 };
 
 #endif
