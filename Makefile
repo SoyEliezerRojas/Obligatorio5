@@ -1,5 +1,5 @@
-main: DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o Sesion.o CIniciarSesion.o CCerrarSesion.o Fabrica.o Puntaje.o DtPuntaje.o Comentario.o DtComentario.o ManejadorUsuario.o CAltaUsuario.o ManejadorPelicula.o CAltaPelicula.o ManejadorCine.o CAltaCine.o ManejadorFuncion.o CAltaFuncion.o CPuntuarPelicula.o CComentarPelicula.o CCrearReserva.o CEliminarPelicula.o CVerReservasDePelicula.o CVerInformacionPelicula.o Reloj.o CReloj.o main.o
-	g++ DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o Sesion.o CIniciarSesion.o CCerrarSesion.o Fabrica.o Puntaje.o DtPuntaje.o Comentario.o DtComentario.o ManejadorUsuario.o CAltaUsuario.o ManejadorPelicula.o CAltaPelicula.o ManejadorCine.o CAltaCine.o ManejadorFuncion.o CAltaFuncion.o CPuntuarPelicula.o CComentarPelicula.o CCrearReserva.o CEliminarPelicula.o CVerReservasDePelicula.o CVerInformacionPelicula.o Reloj.o CReloj.o main.o -o mainCine
+main: DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o Sesion.o CIniciarSesion.o CCerrarSesion.o Fabrica.o Puntaje.o DtPuntaje.o Comentario.o DtComentario.o ManejadorUsuario.o CAltaUsuario.o ManejadorPelicula.o CAltaPelicula.o ManejadorCine.o CAltaCine.o ManejadorFuncion.o CAltaFuncion.o CPuntuarPelicula.o CComentarPelicula.o CCrearReserva.o CEliminarPelicula.o CVerReservasDePelicula.o CVerInformacionPelicula.o Reloj.o CReloj.o Financiera.o ManejadorFinanciera.o main.o
+	g++ DtFecha.o DtHorario.o DtDireccion.o Sala.o Cine.o Funcion.o Pelicula.o Usuario.o Reserva.o Debito.o Credito.o DtSala.o DtCine.o DtFuncion.o DtPelicula.o DtReserva.o Sesion.o CIniciarSesion.o CCerrarSesion.o Fabrica.o Puntaje.o DtPuntaje.o Comentario.o DtComentario.o ManejadorUsuario.o CAltaUsuario.o ManejadorPelicula.o CAltaPelicula.o ManejadorCine.o CAltaCine.o ManejadorFuncion.o CAltaFuncion.o CPuntuarPelicula.o CComentarPelicula.o CCrearReserva.o CEliminarPelicula.o CVerReservasDePelicula.o CVerInformacionPelicula.o Reloj.o CReloj.o Financiera.o ManejadorFinanciera.o main.o -o mainCine
 
 DtReserva.o: DtReserva.cpp
 
@@ -82,6 +82,10 @@ Reloj.o: Reloj.cpp
 CReloj.o: CReloj.cpp
 
 main.o: main.cpp
+
+Financiera.o: Financiera.cpp
+
+ManejadorFinanciera.o: ManejadorFinanciera.cpp
 
 clean:
 	rm -f *.o mainCine

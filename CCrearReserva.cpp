@@ -1,5 +1,6 @@
 #include "CCrearReserva.h"
 #include "Sesion.h"
+#include "ManejadorFinanciera.h"
 
 CCrearReserva::CCrearReserva() {
     this->peliculaSeleccionada = NULL;
@@ -60,10 +61,29 @@ void CCrearReserva::seleccionarDebito(string banco) {
     this->esDebito = true;
 }
 
-void CCrearReserva::seleccionarCredito(string financiera, float descuento) {
+float CCrearReserva::obtenerDescuentoFinanciera(string nombreFinanciera) {
+    ManejadorFinanciera* mF = ManejadorFinanciera::getInstancia();
+    return mF->obtenerDescuento(nombreFinanciera);
+}
+
+void CCrearReserva::seleccionarCredito(string financiera) {
     this->financiera = financiera;
-    this->descuento = descuento;
+    this->descuento = obtenerDescuentoFinanciera(financiera);
     this->esDebito = false;
+}
+
+float CCrearReserva::calcularPrecioTotal() {
+    if (this->funcionSeleccionada != NULL && this->cantidadEntradas > 0) {
+        float precioBase = this->funcionSeleccionada->getPrecio() * this->cantidadEntradas;
+        
+        if (!this->esDebito) {
+            // Aplicar descuento para crédito
+            precioBase = precioBase * (1.0 - this->descuento / 100.0);
+        }
+        
+        return precioBase;
+    }
+    return 0.0;
 }
 
 void CCrearReserva::confirmarReserva() {
@@ -71,7 +91,7 @@ void CCrearReserva::confirmarReserva() {
         Usuario* usuarioActual = Sesion::getInstancia()->getUsuario();
         
         if (usuarioActual != NULL) {
-            float costo = this->funcionSeleccionada->getPrecio() * this->cantidadEntradas;
+            float costo = this->calcularPrecioTotal();
             Reserva* reserva;
             
             // Generar un ID único para la reserva

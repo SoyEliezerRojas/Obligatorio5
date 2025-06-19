@@ -544,14 +544,24 @@ void crearReserva() {
         iCrearReserva->seleccionarDebito(banco);
     } else if (opcionPago == 2) {
         string financiera;
-        float descuento;
         cout << "Ingrese la financiera: ";
         cin.ignore();
         getline(cin, financiera);
-        cout << "Ingrese el porcentaje de descuento: ";
-        cin >> descuento;
-        iCrearReserva->seleccionarCredito(financiera, descuento);
+        
+        // El sistema obtiene el descuento automáticamente
+        float descuento = iCrearReserva->obtenerDescuentoFinanciera(financiera);
+        if (descuento > 0) {
+            cout << "La financiera " << financiera << " tiene un descuento del " << descuento << "%" << endl;
+        } else {
+            cout << "La financiera " << financiera << " no tiene descuento" << endl;
+        }
+        
+        iCrearReserva->seleccionarCredito(financiera);
     }
+
+    // Mostrar precio total
+    float precioTotal = iCrearReserva->calcularPrecioTotal();
+    cout << endl << "PRECIO TOTAL: $" << precioTotal << endl;
 
     // Confirmar reserva
     cout << endl << "¿Desea confirmar la reserva? (1: SI, 2: NO): ";
@@ -684,39 +694,32 @@ void verInformacionPelicula() {
         return;
     }
     
-    cout << "Películas disponibles:" << endl;
-    int contador = 1;
+    cout << "PELÍCULAS DISPONIBLES:" << endl;
     for (list<DtPelicula>::iterator it = peliculas.begin(); it != peliculas.end(); ++it) {
-        cout << contador << ". " << it->getTitulo() << endl;
-        contador++;
+        cout << "- " << it->getTitulo() << endl;
     }
     
-    int numPeliculas = peliculas.size();
-    cout << endl << (numPeliculas + 1) << ". Salir" << endl;
+    cout << endl << "¿Qué desea hacer?" << endl;
+    cout << "1. Ver información de una película" << endl;
+    cout << "2. Salir" << endl;
+    cout << "Seleccione una opción (1-2): ";
     
-    // 2. Seleccionar película
     int opcion;
-    do {
-        cout << "Seleccione una película (1-" << (numPeliculas + 1) << "): ";
-        cin >> opcion;
-        
-        if (!iVerInformacionPelicula->validarOpcionMenu(opcion, numPeliculas + 1)) {
-            cout << "Opción inválida. Intente nuevamente." << endl;
-        }
-    } while (!iVerInformacionPelicula->validarOpcionMenu(opcion, numPeliculas + 1));
+    cin >> opcion;
     
-    // Si eligió salir
-    if (opcion == numPeliculas + 1) {
+    if (opcion == 2) {
         cout << "Saliendo..." << endl;
         return;
-    }
-    
-    // 3. Obtener título de la película seleccionada
-    string tituloSeleccionado = iVerInformacionPelicula->obtenerTituloPorIndice(opcion - 1);
-    if (tituloSeleccionado.empty()) {
-        cout << "Error al obtener la película seleccionada." << endl;
+    } else if (opcion != 1) {
+        cout << "Opción inválida." << endl;
         return;
     }
+    
+    // 2. Seleccionar película por nombre
+    string tituloSeleccionado;
+    cout << endl << "Ingrese el título de la película: ";
+    cin.ignore();
+    getline(cin, tituloSeleccionado);
     
     // 4. Mostrar información de la película
     DtPelicula pelicula = iVerInformacionPelicula->obtenerInformacionPelicula(tituloSeleccionado);

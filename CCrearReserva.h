@@ -5,6 +5,7 @@
 #include "ManejadorPelicula.h"
 #include "ManejadorFuncion.h"
 #include "ManejadorUsuario.h"
+#include "ManejadorFinanciera.h"
 #include "Pelicula.h"
 #include "Funcion.h"
 #include "Usuario.h"
@@ -33,7 +34,9 @@ public:
     void selectFuncion(int id);
     void ingresarCantidadEntradas(int cantidad);
     void seleccionarDebito(string banco);
-    void seleccionarCredito(string financiera, float descuento);
+    float obtenerDescuentoFinanciera(string financiera);
+    void seleccionarCredito(string financiera);
+    float calcularPrecioTotal();
     void confirmarReserva();
     void cancelarReserva();
     ~CCrearReserva();
