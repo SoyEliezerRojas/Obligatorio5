@@ -9,6 +9,7 @@ class ICAltaPelicula {
 public:
     virtual bool altaPelicula(string titulo, string sinopsis, string url) = 0;
     virtual bool hayUsuarioLogueado() = 0;
+    virtual bool verificarExistenciaPelicula(string titulo) = 0;
     virtual ~ICAltaPelicula() {}
 };
 

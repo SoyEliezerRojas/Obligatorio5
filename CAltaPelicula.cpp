@@ -22,4 +22,9 @@ bool CAltaPelicula::hayUsuarioLogueado() {
     return Sesion::getInstancia()->getUsuario() != NULL;
 }
 
+bool CAltaPelicula::verificarExistenciaPelicula(string titulo) {
+    ManejadorPelicula* mp = ManejadorPelicula::getInstancia();
+    return mp->buscarPelicula(titulo) != NULL;
+}
+
 CAltaPelicula::~CAltaPelicula() {}

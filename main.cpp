@@ -17,11 +17,9 @@
 #include "DtFuncion.h"
 #include "DtFecha.h"
 #include "DtHorario.h"
-#include "ManejadorCine.h"
 #include "ICVerReservasDePelicula.h"
 #include "ICVerInformacionPelicula.h"
 #include "ICReloj.h"
-#include "ManejadorPelicula.h"
 using namespace std;
 
 Fabrica* fabrica;
@@ -154,12 +152,11 @@ void altaPelicula() {
     
     string titulo, sinopsis, url;
     int opcion;
-    ManejadorPelicula* mp = ManejadorPelicula::getInstancia();
     while (true) {
         cout << "TITULO: ";
         cin.ignore();
         getline(cin, titulo);
-        if (mp->buscarPelicula(titulo) != nullptr) {
+        if (iAltaPelicula->verificarExistenciaPelicula(titulo)) {
             cout << "ERROR: Ya existe una película con ese título." << endl;
             cout << "1. Reintentar" << endl;
             cout << "2. Cancelar" << endl;

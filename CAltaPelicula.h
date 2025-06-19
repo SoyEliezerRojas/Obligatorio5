@@ -11,6 +11,7 @@ public:
     CAltaPelicula();
     bool altaPelicula(string titulo, string sinopsis, string url);
     bool hayUsuarioLogueado();
+    bool verificarExistenciaPelicula(string titulo);
     ~CAltaPelicula();
 };
 

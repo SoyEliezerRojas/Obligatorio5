@@ -192,31 +192,45 @@ map<int, string> CAltaFuncion::obtenerInformacionOcupacionSalas() {
     if (cine != nullptr) {
         list<Sala*> salas = cine->getSalas();
         for (Sala* sala : salas) {
-            string funcionesFuturas = "";
+            string funcionesCompletas = "";
+            int capacidadSala = sala->getCapacidad();
             list<Funcion*> funciones = sala->getFunciones();
             for (Funcion* funcion : funciones) {
-                DtFecha fecha = funcion->getDiaFun();
-                DtHorario horario = funcion->getHoraFun();
-                int dia = fecha.getDia();
-                int mes = fecha.getMes();
-                int anio = fecha.getAnio();
-                string horaStr = horario.getHoraIni();
-                int hora, minuto;
-                sscanf(horaStr.c_str(), "%d:%d", &hora, &minuto);
-                // Comparar fecha y hora actual con la de la función
-                bool esFutura = false;
-                if (anio > anioActual ||
-                    (anio == anioActual && mes > mesActual) ||
-                    (anio == anioActual && mes == mesActual && dia > diaActual) ||
-                    (anio == anioActual && mes == mesActual && dia == diaActual && (hora > horaActual || (hora == horaActual && minuto >= minActual)))) {
-                    esFutura = true;
-                }
-                if (esFutura) {
-                    if (!funcionesFuturas.empty()) funcionesFuturas += ", ";
-                    funcionesFuturas += to_string(dia) + "/" + to_string(mes) + "/" + to_string(anio) + " " + horaStr + " (" + funcion->getPelicula()->getTitulo() + ")";
+                // Solo mostrar funciones que tienen la sala completamente ocupada
+                list<Reserva*> reservas = funcion->getReservas();
+                if (!reservas.empty()) {
+                    // Contar el total de entradas reservadas para esta función
+                    int totalEntradasReservadas = 0;
+                    for (Reserva* reserva : reservas) {
+                        totalEntradasReservadas += reserva->getCantEntradas();
+                    }
+                    
+                    // Solo mostrar si la sala está completamente ocupada
+                    if (totalEntradasReservadas >= capacidadSala) {
+                        DtFecha fecha = funcion->getDiaFun();
+                        DtHorario horario = funcion->getHoraFun();
+                        int dia = fecha.getDia();
+                        int mes = fecha.getMes();
+                        int anio = fecha.getAnio();
+                        string horaStr = horario.getHoraIni();
+                        int hora, minuto;
+                        sscanf(horaStr.c_str(), "%d:%d", &hora, &minuto);
+                        // Comparar fecha y hora actual con la de la función
+                        bool esFutura = false;
+                        if (anio > anioActual ||
+                            (anio == anioActual && mes > mesActual) ||
+                            (anio == anioActual && mes == mesActual && dia > diaActual) ||
+                            (anio == anioActual && mes == mesActual && dia == diaActual && (hora > horaActual || (hora == horaActual && minuto >= minActual)))) {
+                            esFutura = true;
+                        }
+                        if (esFutura) {
+                            if (!funcionesCompletas.empty()) funcionesCompletas += ", ";
+                            funcionesCompletas += to_string(dia) + "/" + to_string(mes) + "/" + to_string(anio) + " " + horaStr + " (" + funcion->getPelicula()->getTitulo() + ")";
+                        }
+                    }
                 }
             }
-            ocupacionSalas[sala->getId()] = funcionesFuturas;
+            ocupacionSalas[sala->getId()] = funcionesCompletas;
         }
     }
     
