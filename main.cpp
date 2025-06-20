@@ -477,13 +477,11 @@ void crearReserva() {
     cout << "_" << endl;
     cout << "_C R E A R  R E S E R V A_" << endl;
 
-    // Verificar si hay usuario logueado
     if (!iCrearReserva->hayUsuarioLogueado()) {
         cout << "ERROR: Debe iniciar sesión para crear una reserva" << endl;
         return;
     }
 
-    // Listar películas disponibles
     list<DtPelicula> peliculas = iCrearReserva->listarPeliculas();
     if (peliculas.empty()) {
         cout << "No hay películas disponibles para reservar." << endl;
@@ -495,85 +493,143 @@ void crearReserva() {
         cout << "- " << it->getTitulo() << endl;
     }
 
-    // Seleccionar película
     string titulo;
-    cout << endl << "Ingrese el título de la película: ";
+    cout << endl << "Ingrese el título de la película (o '1' para cancelar): ";
     cin.ignore();
     getline(cin, titulo);
-    iCrearReserva->selectPelicula(titulo);
 
-    // Listar funciones disponibles
-    list<DtFuncion> funciones = iCrearReserva->listarFunciones();
-    if (funciones.empty()) {
-        cout << "No hay funciones disponibles para esta película." << endl;
+    if (titulo == "1") {
+        cout << "Operación cancelada." << endl;
         return;
     }
 
-    cout << endl << "FUNCIONES DISPONIBLES:" << endl;
-    for (list<DtFuncion>::iterator it = funciones.begin(); it != funciones.end(); ++it) {
-        cout << "ID: " << it->getIdFun() << " - Fecha: " << it->getDiaFun().getDia() << "/" 
-             << it->getDiaFun().getMes() << "/" << it->getDiaFun().getAnio() 
-             << " - Hora: " << it->getHoraFun().getHoraIni() << endl;
-    }
+    try {
+        DtPelicula dtp = iVerInformacionPelicula->obtenerInformacionPelicula(titulo);
+        cout << endl << "========================================" << endl;
+        cout << "PÓSTER: " << dtp.getPoster() << endl;
+        cout << "SINOPSIS: " << dtp.getSinopsis() << endl;
+        cout << "========================================" << endl;
 
-    // Seleccionar función
-    int idFuncion;
-    cout << endl << "Ingrese el ID de la función: ";
-    cin >> idFuncion;
-    iCrearReserva->selectFuncion(idFuncion);
+        cout << endl << "¿Qué desea hacer?" << endl;
+        cout << "1. Ver información de cines y funciones" << endl;
+        cout << "2. Finalizar" << endl;
+        cout << "Opción: ";
+        int opcion;
+        cin >> opcion;
 
-    // Ingresar cantidad de entradas
-    int cantEntradas;
-    cout << endl << "Cantidad de entradas: ";
-    cin >> cantEntradas;
-    iCrearReserva->ingresarCantidadEntradas(cantEntradas);
-
-    // Seleccionar forma de pago
-    cout << endl << "FORMA DE PAGO:" << endl;
-    cout << "1. Débito" << endl;
-    cout << "2. Crédito" << endl;
-    int opcionPago;
-    cout << "Seleccione una opción (1-2): ";
-    cin >> opcionPago;
-
-    if (opcionPago == 1) {
-        string banco;
-        cout << "Ingrese el banco: ";
-        cin.ignore();
-        getline(cin, banco);
-        iCrearReserva->seleccionarDebito(banco);
-    } else if (opcionPago == 2) {
-        string financiera;
-        cout << "Ingrese la financiera: ";
-        cin.ignore();
-        getline(cin, financiera);
-        
-        // El sistema obtiene el descuento automáticamente
-        float descuento = iCrearReserva->obtenerDescuentoFinanciera(financiera);
-        if (descuento > 0) {
-            cout << "La financiera " << financiera << " tiene un descuento del " << descuento << "%" << endl;
-        } else {
-            cout << "La financiera " << financiera << " no tiene descuento" << endl;
+        if (opcion != 1) {
+            cout << "Operación finalizada." << endl;
+            return;
         }
         
-        iCrearReserva->seleccionarCredito(financiera);
-    }
+        iCrearReserva->selectPelicula(titulo);
 
-    // Mostrar precio total
-    float precioTotal = iCrearReserva->calcularPrecioTotal();
-    cout << endl << "PRECIO TOTAL: $" << precioTotal << endl;
+        list<DtCine> cines = iVerInformacionPelicula->obtenerCinesPelicula(titulo);
+        if (cines.empty()) {
+            cout << "Esta película no se proyecta en ningún cine actualmente." << endl;
+            return;
+        }
 
-    // Confirmar reserva
-    cout << endl << "¿Desea confirmar la reserva? (1: SI, 2: NO): ";
-    int confirmar;
-    cin >> confirmar;
+        cout << endl << "CINES DONDE SE PROYECTA '" << titulo << "':" << endl;
+        for (list<DtCine>::iterator it = cines.begin(); it != cines.end(); ++it) {
+            cout << "ID: " << it->getId() << " - Dirección: " << it->getDireccion().getCalle() << " " << it->getDireccion().getNumero() << endl;
+        }
 
-    if (confirmar == 1) {
-        iCrearReserva->confirmarReserva();
-        cout << "RESERVA CREADA EXITOSAMENTE" << endl;
-    } else {
-        iCrearReserva->cancelarReserva();
-        cout << "OPERACIÓN CANCELADA" << endl;
+        cout << endl << "¿Desea seleccionar un cine para ver las funciones? (s/n): ";
+        char respuesta;
+        cin >> respuesta;
+
+        if (respuesta != 's' && respuesta != 'S') {
+            cout << "Operación cancelada." << endl;
+            return;
+        }
+
+        int idCine;
+        cout << "Ingrese el ID del cine: ";
+        cin >> idCine;
+
+        list<DtFuncion> funciones = iVerInformacionPelicula->obtenerFuncionesPeliculaEnCine(titulo, idCine);
+        if (funciones.empty()) {
+            cout << "No hay funciones disponibles para esta película en este cine." << endl;
+            return;
+        }
+
+        cout << endl << "FUNCIONES DISPONIBLES (posteriores a la fecha actual):" << endl;
+        for (list<DtFuncion>::iterator it = funciones.begin(); it != funciones.end(); ++it) {
+            cout << "ID: " << it->getIdFun() << " - Fecha: " << it->getDiaFun().getDia() << "/"
+                 << it->getDiaFun().getMes() << "/" << it->getDiaFun().getAnio()
+                 << " - Hora: " << it->getHoraFun().getHoraIni() << endl;
+        }
+
+        int idFuncion;
+        cout << endl << "Ingrese el ID de la función: ";
+        cin >> idFuncion;
+        iCrearReserva->selectFuncion(idFuncion);
+
+        int cantEntradas;
+        int asientosDisponibles = iCrearReserva->obtenerAsientosDisponibles();
+
+        if (asientosDisponibles <= 0) {
+            cout << "Lo sentimos, no quedan asientos disponibles para esta función." << endl;
+            return;
+        }
+
+        do {
+            cout << endl << "Asientos disponibles: " << asientosDisponibles << endl;
+            cout << "Cantidad de entradas a reservar: ";
+            cin >> cantEntradas;
+
+            if (cantEntradas <= 0 || cantEntradas > asientosDisponibles) {
+                cout << "Error: La cantidad de entradas debe ser mayor que 0 y no puede superar los asientos disponibles." << endl;
+            }
+        } while (cantEntradas <= 0 || cantEntradas > asientosDisponibles);
+        
+        iCrearReserva->ingresarCantidadEntradas(cantEntradas);
+
+        cout << endl << "FORMA DE PAGO:" << endl;
+        cout << "1. Débito" << endl;
+        cout << "2. Crédito" << endl;
+        int opcionPago;
+        cout << "Seleccione una opción (1-2): ";
+        cin >> opcionPago;
+
+        if (opcionPago == 1) {
+            string banco;
+            cout << "Ingrese el banco: ";
+            cin.ignore();
+            getline(cin, banco);
+            iCrearReserva->seleccionarDebito(banco);
+        } else if (opcionPago == 2) {
+            string financiera;
+            cout << "Ingrese la financiera: ";
+            cin.ignore();
+            getline(cin, financiera);
+
+            float descuento = iCrearReserva->obtenerDescuentoFinanciera(financiera);
+            if (descuento > 0) {
+                cout << "La financiera " << financiera << " tiene un descuento del " << descuento << "%" << endl;
+            } else {
+                cout << "La financiera " << financiera << " no tiene descuento" << endl;
+            }
+            iCrearReserva->seleccionarCredito(financiera);
+        }
+
+        float precioTotal = iCrearReserva->calcularPrecioTotal();
+        cout << endl << "PRECIO TOTAL: $" << precioTotal << endl;
+
+        cout << endl << "¿Desea confirmar la reserva? (1: SI, 2: NO): ";
+        int confirmar;
+        cin >> confirmar;
+
+        if (confirmar == 1) {
+            iCrearReserva->confirmarReserva();
+            cout << "RESERVA CREADA EXITOSAMENTE" << endl;
+        } else {
+            iCrearReserva->cancelarReserva();
+            cout << "OPERACIÓN CANCELADA" << endl;
+        }
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
     }
 }
 
@@ -646,7 +702,7 @@ void verReservasDePelicula() {
     cout << "_" << endl;
     cout << "_V E R  R E S E R V A S  D E  P E L I C U L A_" << endl;
 
-    // Listar películas disponibles
+    // 1. Listar películas disponibles
     list<DtPelicula> peliculas = iVerReservasDePelicula->listarPeliculas();
     if (peliculas.empty()) {
         cout << "No hay películas registradas en el sistema." << endl;
@@ -658,26 +714,42 @@ void verReservasDePelicula() {
         cout << "- " << it->getTitulo() << endl;
     }
 
-    // Seleccionar película
+    // 2. Seleccionar película
     string titulo;
     cout << endl << "Ingrese el título de la película: ";
     cin.ignore();
     getline(cin, titulo);
 
-    // Listar reservas de la película
-    list<DtReserva> reservas = iVerReservasDePelicula->listarReservasDePelicula(titulo);
-    if (reservas.empty()) {
-        cout << "No hay reservas para esta película." << endl;
+    // 3. Obtener las funciones de esa película
+    list<DtFuncion> funciones = iVerReservasDePelicula->obtenerFuncionesDePelicula(titulo);
+    if (funciones.empty()) {
+        cout << "No hay funciones registradas para esta película." << endl;
         return;
     }
 
-    cout << endl << "RESERVAS DE LA PELÍCULA " << titulo << ":" << endl;
-    for (list<DtReserva>::iterator it = reservas.begin(); it != reservas.end(); ++it) {
-        cout << "ID Reserva: " << it->getId() << endl;
-        cout << "Cantidad de entradas: " << it->getCantEntradas() << endl;
-        cout << "Costo total: $" << it->getCosto() << endl;
-        cout << "Forma de pago: " << it->getFormaPago() << endl;
-        cout << "------------------------" << endl;
+    cout << endl << "========================================" << endl;
+    cout << "RESERVAS PARA LA PELÍCULA: " << titulo << endl;
+    cout << "========================================" << endl;
+
+    // 4. Iterar por cada función y mostrar sus reservas
+    for (list<DtFuncion>::iterator itFun = funciones.begin(); itFun != funciones.end(); ++itFun) {
+        cout << endl << "--- Función ID: " << itFun->getIdFun()
+             << " | Fecha: " << itFun->getDiaFun().getDia() << "/" << itFun->getDiaFun().getMes() << "/" << itFun->getDiaFun().getAnio()
+             << " | Hora: " << itFun->getHoraFun().getHoraIni() << " ---" << endl;
+        
+        list<DtReserva> reservas = iVerReservasDePelicula->obtenerReservasDeFuncion(itFun->getIdFun());
+        
+        if (reservas.empty()) {
+            cout << "No hay reservas para esta función." << endl;
+        } else {
+            for (list<DtReserva>::iterator itRes = reservas.begin(); itRes != reservas.end(); ++itRes) {
+                cout << "  ID Reserva: " << itRes->getId() << endl;
+                cout << "  Cantidad de entradas: " << itRes->getCantEntradas() << endl;
+                cout << "  Costo total: $" << itRes->getCosto() << endl;
+                cout << "  Forma de pago: " << itRes->getFormaPago() << endl;
+                cout << "  ------------------------" << endl;
+            }
+        }
     }
 }
 
@@ -786,7 +858,7 @@ void verInformacionPelicula() {
     }
     
     cout << endl << "Presione Enter para continuar...";
-    cin.ignore();
+    cin.ignore(10000, '\n');
     cin.get();
 }
 
@@ -867,7 +939,13 @@ void menuReloj() {
         }
         
         if (opcion != 3) {
-            system("sleep 3");
+            cout << endl << "Presione Enter para continuar...";
+            #ifdef _WIN32
+                system("pause > nul");
+            #else
+                cin.ignore(10000, '\n');
+                cin.get();
+            #endif
         }
         
     } while (opcion != 3);
@@ -931,7 +1009,15 @@ int main() {
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;
         }
-        system("sleep 5");
+        if (opcion != 14) {
+            cout << endl << "Presione Enter para continuar...";
+            #ifdef _WIN32
+                system("pause > nul");
+            #else
+                cin.ignore(10000, '\n');
+                cin.get();
+            #endif
+        }
         system("clear");
         menu();
         cin >> opcion;

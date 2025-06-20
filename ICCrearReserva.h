@@ -15,6 +15,7 @@ public:
     virtual void selectPelicula(string titulo) = 0;
     virtual list<DtFuncion> listarFunciones() = 0;
     virtual void selectFuncion(int id) = 0;
+    virtual int obtenerAsientosDisponibles() = 0;
     virtual void ingresarCantidadEntradas(int cantidad) = 0;
     virtual void seleccionarDebito(string banco) = 0;
     virtual float obtenerDescuentoFinanciera(string financiera) = 0;

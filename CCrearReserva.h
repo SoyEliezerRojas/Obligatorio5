@@ -32,6 +32,7 @@ public:
     void selectPelicula(string titulo);
     list<DtFuncion> listarFunciones();
     void selectFuncion(int id);
+    int obtenerAsientosDisponibles();
     void ingresarCantidadEntradas(int cantidad);
     void seleccionarDebito(string banco);
     float obtenerDescuentoFinanciera(string financiera);

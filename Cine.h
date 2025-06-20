@@ -35,6 +35,10 @@ public:
     
     list<DtReserva> listarReservasDePelicula(string titulo);
     
+    Sala* buscarSala(int idSala);
+    
+    void getSalasDeCine();
+    
     ~Cine();
 };
 

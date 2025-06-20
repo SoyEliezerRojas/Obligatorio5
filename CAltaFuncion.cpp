@@ -111,28 +111,29 @@ void CAltaFuncion::altaFuncion(string horaInicio, DtFecha fecha) {
     Cine* cine = manejadorCine->buscarCine(idCine);
     
     if (pelicula != nullptr && cine != nullptr) {
+        // Buscar la sala seleccionada
+        Sala* salaSeleccionada = cine->buscarSala(this->idSalaSeleccionada);
+        if (salaSeleccionada == nullptr) {
+            // Manejar error si la sala no se encuentra
+            return;
+        }
+
         // ID autogenerado para la función
         int idFuncion = manejadorFunc->getNextId();
         
         // Crear horario
         DtHorario horario(horaInicio, ""); // Hora fin se calcula internamente
         
-        // f = new Funcion(hora, fecha, p)
-        Funcion* funcion = new Funcion(idFuncion, fecha, horario);
+        // f = new Funcion(...) con la sala
+        Funcion* funcion = new Funcion(idFuncion, fecha, horario, salaSeleccionada);
         funcion->setPelicula(pelicula);
         funcion->setPrecio(200); // Precio por defecto
         
         // ColGlobalFuncion->add(f)
         manejadorFunc->agregarFuncion(funcion);
         
-        // Asociar la función a la sala seleccionada
-        list<Sala*> salas = cine->getSalas();
-        for (Sala* sala : salas) {
-            if (sala->getId() == this->idSalaSeleccionada) {
-                sala->agregarFuncion(funcion);
-                break;
-            }
-        }
+        // Asociar la función a la sala (la sala ya lo sabe por el constructor, pero esta llamada puede ser necesaria para la bidireccionalidad)
+        salaSeleccionada->agregarFuncion(funcion);
         
         // Asegurar que el cine esté en la lista de cines de la película
         bool cineExiste = false;

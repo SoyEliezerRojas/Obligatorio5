@@ -8,17 +8,20 @@
 #include "Reserva.h"
 #include <list>
 
+class Sala; // Forward declaration
+
 class Funcion{
 private:
     int idFun;
     DtFecha dia;
     DtHorario horario;
     Pelicula* pelicula;
+    Sala* sala;
     float precio;
     list<Reserva*> reservas;
 public:
     Funcion();
-    Funcion(int, DtFecha, DtHorario);
+    Funcion(int, DtFecha, DtHorario, Sala*);
     int getIdFun();
     void setIdFun(int);
 
@@ -27,6 +30,8 @@ public:
 
     DtHorario getHoraFun();
     void setHorario(DtHorario);
+
+    Sala* getSala();
 
     Pelicula* getPelicula();
     void setPelicula(Pelicula*);

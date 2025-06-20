@@ -1,6 +1,7 @@
 #include "CCrearReserva.h"
 #include "Sesion.h"
 #include "ManejadorFinanciera.h"
+#include "Sala.h"
 
 CCrearReserva::CCrearReserva() {
     this->peliculaSeleccionada = NULL;
@@ -50,6 +51,22 @@ list<DtFuncion> CCrearReserva::listarFunciones() {
 void CCrearReserva::selectFuncion(int id) {
     ManejadorFuncion* mF = ManejadorFuncion::getInstancia();
     this->funcionSeleccionada = mF->buscarFuncion(id);
+}
+
+int CCrearReserva::obtenerAsientosDisponibles() {
+    if (this->funcionSeleccionada == NULL) {
+        return 0;
+    }
+    
+    int capacidadSala = this->funcionSeleccionada->getSala()->getCapacidad();
+    int asientosReservados = 0;
+    
+    list<Reserva*> reservas = this->funcionSeleccionada->getReservas();
+    for (list<Reserva*>::iterator it = reservas.begin(); it != reservas.end(); ++it) {
+        asientosReservados += (*it)->getCantEntradas();
+    }
+    
+    return capacidadSala - asientosReservados;
 }
 
 void CCrearReserva::ingresarCantidadEntradas(int cantidad) {

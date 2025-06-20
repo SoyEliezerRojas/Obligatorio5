@@ -9,17 +9,12 @@
 class CVerReservasDePelicula : public ICVerReservasDePelicula {
     private:
         static CVerReservasDePelicula* instancia;
-        string tituloSeleccionado;
-        int idFuncionSeleccionada;
-        CVerReservasDePelicula() {}
+        CVerReservasDePelicula();
     public:
         static CVerReservasDePelicula* getInstancia();
         list<DtPelicula> listarPeliculas() override;
-        void selectPelicula(string titulo) override;
-        list<DtFuncion> listarFunciones() override;
-        void selectFuncion(int idFuncion) override;
-        list<DtReserva> listarReservas() override;
-        list<DtReserva> listarReservasDePelicula(string titulo) override;
+        list<DtFuncion> obtenerFuncionesDePelicula(string titulo) override;
+        list<DtReserva> obtenerReservasDeFuncion(int idFuncion) override;
         ~CVerReservasDePelicula();
 };
 

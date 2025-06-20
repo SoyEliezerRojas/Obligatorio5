@@ -1,9 +1,13 @@
 #include "CVerReservasDePelicula.h"
 #include "ManejadorPelicula.h"
 #include "ManejadorFuncion.h"
+#include "Pelicula.h"
+#include "Funcion.h"
 #include "Sesion.h"
 
 CVerReservasDePelicula* CVerReservasDePelicula::instancia = NULL;
+
+CVerReservasDePelicula::CVerReservasDePelicula() {}
 
 CVerReservasDePelicula* CVerReservasDePelicula::getInstancia() {
     if (instancia == NULL) {
@@ -14,59 +18,36 @@ CVerReservasDePelicula* CVerReservasDePelicula::getInstancia() {
 
 list<DtPelicula> CVerReservasDePelicula::listarPeliculas() {
     ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
-    return mP->listarPeliculas();
+    vector<Pelicula*>& peliculas = mP->getPeliculas();
+    list<DtPelicula> dtPeliculas;
+    for (auto const& p : peliculas) {
+        dtPeliculas.push_back(p->getDtPelicula());
+    }
+    return dtPeliculas;
 }
 
-void CVerReservasDePelicula::selectPelicula(string titulo) {
-    this->tituloSeleccionado = titulo;
-}
+list<DtFuncion> CVerReservasDePelicula::obtenerFuncionesDePelicula(string titulo) {
+    list<DtFuncion> funcionesDePelicula;
+    ManejadorFuncion* mf = ManejadorFuncion::getInstancia();
+    list<Funcion*> todasLasFunciones = mf->getFunciones();
 
-list<DtFuncion> CVerReservasDePelicula::listarFunciones() {
-    ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
-    Pelicula* pelicula = mP->buscarPelicula(tituloSeleccionado);
-    if (pelicula != NULL) {
-        list<Cine*> cines = pelicula->getCines();
-        list<DtFuncion> funciones;
-        for (Cine* cine : cines) {
-            list<Sala*> salas = cine->getSalas();
-            for (Sala* sala : salas) {
-                list<Funcion*> funcionesSala = sala->getFunciones();
-                for (Funcion* funcion : funcionesSala) {
-                    if (funcion->getTituloPelicula() == tituloSeleccionado) {
-                        DtFuncion dtFuncion(
-                            funcion->getIdFun(),
-                            funcion->getDiaFun(),
-                            funcion->getHoraFun()
-                        );
-                        funciones.push_back(dtFuncion);
-                    }
-                }
-            }
+    for (list<Funcion*>::iterator it = todasLasFunciones.begin(); it != todasLasFunciones.end(); ++it) {
+        if ((*it)->getPelicula() != nullptr && (*it)->getPelicula()->getTitulo() == titulo) {
+            DtFuncion dtF((*it)->getIdFun(), (*it)->getDiaFun(), (*it)->getHoraFun());
+            funcionesDePelicula.push_back(dtF);
         }
-        return funciones;
     }
-    return list<DtFuncion>();
+    return funcionesDePelicula;
 }
 
-void CVerReservasDePelicula::selectFuncion(int idFuncion) {
-    this->idFuncionSeleccionada = idFuncion;
-}
+list<DtReserva> CVerReservasDePelicula::obtenerReservasDeFuncion(int idFuncion) {
+    ManejadorFuncion* mf = ManejadorFuncion::getInstancia();
+    Funcion* funcion = mf->buscarFuncion(idFuncion);
 
-list<DtReserva> CVerReservasDePelicula::listarReservas() {
-    ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
-    Pelicula* pelicula = mP->buscarPelicula(tituloSeleccionado);
-    if (pelicula != NULL) {
-        return pelicula->listarReservas();
+    if (funcion != nullptr) {
+        return funcion->listarReservas();
     }
-    return list<DtReserva>();
-}
 
-list<DtReserva> CVerReservasDePelicula::listarReservasDePelicula(string titulo) {
-    ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
-    Pelicula* pelicula = mP->buscarPelicula(titulo);
-    if (pelicula != NULL) {
-        return pelicula->listarReservas();
-    }
     return list<DtReserva>();
 }
 

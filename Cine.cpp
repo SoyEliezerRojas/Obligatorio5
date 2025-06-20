@@ -71,3 +71,12 @@ Cine::~Cine() {
     }
     salas.clear();
 }
+
+Sala* Cine::buscarSala(int idSala) {
+    for (Sala* sala : this->salas) {
+        if (sala->getId() == idSala) {
+            return sala;
+        }
+    }
+    return nullptr; // Si no se encuentra la sala
+}

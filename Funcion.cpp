@@ -2,17 +2,20 @@
 #include "DtFecha.h"
 #include "DtHorario.h"
 #include "Pelicula.h"
+#include "Sala.h"
 
 Funcion::Funcion() {
     this->pelicula = NULL;
+    this->sala = NULL;
     this->precio = 0;
 }
 
-Funcion::Funcion(int id, DtFecha fecha, DtHorario hora){
+Funcion::Funcion(int id, DtFecha fecha, DtHorario hora, Sala* sala) {
     this->idFun     = id;
     this->dia       = fecha;
     this->horario   = hora;
     this->pelicula  = NULL;
+    this->sala = sala;
     this->precio    = 0;
 }
 
@@ -37,6 +40,10 @@ DtHorario Funcion::getHoraFun(){
 
 void Funcion::setHorario(DtHorario hora){
     this->horario = hora;
+}
+
+Sala* Funcion::getSala() {
+    return this->sala;
 }
 
 Pelicula* Funcion::getPelicula() {
