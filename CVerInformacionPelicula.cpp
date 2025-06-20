@@ -2,6 +2,12 @@
 #include "Funcion.h"
 #include "DtHorario.h"
 #include "DtFecha.h"
+#include "Reloj.h"
+#include <string>
+#include <list>
+#include <algorithm>
+
+using namespace std;
 
 CVerInformacionPelicula::CVerInformacionPelicula() {
     this->manejadorPelicula = ManejadorPelicula::getInstancia();
@@ -29,12 +35,54 @@ list<DtCine> CVerInformacionPelicula::obtenerCinesPelicula(string titulo) {
     list<Cine*> cines = pelicula->getCines();
     list<DtCine> dtCines;
     
-        for (Cine* cine : cines) {
+    for (Cine* cine : cines) {
         DtCine dtCine(cine->getIdCine(), cine->getDirecCine());
         dtCines.push_back(dtCine);
     }
     
     return dtCines;
+}
+
+// Función auxiliar para comparar si una función es posterior a la fecha y hora actual
+bool CVerInformacionPelicula::esFuncionPosterior(DtFuncion& funcion) {
+    Reloj* reloj = Reloj::getInstancia();
+    DtFecha fechaActual = reloj->getFechaActual();
+    string horaActual = reloj->getHoraActual();
+    
+    DtFecha fechaFuncion = funcion.getDiaFun();
+    DtHorario horarioFuncion = funcion.getHoraFun();
+    
+    // Si la fecha de la función es posterior a la fecha actual
+    if (fechaActual < fechaFuncion) {
+        return true;
+    }
+    
+    // Si es el mismo día, comparar horarios
+    if (fechaActual.getDia() == fechaFuncion.getDia() && 
+        fechaActual.getMes() == fechaFuncion.getMes() && 
+        fechaActual.getAnio() == fechaFuncion.getAnio()) {
+        
+        // Comparar hora de inicio de la función con la hora actual
+        string horaInicioFuncion = horarioFuncion.getHoraIni();
+        return compararHoras(horaActual, horaInicioFuncion);
+    }
+    
+    return false;
+}
+
+// Función auxiliar para comparar horas en formato "hh:mm"
+bool CVerInformacionPelicula::compararHoras(const string& horaActual, const string& horaFuncion) {
+    // Extraer horas y minutos
+    int horaActualH = stoi(horaActual.substr(0, 2));
+    int horaActualM = stoi(horaActual.substr(3, 2));
+    int horaFuncionH = stoi(horaFuncion.substr(0, 2));
+    int horaFuncionM = stoi(horaFuncion.substr(3, 2));
+    
+    // Convertir a minutos totales para facilitar la comparación
+    int minutosActual = horaActualH * 60 + horaActualM;
+    int minutosFuncion = horaFuncionH * 60 + horaFuncionM;
+    
+    return minutosFuncion > minutosActual;
 }
 
 list<DtFuncion> CVerInformacionPelicula::obtenerFuncionesPeliculaEnCine(string titulo, int idCine) {
@@ -51,7 +99,11 @@ list<DtFuncion> CVerInformacionPelicula::obtenerFuncionesPeliculaEnCine(string t
         for (Funcion* funcion : funcionesSala) {
             if (funcion->getPelicula() && funcion->getPelicula()->getTitulo() == titulo) {
                 DtFuncion dtFuncion(funcion->getIdFun(), funcion->getDiaFun(), funcion->getHoraFun());
-                funciones.push_back(dtFuncion);
+                
+                // Solo agregar funciones posteriores a la fecha y hora actual
+                if (esFuncionPosterior(dtFuncion)) {
+                    funciones.push_back(dtFuncion);
+                }
             }
         }
     }

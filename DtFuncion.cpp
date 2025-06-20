@@ -10,15 +10,15 @@ DtFuncion::DtFuncion(int id, DtFecha fecha, DtHorario hora){
     this->horario   = hora;
 }
 
-int DtFuncion::getIdFun(){
+int DtFuncion::getIdFun() {
     return this->idFun; 
 }
 
-DtFecha DtFuncion::getDiaFun(){
+DtFecha DtFuncion::getDiaFun() {
     return this->dia;
 }
 
-DtHorario DtFuncion::getHoraFun(){
+DtHorario DtFuncion::getHoraFun() {
     return this->horario;
 }
 

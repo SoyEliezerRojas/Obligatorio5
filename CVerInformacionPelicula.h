@@ -2,6 +2,7 @@
 #define CVERINFORMACIONPELICULA_H
 
 #include <string>
+#include <iostream>
 #include <list>
 #include <vector>
 #include "ManejadorPelicula.h"
@@ -20,6 +21,10 @@ class CVerInformacionPelicula : public ICVerInformacionPelicula {
 private:
     ManejadorPelicula* manejadorPelicula;
     ManejadorCine* manejadorCine;
+    
+    // Métodos auxiliares para filtrado por fecha y hora
+    bool esFuncionPosterior(DtFuncion& funcion);
+    bool compararHoras(const string& horaActual, const string& horaFuncion);
     
 public:
     CVerInformacionPelicula();

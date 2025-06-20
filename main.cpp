@@ -166,7 +166,6 @@ void altaPelicula() {
                 cout << "Operación cancelada." << endl;
                 return;
             }
-            cin.ignore(); // Limpiar buffer antes de volver a pedir título
         } else {
             break;
         }
@@ -335,8 +334,6 @@ void altaFuncion() {
         
         cout << endl << "¿Desea agregar otra función para esta película? (s/n): ";
         cin >> continuar;
-        cin.ignore(10000, '\n');
-        system("clear");
         
     } while (tolower(continuar) == 's');
 }
@@ -409,8 +406,6 @@ void comentarPelicula() {
 
             cout << endl << "¿Desea agregar otro comentario? (s/n): ";
             cin >> continuar;
-            cin.ignore(10000, '\n');
-            system("clear");
 
         } while (tolower(continuar) == 's');
 
@@ -857,9 +852,6 @@ void verInformacionPelicula() {
         cout << "=============================" << endl;
     }
     
-    cout << endl << "Presione Enter para continuar...";
-    cin.ignore(10000, '\n');
-    cin.get();
 }
 
 void modificarFechaSistema() {
@@ -909,6 +901,10 @@ void consultarFechaSistema() {
     } catch (const exception& e) {
         cout << endl << e.what() << endl;
     }
+    
+    cout << endl << "Presione Enter para continuar...";
+    cin.ignore(1000, '\n');
+    cin.get();
 }
 
 void menuReloj() {
@@ -916,13 +912,18 @@ void menuReloj() {
     do {
         system("clear");
         cout << "_" << endl;
-        cout << "S U B M E N U  R E L O J  D E L  S I S T E M A" << endl;
+        cout << "R E L O J" << endl;
         cout << "1. Modificar fecha del sistema" << endl;
         cout << "2. Consultar fecha del sistema" << endl;
         cout << "3. Volver al menú principal" << endl;
         cout << "_" << endl;
         cout << "OPCION: ";
         cin >> opcion;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            opcion = -1;
+        }
         
         switch(opcion) {
             case 1: 
@@ -932,18 +933,24 @@ void menuReloj() {
                 consultarFechaSistema();
                 break;
             case 3: 
-                cout << "Volviendo al menú principal..." << endl;
+                cout << endl << "Presione Enter para continuar...";
+                #ifdef _WIN32
+                    system("pause > nul");
+                #else
+                    cin.ignore(1000, '\n');
+                    cin.get();
+                #endif
+                cout << endl << "Volviendo al menú principal..." << endl;
                 break;
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;
         }
         
-        if (opcion != 3) {
+        if (opcion != 3 && opcion != 2) {
             cout << endl << "Presione Enter para continuar...";
             #ifdef _WIN32
                 system("pause > nul");
             #else
-                cin.ignore(10000, '\n');
                 cin.get();
             #endif
         }
@@ -1009,16 +1016,18 @@ int main() {
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;
         }
-        if (opcion != 14) {
+        if (opcion != 14 && opcion != 13) {
             cout << endl << "Presione Enter para continuar...";
-            #ifdef _WIN32
-                system("pause > nul");
-            #else
-                cin.ignore(10000, '\n');
+            if (opcion == 4) { // AltaPelicula - no necesita ignore extra
                 cin.get();
-            #endif
+            } else { // Otras opciones como iniciarSesion, altaUsuario
+                cin.ignore(1000, '\n');
+                cin.get();
+            }
+            system("clear");
+        } else if (opcion != 14) {
+            system("clear");
         }
-        system("clear");
         menu();
         cin >> opcion;
         if (cin.fail()) {

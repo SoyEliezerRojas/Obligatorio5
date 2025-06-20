@@ -3,6 +3,7 @@
 
 #include <string>
 #include <list>
+#include <iostream>
 #include "DtPelicula.h"
 #include "DtCine.h"
 #include "DtFuncion.h"
