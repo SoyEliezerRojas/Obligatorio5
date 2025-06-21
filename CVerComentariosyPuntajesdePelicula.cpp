@@ -4,6 +4,9 @@
 #include "Usuario.h"
 #include <vector>
 #include <map>
+#include <set>
+#include <list>
+#include <string>
 
 CVerComentariosyPuntajesdePelicula::CVerComentariosyPuntajesdePelicula() {}
 
@@ -18,7 +21,7 @@ set<DtPelicula*> CVerComentariosyPuntajesdePelicula::listarPeliculas() {
 }
 
 DtComentario* convertirComentarioADt(Comentario* c) {
-    if (c == NULL) return NULL;
+    if (c == nullptr) return nullptr;
     DtComentario* dtc = new DtComentario(c->getAutor()->getNickName(), c->getTexto());
     list<Comentario*> respuestas = c->getRespuestas();
     for (list<Comentario*>::iterator it = respuestas.begin(); it != respuestas.end(); ++it) {
@@ -48,10 +51,10 @@ DtPeliFull* CVerComentariosyPuntajesdePelicula::selectPeli(string titulo) {
     // Mapear Comentarios
     CComentarPelicula* ccp = CComentarPelicula::getInstancia();
     map<int, Comentario*>& todosLosComentarios = ccp->getComentarios();
-    set<DtComentario*> dtComentarios;
+    list<DtComentario*> dtComentarios;
     for (map<int, Comentario*>::iterator it = todosLosComentarios.begin(); it != todosLosComentarios.end(); ++it) {
         if (it->second->getPelicula()->getTitulo() == titulo && it->second->getComentarioPadre() == nullptr) {
-            dtComentarios.insert(convertirComentarioADt(it->second));
+            dtComentarios.push_back(convertirComentarioADt(it->second));
         }
     }
     

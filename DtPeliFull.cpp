@@ -1,6 +1,6 @@
 #include "DtPeliFull.h"
 
-DtPeliFull::DtPeliFull(string titulo, float puntajePromedio, int cantPuntuaciones, set<DtPuntaje*> puntajes, set<DtComentario*> comentarios) {
+DtPeliFull::DtPeliFull(string titulo, float puntajePromedio, int cantPuntuaciones, set<DtPuntaje*> puntajes, list<DtComentario*> comentarios) {
     this->titulo = titulo;
     this->puntajePromedio = puntajePromedio;
     this->cantPuntuaciones = cantPuntuaciones;
@@ -24,7 +24,7 @@ set<DtPuntaje*> DtPeliFull::getPuntajes() {
     return this->puntajes;
 }
 
-set<DtComentario*> DtPeliFull::getComentarios() {
+list<DtComentario*> DtPeliFull::getComentarios() {
     return this->comentarios;
 }
 
@@ -34,7 +34,7 @@ DtPeliFull::~DtPeliFull() {
     }
     this->puntajes.clear();
 
-    for (set<DtComentario*>::iterator it = this->comentarios.begin(); it != this->comentarios.end(); ++it) {
+    for (list<DtComentario*>::iterator it = this->comentarios.begin(); it != this->comentarios.end(); ++it) {
         delete *it;
     }
     this->comentarios.clear();

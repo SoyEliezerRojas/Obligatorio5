@@ -37,6 +37,7 @@ ICEliminarPelicula* iEliminarPelicula;
 ICVerReservasDePelicula* iVerReservasDePelicula;
 ICVerInformacionPelicula* iVerInformacionPelicula;
 ICReloj* iReloj;
+ICVerComentariosyPuntajesdePelicula* iVerComentariosyPuntajesdePelicula;
 
 void altaUsuario(){
     system("clear");
@@ -364,6 +365,28 @@ void comentarPelicula() {
         cin.ignore(10000, '\n');
         getline(cin, titulo);
         iComentarPelicula->selectPeli(titulo);
+
+        // Mostrar comentarios existentes de la película seleccionada
+        cout << endl << "========================================" << endl;
+        cout << "COMENTARIOS EXISTENTES PARA: " << titulo << endl;
+        cout << "========================================" << endl;
+        
+        list<DtComentario*> comentarios = iComentarPelicula->obtenerComentariosPeliculaSeleccionada();
+        if (comentarios.empty()) {
+            cout << "No hay comentarios para esta película." << endl;
+        } else {
+            int comentarioId = 1;
+            for (list<DtComentario*>::iterator it = comentarios.begin(); it != comentarios.end(); ++it) {
+                cout << "[ID: " << comentarioId << "] " << (*it)->getNickname() << ": " << (*it)->getTexto() << endl;
+                
+                // Mostrar respuestas con indentación
+                set<DtComentario*> respuestas = (*it)->getRespuestas();
+                for (set<DtComentario*>::iterator itResp = respuestas.begin(); itResp != respuestas.end(); ++itResp) {
+                    cout << "  " << (*itResp)->getNickname() << ": " << (*itResp)->getTexto() << endl;
+                }
+                comentarioId++;
+            }
+        }
 
         char continuar;
         do {
@@ -959,6 +982,72 @@ void menuReloj() {
     } while (opcion != 3);
 }
 
+void verComentariosPuntajesPelicula() {
+    system("clear");
+    cout << "_" << endl;
+    cout << "_V E R  C O M E N T A R I O S  Y  P U N T A J E S  D E  P E L I C U L A_" << endl;
+    
+    set<DtPelicula*> peliculas = iVerComentariosyPuntajesdePelicula->listarPeliculas();
+    if (peliculas.empty()) {
+        cout << "No hay películas registradas en el sistema." << endl;
+        return;
+    }
+    
+    cout << "PELÍCULAS DISPONIBLES:" << endl;
+    for (set<DtPelicula*>::iterator it = peliculas.begin(); it != peliculas.end(); ++it) {
+        cout << "- " << (*it)->getTitulo() << endl;
+    }
+    
+    string titulo;
+    cout << endl << "Ingrese el título de la película: ";
+    cin.ignore();
+    getline(cin, titulo);
+    
+    try {
+        DtPeliFull* peliculaCompleta = iVerComentariosyPuntajesdePelicula->selectPeli(titulo);
+        
+        cout << endl << titulo << endl;
+        cout << "Puntaje promedio: " << peliculaCompleta->getPuntajePromedio() << " (" << peliculaCompleta->getCantPuntuaciones() << " usuarios)" << endl;
+        
+        // Mostrar comentarios
+        cout << endl << "Comentarios" << endl;
+        list<DtComentario*> comentarios = peliculaCompleta->getComentarios();
+        if (comentarios.empty()) {
+            cout << "No hay comentarios para esta película." << endl;
+        } else {
+            int comentarioId = 1;
+            for (list<DtComentario*>::iterator it = comentarios.begin(); it != comentarios.end(); ++it) {
+                cout << "[ID: " << comentarioId << "] " << (*it)->getNickname() << ": " << (*it)->getTexto() << endl;
+                
+                // Mostrar respuestas con indentación
+                set<DtComentario*> respuestas = (*it)->getRespuestas();
+                for (set<DtComentario*>::iterator itResp = respuestas.begin(); itResp != respuestas.end(); ++itResp) {
+                    cout << "  " << (*itResp)->getNickname() << ": " << (*itResp)->getTexto() << endl;
+                }
+                comentarioId++;
+            }
+        }
+        
+        // Mostrar puntajes individuales
+        cout << endl << "Puntajes" << endl;
+        set<DtPuntaje*> puntajes = peliculaCompleta->getPuntajes();
+        if (puntajes.empty()) {
+            cout << "No hay puntajes para esta película." << endl;
+        } else {
+            for (set<DtPuntaje*>::iterator it = puntajes.begin(); it != puntajes.end(); ++it) {
+                cout << (*it)->getNickUsuario() << ": " << (*it)->getValor() << endl;
+            }
+        }
+        
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
+    }
+    
+    cout << endl << "Presione Enter para continuar...";
+    cin.ignore(1000, '\n');
+    cin.get();
+}
+
 void menu();
 
 int main() {
@@ -979,11 +1068,12 @@ int main() {
     iVerReservasDePelicula = fabrica->getICVerReservasDePelicula();
     iVerInformacionPelicula = fabrica->getICVerInformacionPelicula();
     iReloj = fabrica->getICReloj();
+    iVerComentariosyPuntajesdePelicula = fabrica->getICVerComentariosyPuntajesdePelicula();
     
     int opcion;
     menu();
     cin >> opcion;
-    while(opcion != 0){
+    while(opcion != 15){
         system("clear");
         switch(opcion){
             case 1: iniciarSesion();
@@ -1014,7 +1104,7 @@ int main() {
                 break;
             case 14: menuReloj();
                 break;
-            case 0: cout << "SALIENDO..." << endl;
+            case 15: cout << "SALIENDO..." << endl;
                 break;
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;
@@ -1060,8 +1150,9 @@ void menu(){
     cout <<"10. Puntuar Pelicula"<<endl;
     cout <<"11. Comentar Pelicula"<<endl;
     cout <<"12. Ver Información de Película"<<endl;
-    cout <<"13. Reloj del Sistema"<<endl;
-    cout <<"14. Salir " <<endl;
+    cout <<"13. Ver Comentarios y Puntajes de Película"<<endl;
+    cout <<"14. Reloj del Sistema"<<endl;
+    cout <<"15. Salir " <<endl;
     cout <<"_" <<endl;
     cout << "OPCION: ";
 }

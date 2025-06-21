@@ -84,6 +84,40 @@ void CComentarPelicula::responder(int id, string texto) {
     comentarioOriginal->agregarRespuesta(respuesta);
 }
 
+list<DtComentario*> CComentarPelicula::obtenerComentariosPeliculaSeleccionada() {
+    list<DtComentario*> comentariosPelicula;
+    
+    if (this->peliculaSeleccionada == nullptr) {
+        return comentariosPelicula; // Lista vacía
+    }
+    
+    // Recorrer todos los comentarios y filtrar los de la película seleccionada que no tengan padre
+    for (map<int, Comentario*>::iterator it = comentarios.begin(); it != comentarios.end(); ++it) {
+        if (it->second->getPelicula()->getTitulo() == this->peliculaSeleccionada->getTitulo() && 
+            it->second->getComentarioPadre() == nullptr) {
+            // Convertir a DtComentario con sus respuestas
+            DtComentario* dtComentario = convertirComentarioADt(it->second);
+            comentariosPelicula.push_back(dtComentario);
+        }
+    }
+    
+    return comentariosPelicula;
+}
+
+// Función auxiliar para convertir Comentario a DtComentario con respuestas
+DtComentario* CComentarPelicula::convertirComentarioADt(Comentario* comentario) {
+    if (comentario == nullptr) return nullptr;
+    
+    DtComentario* dtComentario = new DtComentario(comentario->getAutor()->getNickName(), comentario->getTexto());
+    
+    list<Comentario*> respuestas = comentario->getRespuestas();
+    for (list<Comentario*>::iterator it = respuestas.begin(); it != respuestas.end(); ++it) {
+        dtComentario->agregarRespuesta(convertirComentarioADt(*it));
+    }
+    
+    return dtComentario;
+}
+
 CComentarPelicula::~CComentarPelicula() {
     // Solo liberamos los comentarios raíz (los que no son respuestas)
     // Las respuestas serán liberadas por el destructor de sus comentarios padre

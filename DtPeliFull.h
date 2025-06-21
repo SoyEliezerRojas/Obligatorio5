@@ -3,6 +3,7 @@
 
 #include <string>
 #include <set>
+#include <list>
 #include "DtPuntaje.h"
 #include "DtComentario.h"
 
@@ -14,15 +15,15 @@ private:
     float puntajePromedio;
     int cantPuntuaciones;
     set<DtPuntaje*> puntajes;
-    set<DtComentario*> comentarios;
+    list<DtComentario*> comentarios;
 
 public:
-    DtPeliFull(string titulo, float puntajePromedio, int cantPuntuaciones, set<DtPuntaje*> puntajes, set<DtComentario*> comentarios);
+    DtPeliFull(string titulo, float puntajePromedio, int cantPuntuaciones, set<DtPuntaje*> puntajes, list<DtComentario*> comentarios);
     string getTitulo();
     float getPuntajePromedio();
     int getCantPuntuaciones();
     set<DtPuntaje*> getPuntajes();
-    set<DtComentario*> getComentarios();
+    list<DtComentario*> getComentarios();
     ~DtPeliFull();
 };
 

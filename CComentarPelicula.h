@@ -7,8 +7,12 @@
 #include "Pelicula.h"
 #include "Usuario.h"
 #include "Comentario.h"
+#include "DtComentario.h"
 #include <string>
 #include <map>
+#include <list>
+
+using namespace std;
 
 class CComentarPelicula : public ICComentarPelicula {
 private:
@@ -19,6 +23,7 @@ private:
     Pelicula* peliculaSeleccionada;
     map<int, Comentario*> comentarios;
     int nextCommentId;
+    DtComentario* convertirComentarioADt(Comentario* comentario);
 
 public:
     static CComentarPelicula* getInstancia();
@@ -29,6 +34,7 @@ public:
     void responder(int id, string texto);
     Comentario* obtenerComentario(int id);
     map<int, Comentario*>& getComentarios();
+    list<DtComentario*> obtenerComentariosPeliculaSeleccionada();
     ~CComentarPelicula();
 };
 
