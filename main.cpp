@@ -371,7 +371,11 @@ void comentarPelicula() {
         cout << "COMENTARIOS EXISTENTES PARA: " << titulo << endl;
         cout << "========================================" << endl;
         
-        list<DtComentario*> comentarios = iComentarPelicula->obtenerComentariosPeliculaSeleccionada();
+
+
+        char continuar;
+        do {
+            list<DtComentario*> comentarios = iComentarPelicula->obtenerComentariosPeliculaSeleccionada();
         if (comentarios.empty()) {
             cout << "No hay comentarios para esta película." << endl;
         } else {
@@ -382,19 +386,16 @@ void comentarPelicula() {
                 // Mostrar respuestas con indentación
                 set<DtComentario*> respuestas = (*it)->getRespuestas();
                 for (set<DtComentario*>::iterator itResp = respuestas.begin(); itResp != respuestas.end(); ++itResp) {
-                    cout << "  " << (*itResp)->getNickname() << ": " << (*itResp)->getTexto() << endl;
+                    cout << "           " << (*itResp)->getNickname() << ": " << (*itResp)->getTexto() << endl;
                 }
                 comentarioId++;
             }
         }
-
-        char continuar;
-        do {
-            cout << endl << "¿Qué desea hacer?" << endl;
-            cout << "1. Agregar nuevo comentario" << endl;
-            cout << "2. Responder a un comentario" << endl;
-            cout << "3. Volver al menú principal" << endl;
-            cout << "Opción: ";
+        cout << endl << "¿Qué desea hacer?" << endl;
+        cout << "1. Agregar nuevo comentario" << endl;
+        cout << "2. Responder a un comentario" << endl;
+        cout << "3. Volver al menú principal" << endl;
+        cout << "Opción: ";
 
             int opcion;
             cin >> opcion;
@@ -430,6 +431,9 @@ void comentarPelicula() {
 
             cout << endl << "¿Desea agregar otro comentario? (s/n): ";
             cin >> continuar;
+
+
+
 
         } while (tolower(continuar) == 's');
 
@@ -911,6 +915,7 @@ void modificarFechaSistema() {
             // Si opcion == 1 o cualquier otra cosa, continúa el bucle
         }
     }
+    cin.get();
 }
 
 void consultarFechaSistema() {
@@ -957,14 +962,7 @@ void menuReloj() {
                 consultarFechaSistema();
                 break;
             case 3: 
-                cout << endl << "Presione Enter para continuar...";
-                #ifdef _WIN32
-                    system("pause > nul");
-                #else
-                    cin.ignore(1000, '\n');
-                    cin.get();
-                #endif
-                cout << endl << "Volviendo al menú principal..." << endl;
+               
                 break;
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;
@@ -972,11 +970,13 @@ void menuReloj() {
         
         if (opcion != 3 && opcion != 2) {
             cout << endl << "Presione Enter para continuar...";
-            #ifdef _WIN32
+            /*#ifdef _WIN32
                 system("pause > nul");
             #else
+             #endif
+            */
                 cin.get();
-            #endif
+           
         }
         
     } while (opcion != 3);
@@ -1109,18 +1109,12 @@ int main() {
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;
         }
-        if (opcion != 14 && opcion != 13) {
+        if (opcion != 15) {
             cout << endl << "Presione Enter para continuar...";
-            if (opcion == 4) { // AltaPelicula - no necesita ignore extra
-                cin.get();
-            } else { // Otras opciones como iniciarSesion, altaUsuario
                 cin.ignore(1000, '\n');
                 cin.get();
-            }
             system("clear");
-        } else if (opcion != 14) {
-            system("clear");
-        }
+         } else system("clear");
         menu();
         cin >> opcion;
         if (cin.fail()) {
