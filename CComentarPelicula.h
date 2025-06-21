@@ -12,6 +12,8 @@
 
 class CComentarPelicula : public ICComentarPelicula {
 private:
+    static CComentarPelicula* instancia;
+    CComentarPelicula();
     ManejadorPelicula* manejadorPelicula;
     ManejadorUsuario* manejadorUsuario;
     Pelicula* peliculaSeleccionada;
@@ -19,13 +21,14 @@ private:
     int nextCommentId;
 
 public:
-    CComentarPelicula();
+    static CComentarPelicula* getInstancia();
     bool hayUsuarioLogueado();
     list<DtPelicula> listarPeliculas();
     void selectPeli(string titulo);
     void comentar(string texto);
     void responder(int id, string texto);
     Comentario* obtenerComentario(int id);
+    map<int, Comentario*>& getComentarios();
     ~CComentarPelicula();
 };
 

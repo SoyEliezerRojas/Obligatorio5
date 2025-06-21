@@ -13,6 +13,7 @@ private:
 public:
     DtPelicula();
     DtPelicula(string, string, string, float);
+    DtPelicula(string titulo, string poster);
     string getTitulo();
     string getSinopsis();
     string getPoster();

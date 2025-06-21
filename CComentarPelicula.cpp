@@ -4,11 +4,24 @@
 
 using namespace std;
 
+CComentarPelicula* CComentarPelicula::instancia = nullptr;
+
+CComentarPelicula* CComentarPelicula::getInstancia() {
+    if (instancia == nullptr) {
+        instancia = new CComentarPelicula();
+    }
+    return instancia;
+}
+
 CComentarPelicula::CComentarPelicula() {
     this->manejadorPelicula = ManejadorPelicula::getInstancia();
     this->manejadorUsuario = ManejadorUsuario::getInstancia();
     this->peliculaSeleccionada = nullptr;
     this->nextCommentId = 1;
+}
+
+map<int, Comentario*>& CComentarPelicula::getComentarios() {
+    return this->comentarios;
 }
 
 bool CComentarPelicula::hayUsuarioLogueado() {

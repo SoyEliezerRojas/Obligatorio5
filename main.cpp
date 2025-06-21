@@ -20,6 +20,7 @@
 #include "ICVerReservasDePelicula.h"
 #include "ICVerInformacionPelicula.h"
 #include "ICReloj.h"
+#include "ICVerComentariosyPuntajesdePelicula.h"
 using namespace std;
 
 Fabrica* fabrica;
@@ -982,7 +983,7 @@ int main() {
     int opcion;
     menu();
     cin >> opcion;
-    while(opcion != 14){
+    while(opcion != 0){
         system("clear");
         switch(opcion){
             case 1: iniciarSesion();
@@ -1009,9 +1010,11 @@ int main() {
                 break;
             case 12: verInformacionPelicula();
                 break;
-            case 13: menuReloj();
+            case 13: verComentariosPuntajesPelicula();
                 break;
-            case 14: cout << "SALIENDO..." << endl;
+            case 14: menuReloj();
+                break;
+            case 0: cout << "SALIENDO..." << endl;
                 break;
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;

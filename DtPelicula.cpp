@@ -9,6 +9,13 @@ DtPelicula::DtPelicula(string titulo, string sinopsis, string poster, float punt
 	this->puntajePromedio = puntajePromedio;
 }
 
+DtPelicula::DtPelicula(string titulo, string poster) {
+	this->titulo = titulo;
+	this->poster = poster;
+	this->sinopsis = "";
+	this->puntajePromedio = 0;
+}
+
 string DtPelicula::getTitulo() {
 	return this->titulo;
 }

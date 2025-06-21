@@ -12,6 +12,7 @@
 #include "CVerReservasDePelicula.h"
 #include "CVerInformacionPelicula.h"
 #include "CReloj.h"
+#include "CVerComentariosyPuntajesdePelicula.h"
 
 Fabrica* Fabrica::instancia = nullptr;
 
@@ -57,7 +58,7 @@ ICCrearReserva* Fabrica::getICCrearReserva() {
 }
 
 ICComentarPelicula* Fabrica::getICComentarPelicula() {
-    return new CComentarPelicula();
+    return CComentarPelicula::getInstancia();
 }
 
 ICEliminarPelicula* Fabrica::getICEliminarPelicula() {
@@ -74,6 +75,10 @@ ICVerInformacionPelicula* Fabrica::getICVerInformacionPelicula() {
 
 ICReloj* Fabrica::getICReloj() {
     return new CReloj();
+}
+
+ICVerComentariosyPuntajesdePelicula* Fabrica::getICVerComentariosyPuntajesdePelicula() {
+    return new CVerComentariosyPuntajesdePelicula();
 }
 
 Fabrica::~Fabrica() {

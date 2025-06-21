@@ -12,6 +12,10 @@ void ManejadorPelicula::agregarPelicula(Pelicula* pelicula) {
     peliculas.push_back(pelicula);
 }
 
+void ManejadorPelicula::agregarPuntaje(Puntaje* puntaje) {
+    puntajes.push_back(puntaje);
+}
+
 Pelicula* ManejadorPelicula::buscarPelicula(string titulo) {
     for (Pelicula* pelicula : peliculas) {
         if (pelicula->getTitulo() == titulo) {

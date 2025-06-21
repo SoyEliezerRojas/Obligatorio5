@@ -14,6 +14,7 @@
 #include "ICVerReservasDePelicula.h"
 #include "ICVerInformacionPelicula.h"
 #include "ICReloj.h"
+#include "ICVerComentariosyPuntajesdePelicula.h"
 
 class Fabrica {
 private:
@@ -35,6 +36,7 @@ public:
     ICVerReservasDePelicula* getICVerReservasDePelicula();
     ICVerInformacionPelicula* getICVerInformacionPelicula();
     ICReloj* getICReloj();
+    ICVerComentariosyPuntajesdePelicula* getICVerComentariosyPuntajesdePelicula();
     ~Fabrica();
 };
 
