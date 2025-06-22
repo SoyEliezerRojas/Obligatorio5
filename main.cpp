@@ -392,11 +392,11 @@ void comentarPelicula() {
                 indice++;
             }
         }
-        cout << endl << "¿Qué desea hacer?" << endl;
-        cout << "1. Agregar nuevo comentario" << endl;
-        cout << "2. Responder a un comentario" << endl;
-        cout << "3. Volver al menú principal" << endl;
-        cout << "Opción: ";
+            cout << endl << "¿Qué desea hacer?" << endl;
+            cout << "1. Agregar nuevo comentario" << endl;
+            cout << "2. Responder a un comentario" << endl;
+            cout << "3. Volver al menú principal" << endl;
+            cout << "Opción: ";
 
             int opcion;
             cin >> opcion;
@@ -974,7 +974,7 @@ void menuReloj() {
             /*#ifdef _WIN32
                 system("pause > nul");
             #else
-             #endif
+            #endif
             */
                 cin.get();
            
