@@ -52,11 +52,23 @@ void CPuntuarPelicula::confirmarPuntaje() {
         Puntaje* nuevoPuntaje = new Puntaje(puntajeTemp, pelicula, usuario);
         
         // Agregarlo al manejador
-        ManejadorPelicula::getInstancia()->agregarPuntaje(nuevoPuntaje);
+        ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
+        mP->agregarPuntaje(nuevoPuntaje);
         
-        // Recalcular promedio (esto es complejo, asumimos una simplificación)
-        // La lógica real de promedio debería estar en la clase Pelicula, 
-        // pero por ahora lo dejamos así para no modificar más archivos.
+        // Recalcular y actualizar el promedio de la película
+        list<Puntaje*>& todosLosPuntajes = mP->getPuntajes();
+        float sumaPuntajes = 0;
+        int cantPuntuaciones = 0;
+        
+        for (list<Puntaje*>::iterator it = todosLosPuntajes.begin(); it != todosLosPuntajes.end(); ++it) {
+            if ((*it)->getPelicula()->getTitulo() == pelicula->getTitulo()) {
+                sumaPuntajes += (*it)->getPuntaje();
+                cantPuntuaciones++;
+            }
+        }
+        
+        float nuevoPromedio = (cantPuntuaciones > 0) ? (sumaPuntajes / cantPuntuaciones) : 0;
+        pelicula->setPuntajeProm(nuevoPromedio);
         
         puntajeConfirmado = true;
     }

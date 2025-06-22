@@ -7,6 +7,7 @@
 #include "ManejadorCine.h"
 #include "ManejadorUsuario.h"
 #include <algorithm>
+#include <stdexcept>
 
 CEliminarPelicula::CEliminarPelicula() {
     manejadorPelicula = ManejadorPelicula::getInstancia();
@@ -38,7 +39,7 @@ DtPelicula CEliminarPelicula::obtenerInformacionPelicula(string titulo) {
     Pelicula* pelicula = manejadorPelicula->buscarPelicula(titulo);
     
     if (pelicula == nullptr) {
-        return DtPelicula(); // Retorna objeto vacío si no existe
+        throw invalid_argument("No existe una película con el título: " + titulo);
     }
     
     return pelicula->getDtPelicula();

@@ -66,7 +66,7 @@ ICEliminarPelicula* Fabrica::getICEliminarPelicula() {
 }
 
 ICVerReservasDePelicula* Fabrica::getICVerReservasDePelicula() {
-    return CVerReservasDePelicula::getInstancia();
+    return new CVerReservasDePelicula();
 }
 
 ICVerInformacionPelicula* Fabrica::getICVerInformacionPelicula() {

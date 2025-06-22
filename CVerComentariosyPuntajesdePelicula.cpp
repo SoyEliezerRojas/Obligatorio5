@@ -7,6 +7,7 @@
 #include <set>
 #include <list>
 #include <string>
+#include <stdexcept>
 
 CVerComentariosyPuntajesdePelicula::CVerComentariosyPuntajesdePelicula() {}
 
@@ -33,6 +34,11 @@ DtComentario* convertirComentarioADt(Comentario* c) {
 DtPeliFull* CVerComentariosyPuntajesdePelicula::selectPeli(string titulo) {
     ManejadorPelicula* mp = ManejadorPelicula::getInstancia();
     this->peliculaRecordada = mp->obtenerPelicula(titulo);
+
+    // Verificar si la película existe
+    if (this->peliculaRecordada == nullptr) {
+        throw invalid_argument("No existe una película con el título: " + titulo);
+    }
 
     // Mapear Puntajes y calcular promedio
     list<Puntaje*>& todosLosPuntajes = mp->getPuntajes();

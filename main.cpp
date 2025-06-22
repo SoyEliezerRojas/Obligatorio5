@@ -687,37 +687,38 @@ void eliminarPelicula() {
     getline(cin, titulo);
 
     // Obtener información de la película
-    DtPelicula pelicula = iEliminarPelicula->obtenerInformacionPelicula(titulo);
-    if (pelicula.getTitulo().empty()) {
-        cout << "ERROR: La película '" << titulo << "' no existe." << endl;
-        return;
-    }
+    try {
+        DtPelicula pelicula = iEliminarPelicula->obtenerInformacionPelicula(titulo);
 
-    // Mostrar información de la película a eliminar
-    cout << endl << "=== PELÍCULA A ELIMINAR ===" << endl;
-    cout << "Título: " << pelicula.getTitulo() << endl;
-    cout << "Sinopsis: " << pelicula.getSinopsis() << endl;
-    cout << "Póster: " << pelicula.getPoster() << endl;
-    cout << "============================" << endl;
-    
-    // Pedir confirmación
-    char confirmacion;
-    cout << endl << "¿Está seguro de que desea eliminar esta película?" << endl;
-    cout << "ADVERTENCIA: Se eliminarán todas las funciones asociadas." << endl;
-    cout << "Confirmar eliminación (s/n): ";
-    cin >> confirmacion;
-    
-    if (confirmacion != 's' && confirmacion != 'S') {
-        cout << "Operación cancelada. La película no fue eliminada." << endl;
-        return;
-    }
+        // Mostrar información de la película a eliminar
+        cout << endl << "=== PELÍCULA A ELIMINAR ===" << endl;
+        cout << "Título: " << pelicula.getTitulo() << endl;
+        cout << "Sinopsis: " << pelicula.getSinopsis() << endl;
+        cout << "Póster: " << pelicula.getPoster() << endl;
+        cout << "============================" << endl;
+        
+        // Pedir confirmación
+        char confirmacion;
+        cout << endl << "¿Está seguro de que desea eliminar esta película?" << endl;
+        cout << "ADVERTENCIA: Se eliminarán todas las funciones asociadas." << endl;
+        cout << "Confirmar eliminación (s/n): ";
+        cin >> confirmacion;
+        
+        if (confirmacion != 's' && confirmacion != 'S') {
+            cout << "Operación cancelada. La película no fue eliminada." << endl;
+            return;
+        }
 
-    // Intentar eliminar la película
-    if (iEliminarPelicula->eliminarPelicula(titulo)) {
-        cout << "Película '" << titulo << "' eliminada exitosamente." << endl;
-        cout << "Se han eliminado todas las funciones y sus reservas para la película." << endl;
-    } else {
-        cout << "ERROR: No se pudo eliminar la película." << endl;
+        // Intentar eliminar la película
+        if (iEliminarPelicula->eliminarPelicula(titulo)) {
+            cout << "Película '" << titulo << "' eliminada exitosamente." << endl;
+            cout << "Se han eliminado todas las funciones y sus reservas para la película." << endl;
+        } else {
+            cout << "ERROR: No se pudo eliminar la película." << endl;
+        }
+        
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
     }
 }
 
@@ -818,69 +819,73 @@ void verInformacionPelicula() {
     getline(cin, tituloSeleccionado);
     
     // 4. Mostrar información de la película
-    DtPelicula pelicula = iVerInformacionPelicula->obtenerInformacionPelicula(tituloSeleccionado);
-    cout << endl << "=========================" << endl;
-    cout << "INFORMACIÓN DE LA PELÍCULA" << endl;
-    cout << "=========================" << endl;
-    cout << "Título: " << pelicula.getTitulo() << endl;
-    cout << "Poster: " << pelicula.getPoster() << endl;
-    cout << "Puntaje Promedio: " << pelicula.getPuntajePromedio() << "/5" << endl;
-    cout << endl << "Sinopsis:" << endl;
-    cout << pelicula.getSinopsis() << endl;
-    cout << "=========================" << endl;
-    
-    // 5. Preguntar si quiere ver información adicional de cines
-    char respuesta;
-    cout << endl << "¿Desea ver información adicional de los cines donde se proyecta? (s/n): ";
-    cin >> respuesta;
-    
-    if (respuesta == 's' || respuesta == 'S') {
-        // 6. Mostrar información de cines
-        list<DtCine> cines = iVerInformacionPelicula->obtenerCinesPelicula(tituloSeleccionado);
+    try {
+        DtPelicula pelicula = iVerInformacionPelicula->obtenerInformacionPelicula(tituloSeleccionado);
+        cout << endl << "=========================" << endl;
+        cout << "INFORMACIÓN DE LA PELÍCULA" << endl;
+        cout << "=========================" << endl;
+        cout << "Título: " << pelicula.getTitulo() << endl;
+        cout << "Poster: " << pelicula.getPoster() << endl;
+        cout << "Puntaje Promedio: " << pelicula.getPuntajePromedio() << "/5" << endl;
+        cout << endl << "Sinopsis:" << endl;
+        cout << pelicula.getSinopsis() << endl;
+        cout << "=========================" << endl;
         
-        cout << endl << "=============================" << endl;
-        cout << "INFORMACIÓN ADICIONAL DE CINES" << endl;
-        cout << "=============================" << endl;
+        // 5. Preguntar si quiere ver información adicional de cines
+        char respuesta;
+        cout << endl << "¿Desea ver información adicional de los cines donde se proyecta? (s/n): ";
+        cin >> respuesta;
         
-        if (cines.empty()) {
-            cout << "Esta película no se proyecta en ningún cine actualmente." << endl;
-        } else {
-            cout << "La película '" << tituloSeleccionado << "' se proyecta en los siguientes cines:" << endl;
-            int contadorCines = 1;
-            for (list<DtCine>::iterator it = cines.begin(); it != cines.end(); ++it) {
-                cout << endl << "Cine " << contadorCines << ":" << endl;
-                cout << "  ID: " << it->getId() << endl;
-                cout << "  Dirección: " << it->getDireccion().getCalle() << " " << it->getDireccion().getNumero() << endl;
-                contadorCines++;
-            }
+        if (respuesta == 's' || respuesta == 'S') {
+            // 6. Mostrar información de cines
+            list<DtCine> cines = iVerInformacionPelicula->obtenerCinesPelicula(tituloSeleccionado);
             
-            // 7. Preguntar si quiere ver funciones de un cine específico
-            cout << endl << "¿Desea seleccionar un cine para ver las funciones de la película? (s/n): ";
-            cin >> respuesta;
+            cout << endl << "=============================" << endl;
+            cout << "INFORMACIÓN ADICIONAL DE CINES" << endl;
+            cout << "=============================" << endl;
             
-            if (respuesta == 's' || respuesta == 'S') {
-                int idCine;
-                cout << "Ingrese el ID del cine: ";
-                cin >> idCine;
+            if (cines.empty()) {
+                cout << "Esta película no se proyecta en ningún cine actualmente." << endl;
+            } else {
+                cout << "La película '" << tituloSeleccionado << "' se proyecta en los siguientes cines:" << endl;
+                int contadorCines = 1;
+                for (list<DtCine>::iterator it = cines.begin(); it != cines.end(); ++it) {
+                    cout << endl << "Cine " << contadorCines << ":" << endl;
+                    cout << "  ID: " << it->getId() << endl;
+                    cout << "  Dirección: " << it->getDireccion().getCalle() << " " << it->getDireccion().getNumero() << endl;
+                    contadorCines++;
+                }
                 
-                // 8. Mostrar funciones en el cine seleccionado
-                list<DtFuncion> funciones = iVerInformacionPelicula->obtenerFuncionesPeliculaEnCine(tituloSeleccionado, idCine);
+                // 7. Preguntar si quiere ver funciones de un cine específico
+                cout << endl << "¿Desea seleccionar un cine para ver las funciones de la película? (s/n): ";
+                cin >> respuesta;
                 
-                cout << endl << "FUNCIONES DE LA PELÍCULA EN EL CINE SELECCIONADO:" << endl;
-                if (funciones.empty()) {
-                    cout << "No hay funciones de esta película en el cine seleccionado." << endl;
-                } else {
-                    for (list<DtFuncion>::iterator it = funciones.begin(); it != funciones.end(); ++it) {
-                        cout << "  Función ID: " << it->getIdFun()
-                             << " | Fecha: " << it->getDiaFun().getDia() << "/" << it->getDiaFun().getMes() << "/" << it->getDiaFun().getAnio()
-                             << " | Hora: " << it->getHoraFun().getHoraIni() << endl;
+                if (respuesta == 's' || respuesta == 'S') {
+                    int idCine;
+                    cout << "Ingrese el ID del cine: ";
+                    cin >> idCine;
+                    
+                    // 8. Mostrar funciones en el cine seleccionado
+                    list<DtFuncion> funciones = iVerInformacionPelicula->obtenerFuncionesPeliculaEnCine(tituloSeleccionado, idCine);
+                    
+                    cout << endl << "FUNCIONES DE LA PELÍCULA EN EL CINE SELECCIONADO:" << endl;
+                    if (funciones.empty()) {
+                        cout << "No hay funciones de esta película en el cine seleccionado." << endl;
+                    } else {
+                        for (list<DtFuncion>::iterator it = funciones.begin(); it != funciones.end(); ++it) {
+                            cout << "  Función ID: " << it->getIdFun()
+                                 << " | Fecha: " << it->getDiaFun().getDia() << "/" << it->getDiaFun().getMes() << "/" << it->getDiaFun().getAnio()
+                                 << " | Hora: " << it->getHoraFun().getHoraIni() << endl;
+                        }
                     }
                 }
             }
+            cout << "=============================" << endl;
         }
-        cout << "=============================" << endl;
+        
+    } catch (const invalid_argument& e) {
+        cout << "ERROR: " << e.what() << endl;
     }
-    
 }
 
 void modificarFechaSistema() {

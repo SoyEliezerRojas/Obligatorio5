@@ -5,16 +5,7 @@
 #include "Funcion.h"
 #include "Sesion.h"
 
-CVerReservasDePelicula* CVerReservasDePelicula::instancia = NULL;
-
 CVerReservasDePelicula::CVerReservasDePelicula() {}
-
-CVerReservasDePelicula* CVerReservasDePelicula::getInstancia() {
-    if (instancia == NULL) {
-        instancia = new CVerReservasDePelicula();
-    }
-    return instancia;
-}
 
 list<DtPelicula> CVerReservasDePelicula::listarPeliculas() {
     ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
@@ -52,8 +43,5 @@ list<DtReserva> CVerReservasDePelicula::obtenerReservasDeFuncion(int idFuncion) 
 }
 
 CVerReservasDePelicula::~CVerReservasDePelicula() {
-    if (instancia != NULL) {
-        delete instancia;
-        instancia = NULL;
-    }
+    // Destructor simple - no hay recursos especiales que liberar
 }

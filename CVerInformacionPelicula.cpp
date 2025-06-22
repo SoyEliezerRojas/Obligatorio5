@@ -6,6 +6,7 @@
 #include <string>
 #include <list>
 #include <algorithm>
+#include <stdexcept>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ list<DtPelicula> CVerInformacionPelicula::listarPeliculas() {
 DtPelicula CVerInformacionPelicula::obtenerInformacionPelicula(string titulo) {
     Pelicula* pelicula = manejadorPelicula->buscarPelicula(titulo);
     if (pelicula == nullptr) {
-        return DtPelicula(); // Retorna objeto vacío en lugar de cout
+        throw invalid_argument("No existe una película con el título: " + titulo);
     }
     return pelicula->getDtPelicula();
 }
