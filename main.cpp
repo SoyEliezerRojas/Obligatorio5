@@ -1,5 +1,8 @@
 #include <iostream>
+#include <stdexcept>
 #include "Fabrica.h"
+#include "Sesion.h"
+#include "Usuario.h"
 #include "ICIniciarSesion.h"
 #include "ICCerrarSesion.h"
 #include "ICAltaUsuario.h"
@@ -23,6 +26,24 @@
 #include "ICVerComentariosyPuntajesdePelicula.h"
 using namespace std;
 
+// Constantes para colores ANSI
+const string COLOR_GREEN = "\033[32m";
+const string COLOR_MAGENTA = "\033[35m";
+const string COLOR_RESET = "\033[0m";
+
+void mostrarEncabezado(string titulo) {
+    system("clear");
+    Sesion* sesion = Sesion::getInstancia();
+    Usuario* usuarioLogueado = sesion->getUsuario();
+
+    if (usuarioLogueado != nullptr) {
+        cout << COLOR_MAGENTA << "Usuario logueado: " << usuarioLogueado->getNickName() << COLOR_RESET << endl;
+        cout << "---------------------------------" << endl;
+    }
+    cout << "_" << endl;
+    cout << "_" << COLOR_GREEN << titulo << COLOR_RESET << "_" << endl;
+}
+
 Fabrica* fabrica;
 ICAltaUsuario* iAltaUsuario;
 ICIniciarSesion* iIniciarSesion;
@@ -40,9 +61,7 @@ ICReloj* iReloj;
 ICVerComentariosyPuntajesdePelicula* iVerComentariosyPuntajesdePelicula;
 
 void altaUsuario(){
-    system("clear");
-    cout <<"_" <<endl;
-    cout <<"_A L T A  D E  U S U A R I O_"<< endl;
+    mostrarEncabezado("A L T A  D E  U S U A R I O");
     
     string nickname, contrasenia, url;
     int aux;
@@ -90,9 +109,14 @@ void altaUsuario(){
 }
 
 void iniciarSesion() {
-    system("clear");
-    cout <<"_" <<endl;
-    cout <<"_I N I C I A R  S E S I O N_"<< endl;
+    mostrarEncabezado("I N I C I A R  S E S I O N");
+
+    Sesion* sesion = Sesion::getInstancia();
+    if (sesion->getUsuario() != nullptr) {
+        cout << endl << "ERROR: Ya hay una sesión iniciada." << endl;
+        cout << "Por favor, cierre la sesión actual para iniciar con otro usuario." << endl;
+        return;
+    }
     
     string nickname, password;
     bool passwordValida = false;
@@ -131,9 +155,7 @@ void iniciarSesion() {
 }
 
 void cerrarSesion() {
-    system("clear");
-    cout <<"_" <<endl;
-    cout <<"_C E R R A R  S E S I O N_"<< endl;
+    mostrarEncabezado("C E R R A R  S E S I O N");
     
     if(iCerrarSesion->cerrarSesion()) {
         cout << endl << "SESION CERRADA CORRECTAMENTE" << endl;
@@ -143,9 +165,7 @@ void cerrarSesion() {
 }
 
 void altaPelicula() {
-    system("clear");
-    cout <<"_" <<endl;
-    cout <<"_A L T A  D E  P E L I C U L A_"<< endl;
+    mostrarEncabezado("A L T A  D E  P E L I C U L A");
     
     if (!iAltaPelicula->hayUsuarioLogueado()) {
         cout << "ERROR: Debe iniciar sesión para dar de alta una película." << endl;
@@ -181,9 +201,7 @@ void altaPelicula() {
 }
 
 void altaCine() {
-    system("clear");
-    cout <<"_" <<endl;
-    cout <<"_A L T A  D E  C I N E_"<< endl;
+    mostrarEncabezado("A L T A  D E  C I N E");
     
     // Verificar si hay usuario logueado
     if (!iAltaCine->hayUsuarioLogueado()) {
@@ -240,9 +258,7 @@ void altaCine() {
 }
 
 void altaFuncion() {
-    system("clear");
-    cout << "_" << endl;
-    cout << "_A L T A  D E  F U N C I O N_" << endl;
+    mostrarEncabezado("A L T A  D E  F U N C I O N");
 
     // Verificar si hay usuario logueado
     if (!iAltaFuncion->hayUsuarioLogueado()) {
@@ -341,13 +357,10 @@ void altaFuncion() {
 }
 
 void comentarPelicula() {
-    system("clear");
-    cout << "_" << endl;
-    cout << "_C O M E N T A R  P E L I C U L A_" << endl;
+    mostrarEncabezado("C O M E N T A R  P E L I C U L A");
 
-    // Verificar si hay usuario logueado
     if (!iComentarPelicula->hayUsuarioLogueado()) {
-        cout << "ERROR: Debe iniciar sesión para comentar películas" << endl;
+        cout << "ERROR: Debe iniciar sesión para comentar una película." << endl;
         return;
     }
 
@@ -444,10 +457,8 @@ void comentarPelicula() {
 }
 
 void puntuarPelicula() {
-    system("clear");
-    cout << "_" << endl;
-    cout << "_P U N T U A R  P E L I C U L A_" << endl;
-
+    mostrarEncabezado("P U N T U A R  P E L I C U L A");
+    
     // Listar películas disponibles
     list<DtPelicula> peliculas = iPuntuarPelicula->listarPeliculas();
     if (peliculas.empty()) {
@@ -497,12 +508,10 @@ void puntuarPelicula() {
 }
 
 void crearReserva() {
-    system("clear");
-    cout << "_" << endl;
-    cout << "_C R E A R  R E S E R V A_" << endl;
+    mostrarEncabezado("C R E A R  R E S E R V A");
 
     if (!iCrearReserva->hayUsuarioLogueado()) {
-        cout << "ERROR: Debe iniciar sesión para crear una reserva" << endl;
+        cout << "ERROR: Debe iniciar sesión para crear una reserva." << endl;
         return;
     }
 
@@ -658,13 +667,10 @@ void crearReserva() {
 }
 
 void eliminarPelicula() {
-    system("clear");
-    cout << "_" << endl;
-    cout << "_E L I M I N A R  P E L I C U L A_" << endl;
+    mostrarEncabezado("E L I M I N A R  P E L I C U L A");
 
-    // Verificar si hay usuario logueado
     if (!iEliminarPelicula->hayUsuarioLogueado()) {
-        cout << "ERROR: Debe iniciar sesión para eliminar películas." << endl;
+        cout << "ERROR: Debe iniciar sesión para eliminar una película." << endl;
         return;
     }
 
@@ -723,9 +729,7 @@ void eliminarPelicula() {
 }
 
 void verReservasDePelicula() {
-    system("clear");
-    cout << "_" << endl;
-    cout << "_V E R  R E S E R V A S  D E  P E L I C U L A_" << endl;
+    mostrarEncabezado("V E R  R E S E R V A S  D E  P E L Í C U L A");
 
     // 1. Listar películas disponibles
     list<DtPelicula> peliculas = iVerReservasDePelicula->listarPeliculas();
@@ -779,9 +783,7 @@ void verReservasDePelicula() {
 }
 
 void verInformacionPelicula() {
-    system("clear");
-    cout << "_" << endl;
-    cout << "_V E R  I N F O R M A C I O N  D E  P E L I C U L A_" << endl;
+    mostrarEncabezado("V E R  I N F O R M A C I Ó N  D E  P E L Í C U L A");
     
     // 1. Listar películas disponibles
     list<DtPelicula> peliculas = iVerInformacionPelicula->listarPeliculas();
@@ -889,109 +891,71 @@ void verInformacionPelicula() {
 }
 
 void modificarFechaSistema() {
-    bool exitoso = false;
-    int opcion;
-    
-    while (!exitoso) {
-        system("clear");
-        cout << "_" << endl;
-        cout << "_M O D I F I C A R  F E C H A  D E L  S I S T E M A_" << endl;
-        
-        try {
-            string fechaHora;
-            cout << "Ingrese la nueva fecha y hora (dd/mm/aaaa hh:mm): ";
-            cin.ignore();
-            getline(cin, fechaHora);
-            
-            iReloj->modificarFecha(fechaHora);
-            cout << endl << "FECHA DEL SISTEMA MODIFICADA EXITOSAMENTE" << endl;
-            exitoso = true;
-            
-        } catch (const exception& e) {
-            cout << endl << e.what() << endl;
-            cout << endl << "1. Reintentar" << endl;
-            cout << "2. Cancelar" << endl;
-            cout << "Opción: ";
-            cin >> opcion;
-            
-            if (opcion == 2) {
-                cout << "Operación cancelada." << endl;
-                exitoso = true;  // Salir del bucle
-            }
-            // Si opcion == 1 o cualquier otra cosa, continúa el bucle
-        }
+    mostrarEncabezado("M O D I F I C A R  F E C H A  D E L  S I S T E M A");
+
+    string fechaHora;
+    cout << "Ingrese la nueva fecha y hora (formato dd/mm/aaaa hh:mm): ";
+    cin.ignore();
+    getline(cin, fechaHora);
+
+    try {
+        iReloj->modificarFecha(fechaHora);
+        cout << "Fecha del sistema modificada correctamente." << endl;
+    } catch (const invalid_argument& e) {
+        cout << e.what() << endl;
     }
-    cin.get();
 }
 
 void consultarFechaSistema() {
-    system("clear");
-    cout << "_" << endl;
-    cout << "_C O N S U L T A R  F E C H A  D E L  S I S T E M A_" << endl;
-    
+    mostrarEncabezado("C O N S U L T A R  F E C H A  D E L  S I S T E M A");
+
     try {
-        string fechaActual = iReloj->consultarFecha();
-        cout << endl << "Fecha y hora actual del sistema: " << fechaActual << endl;
-        
-    } catch (const exception& e) {
-        cout << endl << e.what() << endl;
+        string fechaHora = iReloj->consultarFecha();
+        cout << "La fecha actual del sistema es: " << fechaHora << endl;
+    } catch (const invalid_argument& e) {
+        cout << e.what() << endl;
     }
-    
-    cout << endl << "Presione Enter para continuar...";
-    cin.ignore(1000, '\n');
-    cin.get();
 }
 
 void menuReloj() {
-    int opcion;
+    int opc;
     do {
-        system("clear");
-        cout << "_" << endl;
-        cout << "R E L O J" << endl;
+        mostrarEncabezado("R E L O J  D E L  S I S T E M A");
         cout << "1. Modificar fecha del sistema" << endl;
         cout << "2. Consultar fecha del sistema" << endl;
-        cout << "3. Volver al menú principal" << endl;
-        cout << "_" << endl;
-        cout << "OPCION: ";
-        cin >> opcion;
+        cout << "3. Volver" << endl;
+        cout << "Opción: ";
+        cin >> opc;
         if (cin.fail()) {
             cin.clear();
-            cin.ignore(1000, '\n');
-            opcion = -1;
+            cin.ignore(10000, '\n');
+            opc = -1;
         }
-        
-        switch(opcion) {
-            case 1: 
+
+        switch (opc) {
+            case 1:
                 modificarFechaSistema();
                 break;
-            case 2: 
+            case 2:
                 consultarFechaSistema();
                 break;
-            case 3: 
-               
+            case 3:
                 break;
             default:
-                cout << "OPCIÓN INCORRECTA" << endl;
+                cout << "Opción incorrecta" << endl;
         }
-        
-        if (opcion != 3 && opcion != 2) {
+
+        if (opc != 3) {
             cout << endl << "Presione Enter para continuar...";
-            /*#ifdef _WIN32
-                system("pause > nul");
-            #else
-            #endif
-            */
-                cin.get();
-           
+            cin.ignore(1000, '\n');
+            cin.get();
         }
-        
-    } while (opcion != 3);
+
+    } while (opc != 3);
 }
 
 void verComentariosPuntajesPelicula() {
-    system("clear");
-    cout << "_" << endl;
-    cout << "_V E R  C O M E N T A R I O S  Y  P U N T A J E S  D E  P E L I C U L A_" << endl;
+    mostrarEncabezado("V E R  C O M E N T A R I O S  Y  P U N T A J E S");
     
     set<DtPelicula*> peliculas = iVerComentariosyPuntajesdePelicula->listarPeliculas();
     if (peliculas.empty()) {
@@ -1051,33 +1015,54 @@ void verComentariosPuntajesPelicula() {
     
 }
 
-void menu();
+void menu(){
+    mostrarEncabezado("M E N U  C I N E M A");
+    cout <<"1. Iniciar Sesion"<<endl;
+    cout <<"2. Cerrar Sesion"<<endl;
+    cout <<"3. Alta Usuario"<<endl;
+    cout <<"4. Alta Pelicula"<<endl;
+    cout <<"5. Alta Cine"<<endl;
+    cout <<"6. Alta Funcion"<<endl;
+    cout <<"7. Crear Reserva"<<endl;
+    cout <<"8. Ver Reservas de Pelicula"<<endl;
+    cout <<"9. Eliminar Pelicula"<<endl;
+    cout <<"10. Puntuar Pelicula"<<endl;
+    cout <<"11. Comentar Pelicula"<<endl;
+    cout <<"12. Ver Información de Película"<<endl;
+    cout <<"13. Ver Comentarios y Puntajes de Película"<<endl;
+    cout <<"14. Reloj del Sistema"<<endl;
+    cout <<"15. Salir " <<endl;
+    cout <<"_" <<endl;
+    cout << "OPCION: ";
+}
 
 int main() {
-    // Obtener la instancia de la Fabrica
     fabrica = Fabrica::getInstancia();
-    
-    // Obtener las interfaces a través de la Fabrica
+    iAltaUsuario = fabrica->getICAltaUsuario();
     iIniciarSesion = fabrica->getICIniciarSesion();
     iCerrarSesion = fabrica->getICCerrarSesion();
-    iAltaUsuario = fabrica->getICAltaUsuario();
     iAltaPelicula = fabrica->getICAltaPelicula();
     iAltaCine = fabrica->getICAltaCine();
     iAltaFuncion = fabrica->getICAltaFuncion();
     iPuntuarPelicula = fabrica->getICPuntuarPelicula();
-    iComentarPelicula = fabrica->getICComentarPelicula();
     iCrearReserva = fabrica->getICCrearReserva();
+    iComentarPelicula = fabrica->getICComentarPelicula();
     iEliminarPelicula = fabrica->getICEliminarPelicula();
     iVerReservasDePelicula = fabrica->getICVerReservasDePelicula();
     iVerInformacionPelicula = fabrica->getICVerInformacionPelicula();
     iReloj = fabrica->getICReloj();
     iVerComentariosyPuntajesdePelicula = fabrica->getICVerComentariosyPuntajesdePelicula();
-    
+
     int opcion;
-    menu();
-    cin >> opcion;
-    while(opcion != 15){
-        system("clear");
+    do {
+        menu();
+        cin >> opcion;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            opcion = -1; 
+        }
+
         switch(opcion){
             case 1: iniciarSesion();
                 break;
@@ -1107,49 +1092,20 @@ int main() {
                 break;
             case 14: menuReloj();
                 break;
-            case 15: cout << "SALIENDO..." << endl;
+            case 15:
                 break;
             default:
                 cout << "OPCIÓN INCORRECTA" << endl;
         }
+
         if (opcion != 15) {
             cout << endl << "Presione Enter para continuar...";
-                cin.ignore(1000, '\n');
-                cin.get();
-            system("clear");
-         } else system("clear");
-        menu();
-        cin >> opcion;
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            opcion = -1;
+            cin.ignore(1000, '\n');
+            cin.get();
         }
-    }
+
+    } while (opcion != 15);
     
     cout << "SALIENDO..." << endl;
     return 0;
-}
-
-void menu(){
-    system("clear");
-    cout <<"_" <<endl;
-    cout <<"M E N U  C I N E MA"<< endl;
-    cout <<"1. Iniciar Sesion"<<endl;
-    cout <<"2. Cerrar Sesion"<<endl;
-    cout <<"3. Alta Usuario"<<endl;
-    cout <<"4. Alta Pelicula"<<endl;
-    cout <<"5. Alta Cine"<<endl;
-    cout <<"6. Alta Funcion"<<endl;
-    cout <<"7. Crear Reserva"<<endl;
-    cout <<"8. Ver Reservas de Pelicula"<<endl;
-    cout <<"9. Eliminar Pelicula"<<endl;
-    cout <<"10. Puntuar Pelicula"<<endl;
-    cout <<"11. Comentar Pelicula"<<endl;
-    cout <<"12. Ver Información de Película"<<endl;
-    cout <<"13. Ver Comentarios y Puntajes de Película"<<endl;
-    cout <<"14. Reloj del Sistema"<<endl;
-    cout <<"15. Salir " <<endl;
-    cout <<"_" <<endl;
-    cout << "OPCION: ";
 }
