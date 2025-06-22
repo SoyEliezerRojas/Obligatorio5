@@ -5,6 +5,9 @@
 #include <list>
 #include "DtPelicula.h"
 #include "DtComentario.h"
+#include <vector>
+
+using namespace std;
 
 class ICComentarPelicula {
 public:
@@ -14,6 +17,7 @@ public:
     virtual void comentar(string texto) = 0;
     virtual void responder(int idComentario, string texto) = 0;
     virtual list<DtComentario*> obtenerComentariosPeliculaSeleccionada() = 0;
+    virtual vector<int> obtenerIdsComentariosPeliculaSeleccionada() = 0;
     virtual ~ICComentarPelicula() {}
 };
 

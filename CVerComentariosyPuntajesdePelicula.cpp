@@ -1,6 +1,6 @@
 #include "CVerComentariosyPuntajesdePelicula.h"
 #include "ManejadorPelicula.h"
-#include "CComentarPelicula.h"
+#include "ManejadorComentario.h"
 #include "Usuario.h"
 #include <vector>
 #include <map>
@@ -49,8 +49,8 @@ DtPeliFull* CVerComentariosyPuntajesdePelicula::selectPeli(string titulo) {
     float promedio = (cantPuntuaciones > 0) ? (sumaPuntajes / cantPuntuaciones) : 0;
 
     // Mapear Comentarios
-    CComentarPelicula* ccp = CComentarPelicula::getInstancia();
-    map<int, Comentario*>& todosLosComentarios = ccp->getComentarios();
+    ManejadorComentario* mc = ManejadorComentario::getInstancia();
+    map<int, Comentario*>& todosLosComentarios = mc->getComentarios();
     list<DtComentario*> dtComentarios;
     for (map<int, Comentario*>::iterator it = todosLosComentarios.begin(); it != todosLosComentarios.end(); ++it) {
         if (it->second->getPelicula()->getTitulo() == titulo && it->second->getComentarioPadre() == nullptr) {

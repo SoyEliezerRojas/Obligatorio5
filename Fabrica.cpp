@@ -58,7 +58,7 @@ ICCrearReserva* Fabrica::getICCrearReserva() {
 }
 
 ICComentarPelicula* Fabrica::getICComentarPelicula() {
-    return CComentarPelicula::getInstancia();
+    return new CComentarPelicula();
 }
 
 ICEliminarPelicula* Fabrica::getICEliminarPelicula() {

@@ -4,6 +4,7 @@
 #include "ICComentarPelicula.h"
 #include "ManejadorPelicula.h"
 #include "ManejadorUsuario.h"
+#include "ManejadorComentario.h"
 #include "Pelicula.h"
 #include "Usuario.h"
 #include "Comentario.h"
@@ -11,22 +12,20 @@
 #include <string>
 #include <map>
 #include <list>
+#include <vector>
 
 using namespace std;
 
 class CComentarPelicula : public ICComentarPelicula {
 private:
-    static CComentarPelicula* instancia;
-    CComentarPelicula();
     ManejadorPelicula* manejadorPelicula;
     ManejadorUsuario* manejadorUsuario;
+    ManejadorComentario* manejadorComentario;
     Pelicula* peliculaSeleccionada;
-    map<int, Comentario*> comentarios;
-    int nextCommentId;
     DtComentario* convertirComentarioADt(Comentario* comentario);
 
 public:
-    static CComentarPelicula* getInstancia();
+    CComentarPelicula();
     bool hayUsuarioLogueado();
     list<DtPelicula> listarPeliculas();
     void selectPeli(string titulo);
@@ -35,6 +34,7 @@ public:
     Comentario* obtenerComentario(int id);
     map<int, Comentario*>& getComentarios();
     list<DtComentario*> obtenerComentariosPeliculaSeleccionada();
+    vector<int> obtenerIdsComentariosPeliculaSeleccionada();
     ~CComentarPelicula();
 };
 

@@ -4,24 +4,15 @@
 
 using namespace std;
 
-CComentarPelicula* CComentarPelicula::instancia = nullptr;
-
-CComentarPelicula* CComentarPelicula::getInstancia() {
-    if (instancia == nullptr) {
-        instancia = new CComentarPelicula();
-    }
-    return instancia;
-}
-
 CComentarPelicula::CComentarPelicula() {
     this->manejadorPelicula = ManejadorPelicula::getInstancia();
     this->manejadorUsuario = ManejadorUsuario::getInstancia();
+    this->manejadorComentario = ManejadorComentario::getInstancia();
     this->peliculaSeleccionada = nullptr;
-    this->nextCommentId = 1;
 }
 
 map<int, Comentario*>& CComentarPelicula::getComentarios() {
-    return this->comentarios;
+    return this->manejadorComentario->getComentarios();
 }
 
 bool CComentarPelicula::hayUsuarioLogueado() {
@@ -50,16 +41,11 @@ void CComentarPelicula::comentar(string texto) {
 
     Usuario* usuarioActual = Sesion::getInstancia()->getUsuario();
     Comentario* nuevoComentario = new Comentario(texto, usuarioActual, this->peliculaSeleccionada);
-    nuevoComentario->setId(this->nextCommentId);
-    this->comentarios[this->nextCommentId] = nuevoComentario;
-    this->nextCommentId++;
+    this->manejadorComentario->agregarComentario(nuevoComentario);
 }
 
 Comentario* CComentarPelicula::obtenerComentario(int id) {
-    if (this->comentarios.count(id) > 0) {
-        return this->comentarios[id];
-    }
-    return nullptr;
+    return this->manejadorComentario->obtenerComentario(id);
 }
 
 void CComentarPelicula::responder(int id, string texto) {
@@ -78,9 +64,7 @@ void CComentarPelicula::responder(int id, string texto) {
     }
 
     Comentario* respuesta = new Comentario(texto, usuarioActual, this->peliculaSeleccionada);
-    respuesta->setId(this->nextCommentId);
-    this->comentarios[this->nextCommentId] = respuesta;
-    this->nextCommentId++;
+    this->manejadorComentario->agregarComentario(respuesta);
     comentarioOriginal->agregarRespuesta(respuesta);
 }
 
@@ -91,11 +75,11 @@ list<DtComentario*> CComentarPelicula::obtenerComentariosPeliculaSeleccionada() 
         return comentariosPelicula; // Lista vacía
     }
     
-    // Recorrer todos los comentarios y filtrar los de la película seleccionada que no tengan padre
-    for (map<int, Comentario*>::iterator it = comentarios.begin(); it != comentarios.end(); ++it) {
+    // EL CONTROLADOR hace el filtrado, no el manejador
+    map<int, Comentario*>& todosLosComentarios = this->manejadorComentario->getComentarios();
+    for (map<int, Comentario*>::iterator it = todosLosComentarios.begin(); it != todosLosComentarios.end(); ++it) {
         if (it->second->getPelicula()->getTitulo() == this->peliculaSeleccionada->getTitulo() && 
             it->second->getComentarioPadre() == nullptr) {
-            // Convertir a DtComentario con sus respuestas
             DtComentario* dtComentario = convertirComentarioADt(it->second);
             comentariosPelicula.push_back(dtComentario);
         }
@@ -118,13 +102,25 @@ DtComentario* CComentarPelicula::convertirComentarioADt(Comentario* comentario) 
     return dtComentario;
 }
 
-CComentarPelicula::~CComentarPelicula() {
-    // Solo liberamos los comentarios raíz (los que no son respuestas)
-    // Las respuestas serán liberadas por el destructor de sus comentarios padre
-    for (map<int, Comentario*>::iterator it = comentarios.begin(); it != comentarios.end(); ++it) {
-        if (it->second->getPelicula() == this->peliculaSeleccionada) {
-            delete it->second;
+vector<int> CComentarPelicula::obtenerIdsComentariosPeliculaSeleccionada() {
+    vector<int> idsComentarios;
+    
+    if (this->peliculaSeleccionada == nullptr) {
+        return idsComentarios; // Vector vacío
+    }
+    
+    // Obtener IDs en el mismo orden que obtenerComentariosPeliculaSeleccionada
+    map<int, Comentario*>& todosLosComentarios = this->manejadorComentario->getComentarios();
+    for (map<int, Comentario*>::iterator it = todosLosComentarios.begin(); it != todosLosComentarios.end(); ++it) {
+        if (it->second->getPelicula()->getTitulo() == this->peliculaSeleccionada->getTitulo() && 
+            it->second->getComentarioPadre() == nullptr) {
+            idsComentarios.push_back(it->second->getId());
         }
     }
-    comentarios.clear();
+    
+    return idsComentarios;
+}
+
+CComentarPelicula::~CComentarPelicula() {
+    // No liberamos los manejadores porque son singletons
 }

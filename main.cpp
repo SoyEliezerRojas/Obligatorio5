@@ -376,19 +376,20 @@ void comentarPelicula() {
         char continuar;
         do {
             list<DtComentario*> comentarios = iComentarPelicula->obtenerComentariosPeliculaSeleccionada();
+            vector<int> idsReales = iComentarPelicula->obtenerIdsComentariosPeliculaSeleccionada();
         if (comentarios.empty()) {
             cout << "No hay comentarios para esta película." << endl;
         } else {
-            int comentarioId = 1;
+            int indice = 0;
             for (list<DtComentario*>::iterator it = comentarios.begin(); it != comentarios.end(); ++it) {
-                cout << "[ID: " << comentarioId << "] " << (*it)->getNickname() << ": " << (*it)->getTexto() << endl;
+                cout << "[ID: " << idsReales[indice] << "] " << (*it)->getNickname() << ": " << (*it)->getTexto() << endl;
                 
                 // Mostrar respuestas con indentación
                 set<DtComentario*> respuestas = (*it)->getRespuestas();
                 for (set<DtComentario*>::iterator itResp = respuestas.begin(); itResp != respuestas.end(); ++itResp) {
                     cout << "           " << (*itResp)->getNickname() << ": " << (*itResp)->getTexto() << endl;
                 }
-                comentarioId++;
+                indice++;
             }
         }
         cout << endl << "¿Qué desea hacer?" << endl;
@@ -1043,9 +1044,6 @@ void verComentariosPuntajesPelicula() {
         cout << "ERROR: " << e.what() << endl;
     }
     
-    cout << endl << "Presione Enter para continuar...";
-    cin.ignore(1000, '\n');
-    cin.get();
 }
 
 void menu();
