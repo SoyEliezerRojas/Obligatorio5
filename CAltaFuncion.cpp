@@ -3,6 +3,7 @@
 #include "ManejadorPelicula.h"
 #include "ManejadorCine.h"
 #include "ManejadorFuncion.h"
+#include <stdexcept>
 #include "Pelicula.h"
 #include "Cine.h"
 #include "Funcion.h"
@@ -96,6 +97,11 @@ void CAltaFuncion::selectSala(int idSala) {
 }
 
 void CAltaFuncion::altaFuncion(string horaInicio, DtFecha fecha) {
+    // Verificar que hay usuario logueado antes de crear la función
+    if (!hayUsuarioLogueado()) {
+        throw invalid_argument("No hay usuario logueado");
+    }
+    
     // Siguiendo diagrama altaFuncion y respetando reglas UML estrictas
     // CAltaFuncion solo puede crear la función, no asignarla a sala
     
@@ -151,9 +157,8 @@ void CAltaFuncion::altaFuncion(string horaInicio, DtFecha fecha) {
 }
 
 bool CAltaFuncion::hayUsuarioLogueado() {
-    // Según reglas UML: CAltaFuncion NO puede acceder a Sesion
-    // El caso de uso asume usuario ya logueado
-    return true;
+    // Verificación real del estado de la sesión
+    return Sesion::getInstancia()->getUsuario() != nullptr;
 }
 
 list<DtSala> CAltaFuncion::obtenerSalasConOcupacion() {

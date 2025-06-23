@@ -8,6 +8,7 @@
 #include "ManejadorPelicula.h"
 #include "ManejadorCine.h"
 #include "ManejadorFuncion.h"
+#include "Sesion.h"
 #include "Pelicula.h"
 #include "Cine.h"
 #include "Funcion.h"
