@@ -1,6 +1,7 @@
 #include "CVerComentariosyPuntajesdePelicula.h"
 #include "ManejadorPelicula.h"
 #include "ManejadorComentario.h"
+#include "ManejadorPuntaje.h"
 #include "Usuario.h"
 #include <vector>
 #include <map>
@@ -40,19 +41,15 @@ DtPeliFull* CVerComentariosyPuntajesdePelicula::selectPeli(string titulo) {
         throw invalid_argument("No existe una película con el título: " + titulo);
     }
 
-    // Mapear Puntajes y calcular promedio
-    list<Puntaje*>& todosLosPuntajes = mp->getPuntajes();
+    // Mapear Puntajes y calcular promedio usando ManejadorPuntaje
+    ManejadorPuntaje* manejadorPuntaje = ManejadorPuntaje::getInstancia();
+    list<Puntaje*> puntajesPelicula = manejadorPuntaje->getPuntajesDePelicula(this->peliculaRecordada);
     set<DtPuntaje*> dtPuntajes;
-    float sumaPuntajes = 0;
-    int cantPuntuaciones = 0;
-    for (list<Puntaje*>::iterator it = todosLosPuntajes.begin(); it != todosLosPuntajes.end(); ++it) {
-        if ((*it)->getPelicula()->getTitulo() == titulo) {
-            dtPuntajes.insert((*it)->getDtPuntaje());
-            sumaPuntajes += (*it)->getPuntaje();
-            cantPuntuaciones++;
-        }
+    for (list<Puntaje*>::iterator it = puntajesPelicula.begin(); it != puntajesPelicula.end(); ++it) {
+        dtPuntajes.insert((*it)->getDtPuntaje());
     }
-    float promedio = (cantPuntuaciones > 0) ? (sumaPuntajes / cantPuntuaciones) : 0;
+    float promedio = manejadorPuntaje->calcularPromedioPelicula(this->peliculaRecordada);
+    int cantPuntuaciones = manejadorPuntaje->contarPuntuacionesPelicula(this->peliculaRecordada);
 
     // Mapear Comentarios
     ManejadorComentario* mc = ManejadorComentario::getInstancia();

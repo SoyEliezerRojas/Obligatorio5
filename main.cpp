@@ -1015,6 +1015,8 @@ void verComentariosPuntajesPelicula() {
     
 }
 
+
+
 void menu(){
     mostrarEncabezado("M E N U  C I N E M A");
     cout <<"1. Iniciar Sesion"<<endl;

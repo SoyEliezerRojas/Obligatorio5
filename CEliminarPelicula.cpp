@@ -1,9 +1,13 @@
 #include "CEliminarPelicula.h"
 #include "ManejadorPelicula.h"
 #include "ManejadorFuncion.h"
+#include "ManejadorComentario.h"
+#include "ManejadorPuntaje.h"
 #include "Funcion.h"
 #include "Pelicula.h"
 #include "Reserva.h"
+#include "Comentario.h"
+#include "Puntaje.h"
 #include "ManejadorCine.h"
 #include "ManejadorUsuario.h"
 #include <algorithm>
@@ -60,6 +64,9 @@ bool CEliminarPelicula::confirmarEliminacion(string titulo) {
     
     // Eliminar funciones asociadas (si las hay)
     eliminarFuncionesAsociadas(titulo);
+    
+    // Eliminar comentarios y puntajes asociados
+    eliminarComentariosYPuntajes(pelicula);
     
     // Eliminar la película del vector
     vector<Pelicula*>& peliculas = manejadorPelicula->getPeliculas();
@@ -125,6 +132,59 @@ void CEliminarPelicula::eliminarFuncionesAsociadas(string tituloPelicula) {
         }
         delete funcion;
         // Si tienes un método para quitar del manejador, agrégalo aquí
+    }
+}
+
+void CEliminarPelicula::eliminarComentariosYPuntajes(Pelicula* pelicula) {
+    ManejadorComentario* manejadorComentario = ManejadorComentario::getInstancia();
+    map<int, Comentario*>& todosComentarios = manejadorComentario->getComentarios();
+    
+    // 1. Recopilar TODOS los comentarios a eliminar (principales y respuestas)
+    list<int> idsAEliminar;
+    
+    for (auto& pair : todosComentarios) {
+        Comentario* comentario = pair.second;
+        if (comentario->getPelicula() == pelicula) {
+            // Recopilar IDs de este comentario y todas sus respuestas recursivamente
+            recopilarIdsComentarios(comentario, idsAEliminar);
+        }
+    }
+    
+    // 2. Eliminar todos los comentarios por ID (evita modificar durante iteración)
+    for (int id : idsAEliminar) {
+        auto it = todosComentarios.find(id);
+        if (it != todosComentarios.end()) {
+            delete it->second;  // Liberar memoria
+            todosComentarios.erase(it);  // Eliminar del map
+        }
+    }
+    
+    // 3. Eliminar puntajes asociados a la película
+    eliminarPuntajesDePelicula(pelicula);
+}
+
+void CEliminarPelicula::recopilarIdsComentarios(Comentario* comentario, list<int>& idsAEliminar) {
+    if (comentario == nullptr) return;
+    
+    // Agregar el ID de este comentario
+    idsAEliminar.push_back(comentario->getId());
+    
+    // Recopilar IDs de todas las respuestas recursivamente
+    list<Comentario*> respuestas = comentario->getRespuestas();
+    for (Comentario* respuesta : respuestas) {
+        recopilarIdsComentarios(respuesta, idsAEliminar);
+    }
+}
+
+void CEliminarPelicula::eliminarPuntajesDePelicula(Pelicula* pelicula) {
+    ManejadorPuntaje* manejadorPuntaje = ManejadorPuntaje::getInstancia();
+    
+    // Eliminar todos los puntajes asociados a esta película
+    bool puntajesEliminados = manejadorPuntaje->eliminarPuntajesDePelicula(pelicula);
+    
+    if (puntajesEliminados) {
+        // Recalcular promedio de la película (debe ser 0 ya que no hay puntajes)
+        pelicula->setPuntajeProm(0.0f);
     }
 }
 

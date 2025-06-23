@@ -7,6 +7,7 @@
 #include "Sesion.h"
 #include "Usuario.h"
 #include "Pelicula.h"
+#include "Comentario.h"
 #include "DtPelicula.h"
 #include <list>
 #include <string>
@@ -31,6 +32,9 @@ public:
     DtPelicula obtenerInformacionPelicula(string titulo);
     bool confirmarEliminacion(string titulo);
     void eliminarFuncionesAsociadas(string tituloPelicula);
+    void eliminarComentariosYPuntajes(Pelicula* pelicula);
+    void recopilarIdsComentarios(Comentario* comentario, list<int>& idsAEliminar);
+    void eliminarPuntajesDePelicula(Pelicula* pelicula);
     
     ~CEliminarPelicula();
 };

@@ -1,5 +1,6 @@
 #include "CPuntuarPelicula.h"
 #include "ManejadorPelicula.h"
+#include "ManejadorPuntaje.h"
 #include "Sesion.h"
 #include "Puntaje.h"
 #include <stdexcept>
@@ -51,23 +52,12 @@ void CPuntuarPelicula::confirmarPuntaje() {
         // Crear el nuevo puntaje
         Puntaje* nuevoPuntaje = new Puntaje(puntajeTemp, pelicula, usuario);
         
-        // Agregarlo al manejador
-        ManejadorPelicula* mP = ManejadorPelicula::getInstancia();
-        mP->agregarPuntaje(nuevoPuntaje);
+        // Agregarlo al manejador de puntajes (esto maneja actualizaciones automáticamente)
+        ManejadorPuntaje* manejadorPuntaje = ManejadorPuntaje::getInstancia();
+        manejadorPuntaje->agregarPuntaje(nuevoPuntaje);
         
-        // Recalcular y actualizar el promedio de la película
-        list<Puntaje*>& todosLosPuntajes = mP->getPuntajes();
-        float sumaPuntajes = 0;
-        int cantPuntuaciones = 0;
-        
-        for (list<Puntaje*>::iterator it = todosLosPuntajes.begin(); it != todosLosPuntajes.end(); ++it) {
-            if ((*it)->getPelicula()->getTitulo() == pelicula->getTitulo()) {
-                sumaPuntajes += (*it)->getPuntaje();
-                cantPuntuaciones++;
-            }
-        }
-        
-        float nuevoPromedio = (cantPuntuaciones > 0) ? (sumaPuntajes / cantPuntuaciones) : 0;
+        // Recalcular y actualizar el promedio de la película usando el nuevo manejador
+        float nuevoPromedio = manejadorPuntaje->calcularPromedioPelicula(pelicula);
         pelicula->setPuntajeProm(nuevoPromedio);
         
         puntajeConfirmado = true;
